@@ -2,27 +2,131 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Bootswatch</title>
-    <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <title>Consultores Patrimoniales</title>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css">
 
+<link rel="stylesheet" href="css/styles.css">
+
 </head>
 <body>
+   <!-- navigation bar -->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+          <img src="images/logo/logo.png" class="logo-size">
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Clientes <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+     
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Link</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+   <!-- end navigation bar -->
+   
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="jumbotron">
-                    <h3>Consultores Patrimoniales</h3>
+       <div class="col-md-8">
+          <div class="well">
+              Bienvenido, Ivan
+          </div>
+           <div id="agent_info">
+               <div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Información</h3>
+  </div>
+  <div class="panel-body panel-body-agent">
+    
+  </div>
+</div>
+           </div>
+           <div class="row">
+                 <div class="col-md-6">
+                    <div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Clientes amarrados</h3>
+  </div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>
+                </div>
+               <div class="col-md-6">
+                    <div class="panel panel-primary">
+              <div class="panel-heading">
+            <h3 class="panel-title">Pólizas activas</h3>
+              </div>
+              <div class="panel-body">
+                hola
+              </div>
+            </div>
+                </div>
+           </div>
+            <div class="row">
+                  <div class="col-md-6">
+                    <div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Comparativas pendientes</h3>
+  </div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Pólizas por cobrar</h3>
+  </div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>
                 </div>
             </div>
-        </div>
+            
+       </div>
+       <div class="col-md-4">
+           <div id="deadline">
+               <div class="panel panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">Deadlines motherfucker</h3>
+  </div>
+  <div class="panel-body panel-body-deadline">
+    Hola
+  </div>
+</div>
+           </div>
+       </div>
+        
     </div>
 </body>
 </html>
