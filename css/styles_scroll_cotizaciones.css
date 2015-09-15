@@ -1,0 +1,33 @@
+.btn-new-pos {
+    position: absolute;
+    right: 5%;
+    top: 2%;
+}
+
+table {
+        width: 100%;
+    }
+
+thead, tbody, tr, td, th { display: block; }
+
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+tbody {
+    height: 380px;
+    overflow-y: auto;
+}
+
+thead {
+    /* fallback */
+}
+
+
+tbody td, thead th {
+    width: 16.66%;
+    float: left;
+}
