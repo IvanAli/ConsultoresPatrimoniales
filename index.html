@@ -31,25 +31,13 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Clientes <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Link</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
+                    <li class="active"><a href="clientes.html">Clientes <span class="sr-only">(current)</span></a></li>
+                    <li><a href="comparativas.html">Comparativas</a></li>
+                    <li><a href="polizas.html">Pólizas</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Link</a></li>
-                </ul>
+                    <li><a href="login.html"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Salir</a></li>
             </div>
         </div>
     </nav>
@@ -58,7 +46,7 @@
     <div class="container">
         <div class="col-md-8">
             <div class="well">
-                Bienvenido, Ivan
+                <h5>Bienvenido, Iván</h5>
             </div>
             <div id="agent_info">
                 <div class="panel panel-primary">
@@ -66,7 +54,15 @@
                         <h3 class="panel-title">Información</h3>
                     </div>
                     <div class="panel-body panel-body-agent">
-
+                        <p>
+                            <strong>Pólizas activas</strong>: 3
+                        </p>
+                        <p>
+                            <strong>Comparativas pendientes</strong>: 2
+                        </p>
+                        <p>
+                            <strong>Cliente más reciente</strong>: Gustavo Gutiérrez Gómez
+                        </p>
                     </div>
                 </div>
             </div>
@@ -74,20 +70,30 @@
                 <div class="col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Clientes amarrados</h3>
+                            <h3 class="panel-title">Clientes asegurados</h3>
                         </div>
                         <div class="panel-body">
-                            Panel content
+                            <p>
+                                Iván Alejandro Soto Velázquez
+                            </p>
+                            <p>
+                                José Gerardo García Sánchez
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Pólizas activas</h3>
+                            <h3 class="panel-title">Cotizaciones por confirmar</h3>
                         </div>
                         <div class="panel-body">
-                            hola
+                            <a href="#"><p>
+                                ID 52359 - Seguro de autos
+                            </p></a>
+                            <a href="#"><p>
+                                ID 5799 - Seguro de autos
+                            </p></a>
                         </div>
                     </div>
                 </div>
@@ -96,20 +102,30 @@
                 <div class="col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Comparativas pendientes</h3>
+                            <h3 class="panel-title">Comparativas sin terminar</h3>
                         </div>
                         <div class="panel-body">
-                            Panel content
+                            <a href="#"><p>
+                                ID 593 - Seguro de autos (3/?)
+                            </p></a>
+                            <a href="#"><p>
+                                ID 533 - Seguro de vida (6/7)
+                            </p></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Pólizas por cobrar</h3>
+                            <h3 class="panel-title">Comisiones por cobrar</h3>
                         </div>
                         <div class="panel-body">
-                            Panel content
+                            <a href="#"><p>
+                                Póliza #12345
+                            </p></a>
+                            <a href="#"><p>
+                                Póliza #15432
+                            </p></a>
                         </div>
                     </div>
                 </div>
@@ -120,10 +136,18 @@
             <div id="deadline">
                 <div class="panel panel-success">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Deadlines motherfucker</h3>
+                        <h3 class="panel-title">Deadlines</h3>
                     </div>
                     <div class="panel-body panel-body-deadline">
-                        Hola
+                        <a href="#"><p>
+                            <strong>ID 12345</strong>: 2015/09/18
+                        </p></a>
+                        <a href="#"><p>
+                            <strong>ID 32456</strong>: 2015/09/18
+                        </p></a>
+                        <a href="#"><p>
+                            <strong>ID 12345</strong>: 2015/09/18
+                        </p></a>
                     </div>
                 </div>
             </div>

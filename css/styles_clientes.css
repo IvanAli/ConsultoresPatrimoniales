@@ -29,8 +29,14 @@
     background-color: deepskyblue;
 }
 
+.btn-new-pos {
+    position: absolute;
+    right: 23%;
+    top: 10%;
+}
+
 .form-group select {
     /*color: white;*/
-    /* color: white;  
+    /* color: white;
     background-color: aquamarine;*/
 }
