@@ -36,9 +36,15 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+<<<<<<< HEAD
                     <li class="active"><a href="clientes.html">Clientes <span class="sr-only">(current)</span></a></li>
                     <li><a href="comparativas.html">Comparativas</a></li>
                     <li><a href="polizas.html">Pólizas</a></li>
+=======
+                    <li><a href="clientes.html">Clientes </a></li>
+                    <li><a href="comparativas.html">comparativas</a></li>
+                    <li ><a href="polizas.html">polizas </a></li>
+>>>>>>> feat_comparativas2
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -53,10 +59,26 @@
             <form class="form-horizontal">
             <fieldset>
             <legend>Nuevo cliente </legend>
-            <div class="form-group1">
-                <label for="inputName" class="col-lg-2 control-label">nombre completo</label>
-                <div class="col-lg-10">
-                    <input type="text" class="form-control" id="inputEmail" placeholder="nombre completo">
+        <div class="row">
+                <div class="form-group1">
+                <label for="inputName" class="col-md-1 control-label">Nombre </label>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Nombre ">
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Apellido Paterno</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Apellido Paterno">
+                    </div>
+                </div>
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Apellido Materno</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Apellido Materno">
+                    </div>
                 </div>
             </div>
         <div class="row">
@@ -73,50 +95,60 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+         <div class="row">
             <div class="form-group1">
-                <label for="inputTel" class="col-lg-2 control-label">Dirección</label>
-                <div class="col-lg-10">
-                    <input type="text" class="form-control" id="inputEmail" placeholder="Dirección">
+                <label for="inputTel" class="col-md-2 control-label">Fecha de nacimiento</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Fecha de nacimiento">
                 </div>
             </div>
         </div>
-        <div class="form-group1">
-      <label class="col-lg-2 control-label">Radios</label>
-      <div class="col-lg-10">
-        <div class="radio">
-          <label>
-            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-            Option one is this
-          </label>
+        <div class="row">
+            <legend>Dirección </legend>
+            <div class="row">
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-1 control-label">País</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="País">
+                    </div>
+                </div>
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-1 control-label">Estado</label>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Estado">
+                    </div>
+                </div>
+                 <div class="form-group1">
+                <label for="inputTel" class="col-md-1 control-label">Municipio</label>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Municipio">
+                    </div>
+                </div>
+            </div>
+        <div class="row">
+            <div class="form-group1">
+                <label for="inputEmail" class="col-md-1 control-label" >Colonia</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Colonia">
+                </div>
+            </div> 
+            <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Calle</label>
+                <div class="col-md-4">
+                 <input type="text" class="form-control" id="inputEmail" placeholder="Calle">
+                </div>
+            </div>
         </div>
-        <div class="radio">
-          <label>
-            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-            Option two can be something else
-          </label>
-        </div>
-      </div>
-    </div>
+       <div class="row">
     <div class="form-group1">
-      <label for="select" class="col-lg-2 control-label">Selects</label>
-      <div class="col-lg-10">
-        <select class="form-control" id="select">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        <br>
-      </div>
-    </div>
-    <div class="form-group1">
-      <div class="col-lg-10 col-lg-offset-2">
+      <div class="col-md-6">
         <button type="reset" class="btn btn-default">Cancel</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <form>
+<INPUT TYPE="button" onClick="parent.location='clientes.html'" class="btn btn-primary" value="submit">
+</form>
       </div>
     </div>
+</div>
     </fieldset>
     </form>
     </div>
