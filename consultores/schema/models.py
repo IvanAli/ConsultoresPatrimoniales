@@ -9,10 +9,10 @@ class Usuario(models.Model):
     email = models.EmailField(max_length=60)
     telefonoLada = models.CharField(max_length=3)
     telefono = models.CharField(max_length=7)
-    calle = models.CharField(max_length=50)
-    numeroExt = models.IntegerField()
+    calle = models.CharField(max_length=50, blank=True)
+    numeroExt = models.IntegerField(blank=True)
     numeroInt = models.IntegerField(blank=True)
-    colonia = models.CharField(max_length=50)
+    colonia = models.CharField(max_length=50, blank=True)
     ciudad = models.CharField(max_length=25)
     estado = models.CharField(max_length=25)
     codigoPostal = models.IntegerField()
@@ -24,8 +24,8 @@ class Usuario(models.Model):
         return nombre + apellidoPaterno + apellidoMaterno
 
 class Cliente(Usuario):
-    linkRegistroRFC = models.URLField()
-    linkComprobanteDomicilio = models.URLField()
+    linkRegistroRFC = models.URLField(null=True)
+    linkComprobanteDomicilio = models.URLField(null=True)
 
 class ClienteFisica(Cliente):
     calleFact = models.CharField(max_length=50)
@@ -34,8 +34,7 @@ class ClienteFisica(Cliente):
     coloniaFact = models.CharField(max_length=50)
     ciudadFact = models.CharField(max_length=25)
     estadoFact = models.CharField(max_length=25)
-    codigoPostalFact = models.IntegerField()
-
+    codigoPostalFact = models.IntegerField
 class ClienteMoral(Cliente):
     razonSocial = models.CharField(max_length=100)
     linkActaConstitutiva = models.URLField()
