@@ -1,0 +1,12 @@
+.logo-size {
+    max-height: 250%;
+    /* margin-top: -0.9em; */
+    position: relative;
+    top: -0.9em;
+}
+
+.base_footer {
+    border-top: 1px solid LightGray;
+    padding: 3em;
+    text-align: center;
+}
