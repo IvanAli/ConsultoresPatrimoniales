@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from .models import Agente
+from ..models import Agente
 
 class TestAgentRegistration(TestCase):
     def test_register_agent_all_fields(self):

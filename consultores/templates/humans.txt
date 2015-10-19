@@ -1,0 +1,19 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Iván Alejandro Soto Velázquez -- Developer
+    Gustavo
+    Gerardo
+
+# THANKS
+
+    Marina Mele, for the great django tutorials
+
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    Bootswatch (a bootstrap variant)
+    Django

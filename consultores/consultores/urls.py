@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from . import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^(?P<filename>(humans.txt)|(robots.txt))$', views.home_files, name='home_files'),
+    url(r'^', include('schema.urls', namespace="schema"))
 ]
