@@ -9,9 +9,9 @@ from django.db import models
 # Create your models here.
 class Usuario(models.Model):
     idUsuario = models.AutoField(primary_key=True)
-    usuario = models.CharField(max_length=30, null=True)
-    contrasena = models.CharField(max_length=30, null=True)
-    nombre = models.CharField(max_length=40, null=True)
+    usuario = models.CharField(max_length=30, unique=True, null=False, blank=False)
+    contrasena = models.CharField(max_length=30, null=False, blank=False)
+    nombre = models.CharField(max_length=40, null=True, blank=False)
     apellidoPaterno = models.CharField(max_length=30, null=True)
     apellidoMaterno = models.CharField(max_length=30, null=True)
     edad = models.PositiveSmallIntegerField(null=True)
@@ -233,7 +233,7 @@ class CoberturasUtilizadas(models.Model):
 
 class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
-    # fechaServicio = models.DateTimeField(auto_now_add=True, 'fecha de servicio')
+    fechaServicio = models.DateTimeField('fecha de servicio', auto_now_add=True)
     fechaConclusion = models.DateTimeField(blank=True, null=True)
     cliente = models.ForeignKey(Cliente, null=True)
     agente = models.ForeignKey(Agente, null=True)
