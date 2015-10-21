@@ -3,10 +3,18 @@ from . import forms
 from .models import Agente
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from . import managers
 # Create your views here.
 
-def login(request):
+"""
+    AGREGAR DECORATORS - PENDIENTE
+    PS: Me gusta codear en ingles
+"""
+
+def loginView(request):
     return render(request, "schema/login.html", {})
 
 def loginAuthentication(request):
@@ -15,10 +23,15 @@ def loginAuthentication(request):
         if login_form.is_valid():
             user_form = login_form.cleaned_data['user']
             password_form = login_form.cleaned_data['password']
-            user_db = Agente.objects.get(usuario=user_form)
-            if user_db.contrasena == password_form:
-                request.session['user'] = user_db.idUsuario
-                return HttpResponseRedirect(reverse('schema:home'))
+            user = authenticate(username=user_form, password=password_form)
+            if user is not None:
+                if user.is_active:
+                    # request.session['username'] = user.username
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('schema:home'))
+                else:
+                    context = {'error_sessionexpired': 'Sesión expirada'}
+                    return render(request, 'schema/login.html', context)
             else:
                 context = {'error_wrongpassword': "Contraseña incorrecta"}
                 return render(request, 'schema/login.html', context)
@@ -26,7 +39,22 @@ def loginAuthentication(request):
             context = {'error_missingfields': "Campos sin llenar"}
             return render(request, 'schema/login.html', context)
 
+def registerAgent(request):
+    return HttpResponse("Work in Progress")
+
+def getUser(username):
+    try:
+        user = User.objects.get(username=username)
+        return user
+    except User.DoesNotExist:
+        return None
+
+def isAgent(user):
+    return user.groups.filter(name='agente').exists()
 
 def home(request):
-    context = {'user': Agente.objects.get(idUsuario=request.session['user'])}
-    return render(request, "schema/home.html", context)
+    if isAgent(request.user):
+        context = {'agente': Agente.objects.get(userAgente=request.user)}
+        return render(request, 'schema/home.html', context)
+    else:
+        print("NOT AN AGENT")
