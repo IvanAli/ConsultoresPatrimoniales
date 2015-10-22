@@ -4,11 +4,55 @@ from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.testing import LiveServerTestCase
 import os
 import unittest
-from ...models import Agente
+from ...models import Agente, ClienteFisico, ClienteMoral, Cliente
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 import time
+
+class ClientesTest(LiveServerTestCase):
+    def setUp(self):
+        chromedriver = os.path.join(os.path.dirname(__file__), '../chromedriver/chromedriver.exe')
+        os.environ["webdriver.chrome.driver"] = chromedriver
+        self.browser = webdriver.Chrome(chromedriver)
+        self.browser.implicitly_wait(3)
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def get_full_url(self, namespace):
+        return self.live_server_url + reverse(namespace)
+
+    def test_show_clientes_table(self):
+        cf1 = ClienteFisico(nombre="Ivan Alejandro", apellidoPaterno="Soto",
+        apellidoMaterno="Velazquez", edad=20, sexo="M", rfc="SOVI", email="ivanali@outlook.com",
+        telefonoLada="644", telefono="1421909", calle="Jesús Oviedo", numeroExt=106, numeroInt=33,
+        colonia="Villas del Tecnológico", ciudad="Santiago de Querétaro", estado="Querétaro",
+        codigoPostal="76150", calleFact="Jesus Oviedo", numeroExtFact=106, numeroIntFact=103,
+        coloniaFact="Villas del Tecnologico", ciudadFact="Queretaro", estadoFact="Queretaro")
+
+        cf2 = ClienteFisico(nombre="Alejandro Ivan", apellidoPaterno="Velazquez",
+        apellidoMaterno="Soto", edad=20, sexo="M", rfc="SOVI", email="ivanali@outlook.com",
+        telefonoLada="644", telefono="1421909", calle="Jesús Oviedo", numeroExt=106, numeroInt=33,
+        colonia="Villas del Tecnológico", ciudad="Santiago de Querétaro", estado="Querétaro",
+        codigoPostal="76150", calleFact="Jesus Oviedo", numeroExtFact=106, numeroIntFact=103,
+        coloniaFact="Villas del Tecnologico", ciudadFact="Queretaro", estadoFact="Queretaro")
+
+        cf3 = ClienteFisico(nombre="Foolanito", apellidoPaterno="Barrera",
+        apellidoMaterno="Nope", edad=5, sexo="M", rfc="SOVI", email="foobar@foo.bar",
+        telefonoLada="123", telefono="6543642", calle="Rainbow", numeroExt=678,
+        colonia="Los foolanos", ciudad="Santiago de Querétaro", estado="Querétaro",
+        codigoPostal="66125", calleFact="Rainbow", numeroExtFact=678,
+        coloniaFact="Los foolanos", ciudadFact="Queretaro", estadoFact="Queretaro")
+
+        cf1.save()
+        cf2.save()
+        cf3.save()
+
+        self.browser.get(self.get_full_url("schema:clientes"))
+        row = self.browser.find_element_by_id('cliente1nombre')
+        time.sleep(5)
+        self.assertIn(row[1], "Ivan Alejandro")
 
 class AgentLoginTest(LiveServerTestCase):
     def setUp(self):

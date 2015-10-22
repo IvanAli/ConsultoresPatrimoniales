@@ -3,8 +3,7 @@
 from django.test import TestCase
 from schema.models import ClienteFisico, Cliente, ClienteMoral
 
-class TestClient(TestCase):
-    """
+class TestCliente(TestCase):
     def test_client_fisico_not_all_fields(self):
         clientefis = ClienteFisico(nombre="Ivan Alejandro", apellidoPaterno="Soto",
         apellidoMaterno="Velazquez", edad=20, sexo="M", rfc="SOVI", email="ivanali@outlook.com",
@@ -14,5 +13,4 @@ class TestClient(TestCase):
         coloniaFact="Villas del Tecnologico", ciudadFact="Queretaro", estadoFact="Queretaro")
 
         clientefis.save()
-        self.assertEqual(clientefis, ClienteFisico.objects.get(usuario="Ivan", contrasena="ivan"))
-    """
+        self.assertEqual(clientefis, ClienteFisico.objects.get(pk=clientefis.pk))

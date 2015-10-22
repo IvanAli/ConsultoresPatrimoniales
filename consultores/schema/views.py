@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . import forms
-from .models import Agente
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -13,6 +13,19 @@ from . import managers
     AGREGAR DECORATORS - PENDIENTE
     PS: Me gusta codear en ingles
 """
+
+# helper functions
+def getUser(username):
+    try:
+        user = User.objects.get(username=username)
+        return user
+    except User.DoesNotExist:
+        return None
+
+def isAgent(user):
+    return user.groups.filter(name='agente').exists()
+
+# views
 
 def loginView(request):
     return render(request, "schema/login.html", {})
@@ -42,19 +55,13 @@ def loginAuthentication(request):
 def registerAgent(request):
     return HttpResponse("Work in Progress")
 
-def getUser(username):
-    try:
-        user = User.objects.get(username=username)
-        return user
-    except User.DoesNotExist:
-        return None
-
-def isAgent(user):
-    return user.groups.filter(name='agente').exists()
-
 def home(request):
     if isAgent(request.user):
         context = {'agente': Agente.objects.get(userAgente=request.user)}
         return render(request, 'schema/home.html', context)
     else:
         print("NOT AN AGENT")
+
+def clientesView(request):
+    context = {'clientesFisicos': ClienteFisico.objects.all()}
+    return render(request, 'schema/clientes.html', context)

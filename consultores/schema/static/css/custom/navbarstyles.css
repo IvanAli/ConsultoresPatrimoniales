@@ -1,8 +1,9 @@
 .logo-size {
-    max-height: 250%;
+    max-height: 45px;
     /* margin-top: -0.9em; */
     position: relative;
-    top: -0.9em;
+    top: -0.4em;
+    left: -0.7em;
 }
 
 .base_footer {
@@ -10,3 +11,10 @@
     padding: 3em;
     text-align: center;
 }
+
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:10px !important; padding-bottom:0 !important;
+    height: 45px;
+    left: -20px;
+}
+.navbar {min-height:45px !important;}
