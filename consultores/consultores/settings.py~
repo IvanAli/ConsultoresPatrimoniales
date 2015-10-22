@@ -38,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'schema',
+    'eav',
+    'django.contrib.sites',
 )
 
 # AUTH_USER_MODEL = 'schema.Usuario'

@@ -1,14 +1,7 @@
 from django.db import models
 from django.db.models import OneToOneField
 from django.contrib.auth.models import User, Group
-from .eav_config import TipoSeguroEavConfig, CoberturaEavConfig
 
-"""
-
-    install django-eav
-
-"""
-# import eav
 
 """
  REVISAR IMPLEMENTACION DE URL PARA CADA CLASE
@@ -89,7 +82,6 @@ class ClienteMoral(Cliente):
     linkIdRepresentante = models.URLField(null=True)
 
 
-
 class Aseguradora(models.Model):
     idAseguradora = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50, null=True)
@@ -108,11 +100,16 @@ class Aseguradora(models.Model):
     def __str__(self):
         return "Aseguradora: " + self.nombre
 
-class TipoSeguro(models.Model):
+class DatoTipoSeguro(models.Model):
+    llave = models.CharField(max_length=40, primary_key=True)
+    valor = models.CharField(max_length=80)
+    class Meta:
+        unique_together = ("llave", "valor")
+    def __str__(self):
+        return self.llave + ": " + self.valor
 
-    def __init__(self):
-        # Register the model as a dynamic model
-        eav.register(TipoSeguro, TipoSeguroEavConfig)
+
+class TipoSeguro(models.Model):
 
     SEGUROS_OPCIONES = (
         ('AP', 'Automoviles y pickups'),
@@ -128,7 +125,8 @@ class TipoSeguro(models.Model):
         ('ESP', 'Especializados'),
     )
     idTipoSeguro = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, primary_key=True)
-    aseguradora = models.ForeignKey(Aseguradora)
+    datos = models.ManyToManyField(DatoTipoSeguro)
+    aseguradora = models.ForeignKey(Aseguradora, null=True)
 
     class Meta:
         unique_together = ("idTipoSeguro", "aseguradora")
@@ -137,22 +135,27 @@ class TipoSeguro(models.Model):
         return "Seguro: " + self.idTipoSeguro
 
 
+class DatoCobertura(models.Model):
+    llave = models.CharField(max_length=40, primary_key=True)
+    valor = models.CharField(max_length=80)
+    class Meta:
+        unique_together = ("llave", "valor")
+    def __str__(self):
+        return self.llave + ": " + self.valor
 
 class Cobertura(models.Model):
     """
         Considerar que la Cobertura puede tambien tener muchos datos y la descripcion
         puede que no sea suficiente
 
+        Se creo DatoCobertura para solucionar esto.
+
     """
-
-    def __init__(self):
-        # Register the model as a dynamic model
-        eav.register(Cobertura, CoberturaEavConfig)
-
 
     idCobertura = models.AutoField(primary_key=True)
     nombreCobertura = models.CharField(max_length=50, null=True)
-    tipoSeguro = models.ForeignKey(TipoSeguro)
+    tipoSeguro = models.ForeignKey(TipoSeguro, null=True)
+    datos = models.ManyToManyField(DatoCobertura)
 
     def __str__(self):
         return "Cobertura: " + self.nombreCobertura
