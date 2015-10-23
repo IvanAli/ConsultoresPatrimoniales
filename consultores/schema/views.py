@@ -63,5 +63,5 @@ def home(request):
         print("NOT AN AGENT")
 
 def clientesView(request):
-    context = {'clientesFisicos': ClienteFisico.objects.all()}
+    context = {'clientesFisicos': request.user.agente.clientes}
     return render(request, 'schema/clientes.html', context)

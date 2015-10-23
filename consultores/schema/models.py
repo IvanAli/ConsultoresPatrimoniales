@@ -39,25 +39,6 @@ class Persona(models.Model):
     class Meta:
         abstract = True
 
-class Agente(Persona):
-    userAgente = OneToOneField(User)
-    claveAgente = models.IntegerField(blank=True, null=True)
-    cuentaBancaria = models.CharField(max_length=34, null=True)
-    banco = models.CharField(max_length=30, null=True)
-
-    def save(self, *args, **kwargs):
-        try:
-            groupAgente = Group.objects.get(name='agente')
-            self.userAgente.groups.add(groupAgente)
-        except Group.DoesNotExist:
-            groupAgente = Group.objects.create(name='agente')
-            self.userAgente.groups.add(groupAgente)
-        self.userAgente.groups.add(groupAgente)
-        super(Agente, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return "Agente: " + self.userAgente.username
-
 class Cliente(Persona):
     nombre = models.CharField(max_length=40, null=True, blank=False)
     apellidoPaterno = models.CharField(max_length=30, null=True)
@@ -81,6 +62,27 @@ class ClienteMoral(Cliente):
     linkActaConstitutiva = models.URLField(null=True)
     linkIdRepresentante = models.URLField(null=True)
 
+class Agente(Persona):
+    userAgente = OneToOneField(User)
+    claveAgente = models.IntegerField(blank=True, null=True)
+    cuentaBancaria = models.CharField(max_length=34, null=True)
+    banco = models.CharField(max_length=30, null=True)
+
+    # many to many relationship with Cliente
+    clientes = models.ManyToManyField(Cliente, through='OrdenServicio')
+
+    def save(self, *args, **kwargs):
+        try:
+            groupAgente = Group.objects.get(name='agente')
+            self.userAgente.groups.add(groupAgente)
+        except Group.DoesNotExist:
+            groupAgente = Group.objects.create(name='agente')
+            self.userAgente.groups.add(groupAgente)
+        self.userAgente.groups.add(groupAgente)
+        super(Agente, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Agente: " + self.userAgente.username
 
 class Aseguradora(models.Model):
     idAseguradora = models.AutoField(primary_key=True)
@@ -160,15 +162,17 @@ class Cobertura(models.Model):
     def __str__(self):
         return "Cobertura: " + self.nombreCobertura
 
-"""
+
 class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
     numeroCotizaciones = models.PositiveIntegerField(null=True)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True, null=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
     fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
-    cliente = models.ForeignKey(Cliente, null=True)
-    agente = models.ForeignKey(Agente, null=True)
+
+    ordenServicio = models.ForeignKey('OrdenServicio', null=True)
+    # cliente = models.ForeignKey(Cliente, null=True)
+    # agente = models.ForeignKey(Agente, null=True)
 
     def __str__(self):
         return "Comparativa: " + self.idComparativa + " Cliente: " + self.cliente + " Agente: " + self.agente
@@ -205,10 +209,11 @@ class Poliza(models.Model):
     fechaFin = models.DateTimeField('fecha de fin', null=True)
     endosoBeneficiario = models.CharField(max_length=50, null=True)
     linkCaratulaPDF = models.URLField(max_length=200, null=True)
-    cliente = models.ForeignKey(Cliente, null=True)
-    agente = models.ForeignKey(Agente, null=True)
-    comision = models.ForeignKey(Comision, null=True)
-    aseguradora = models.ForeignKey(Aseguradora, null=True)
+    # cliente = models.ForeignKey(Cliente, null=True)
+    # agente = models.ForeignKey(Agente, null=True)
+    comision = models.OneToOneField(Comision, null=True)
+    # aseguradora = models.ForeignKey(Aseguradora, null=True)
+    cotizacion = models.OneToOneField(Cotizacion, null=True)
     def __str__(self):
         return "Póliza: " + self.idPoliza + "Cliente: " + self.cliente + "Agente: " + self.agente
 
@@ -244,12 +249,13 @@ class Contacto(models.Model):
     def __str__(self):
         return "Contacto: " + self.idContacto + " Aseguradora: " + self.aseguradora
 
-
+"""
 class CoberturasUtilizadas(models.Model):
     poliza = models.ForeignKey(Poliza, null=True)
     cobertura = models.ForeignKey(Cobertura, null=True)
     def __str__(self):
         return "Cobertura " + self.cobertura + " utilizada en Poliza " + self.poliza
+"""
 
 class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
@@ -258,8 +264,8 @@ class OrdenServicio(models.Model):
     cliente = models.ForeignKey(Cliente, null=True)
     agente = models.ForeignKey(Agente, null=True)
     tipoSeguro = models.ForeignKey(TipoSeguro, null=True)
-    comparativa = models.ForeignKey(Comparativa, null=True)
-    poliza = models.ForeignKey(Poliza, null=True)
+    ### foreign key is under Comparativa
+    # comparativa = models.OneToOneField(Comparativa, null=True)
+    poliza = models.OneToOneField(Poliza, null=True)
     def __str__ (self):
         return "Orden de Servicio: " + self.idServicio + " Cliente: " + self.cliente + " Agente: " + self.agente;
-"""

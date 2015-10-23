@@ -18,7 +18,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-primary">
+            <div class="panel">
                 <div class="panel-heading">
                     <h3 class="panel-title">Clientes</h3>
                     <div class="pull-right">
@@ -39,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for cliente in clientesFisicos %}
+                            {% for cliente in clientesFisicos.all %}
                                 <tr id="cliente{{ forloop.counter }}">
                                     <td>
                                         {{ cliente.pk }}
