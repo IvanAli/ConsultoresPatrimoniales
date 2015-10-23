@@ -5,11 +5,11 @@
 
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
 {% endblock %}
 {% block head_javascript %}
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 {% endblock %}
 
 {% block clientes_tag %}class="active"{% endblock %}
@@ -32,17 +32,17 @@
                     <table class="table table-hover" id="clientesTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>ID Cliente</th>
                                 <th>Nombre</th>
                                 <th>Apellido Paterno</th>
                                 <th>Apellido Materno</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="rowlink" data-link="row">
                             {% for cliente in clientesFisicos.all %}
                                 <tr id="cliente{{ forloop.counter }}">
                                     <td>
-                                        {{ cliente.pk }}
+                                        <a href="{% url 'schema:infoClientes' cliente.pk %}">{{ cliente.pk }}</a>
                                     </td>
                                     <td>
                                         {{ cliente.nombre }}
@@ -54,6 +54,7 @@
                                         {{ cliente.apellidoMaterno }}
                                     </td>
                                 </tr>
+
                             {% endfor %}
                         </tbody>
                     </table>
@@ -75,6 +76,7 @@
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
 <script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+
 <script>
 $(document).ready( function () {
     $('#clientesTable').DataTable();

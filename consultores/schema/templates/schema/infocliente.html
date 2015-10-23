@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block head_title %}Cliente: {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+
+{% endblock %}
+{% block head_javascript %}
+
+{% endblock %}
+
+{% block clientes_tag %}class="active"{% endblock %}
+{% block body_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Pólizas</h3>
+                    <div class="pull-right">
+                    <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
+                        <a href="" class="btn btn-default btn-sm btn-new-pos">---</a>
+                    </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <!-- start panel body -->
+                    <table class="table table-hover" id="clienteTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Tipo de Seguro</th>
+                                <th>Número de cotizaciones</th>
+                                <th>Concluida</th>
+                                <th>Enviada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for orden in ordenes.all %}
+                                <tr id="comparativa{{ forloop.counter }}">
+                                    <td>
+                                        {{ orden.comparativa.pk }}
+                                    </td>
+                                    <td>
+                                        {{ orden.cliente.nombre }}
+                                        {{ orden.cliente.apellidoPaterno }}
+                                        {{ orden.cliente.apellidoMaterno }}
+                                    </td>
+                                    <td>
+                                        {{ orden.tipoSeguro.get_idTipoSeguro_display }}
+                                    </td>
+                                    <td>
+                                        {{ orden.comparativa.cotizacion_set.all.count }}
+                                        <!-- numero de cotizaciones -->
+                                    </td>
+                                    <td>
+                                        {% if orden.comparativa.fechaConclusion %}
+                                            Sí
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if orden.comparativa.fechaEnviada %}
+                                            Sí
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- end panel body -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Info del cliente</h3>
+                </div>
+                <div class="panel-body">
+                    <p>{{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}</p>
+                    <p>{{ cliente.email }}</p>
+                    <p>{{ cliente.rfc }}</p>
+                    <p>{{ telefonoLada }} {{ telefono }}</p>
+                    <p>{{ cliente.calle }} #{{ cliente.numeroExt }}
+                    {% if cliente.numeroInt %} Int. {{ cliente.numeroInt }}{% endif %}</p>
+                    <p>{{ cliente.ciudad }}</p>
+                    <p>{{ cliente.estado }}</p>
+                    <p>{{ cliente.codigoPostal }}</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#clienteTable').DataTable();
+} );
+</script>
+{% endblock %}
