@@ -22,7 +22,7 @@ def getUser(username):
     except User.DoesNotExist:
         return None
 
-def isAgent(user):
+def isAgente(user):
     return user.groups.filter(name='agente').exists()
 
 # views
@@ -52,11 +52,11 @@ def loginAuthentication(request):
             context = {'error_missingfields': "Campos sin llenar"}
             return render(request, 'schema/login.html', context)
 
-def registerAgent(request):
+def registerAgente(request):
     return HttpResponse("Work in Progress")
 
 def home(request):
-    if isAgent(request.user):
+    if isAgente(request.user):
         context = {'agente': Agente.objects.get(userAgente=request.user)}
         return render(request, 'schema/home.html', context)
     else:
@@ -69,3 +69,7 @@ def clientesView(request):
 def comparativasView(request):
     context = {'ordenes': request.user.agente.ordenservicio_set}
     return render(request, 'schema/comparativas.html', context)
+
+def polizasView(request):
+    context = {'ordenes': request.user.agente.ordenservicio_set}
+    return render(request, 'schema/polizas.html', context)

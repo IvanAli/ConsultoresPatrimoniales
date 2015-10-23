@@ -58,7 +58,7 @@
                         <li {% block home_tag %}{% endblock %}><a href="{% url 'schema:home' %}">Inicio</a></li>
                         <li {% block clientes_tag %}{% endblock %}><a href="{% url 'schema:clientes' %}">Clientes<span class="sr-only">(current)</span></a></li>
                         <li {% block comparativas_tag %}{% endblock %}><a href="{% url 'schema:comparativas' %}">Comparativas</a></li>
-                        <li {% block polizas_tag %}{% endblock %}><a href="">Pólizas</a></li>
+                        <li {% block polizas_tag %}{% endblock %}><a href="{% url 'schema:polizas' %}">Pólizas</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
