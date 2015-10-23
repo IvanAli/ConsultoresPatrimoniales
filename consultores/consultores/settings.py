@@ -37,8 +37,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'schema',
 )
+
+# AUTH_USER_MODEL = 'schema.Usuario'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -81,7 +84,10 @@ DATABASES = {
         'NAME': 'consultores_patrimoniales',
         'USER': 'root',
         'HOST': 'localhost',
-        'PORT': '3306'
+        'PORT': '3306',
+        'OPTIONS': {
+           'init_command': 'SET storage_engine=INNODB',
+        }
      }
 }
 

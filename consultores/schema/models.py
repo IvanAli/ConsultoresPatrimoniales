@@ -1,19 +1,23 @@
 from django.db import models
+from django.db.models import OneToOneField
+from django.contrib.auth.models import User, Group
+
+
 """
  REVISAR IMPLEMENTACION DE URL PARA CADA CLASE
     #def get_absolute_url(self):
         from django.core.urlresolvers import reverse
         return reverse()
+
+http://stackoverflow.com/questions/12567151/how-to-add-column-in-manytomany-table-django
 """
 
 # Create your models here.
-class Usuario(models.Model):
-    idUsuario = models.AutoField(primary_key=True)
-    usuario = models.CharField(max_length=30, unique=True, null=False, blank=False)
-    contrasena = models.CharField(max_length=30, null=False, blank=False)
-    nombre = models.CharField(max_length=40, null=True, blank=False)
-    apellidoPaterno = models.CharField(max_length=30, null=True)
-    apellidoMaterno = models.CharField(max_length=30, null=True)
+class Persona(models.Model):
+    # nombre = models.CharField(max_length=40, null=True, blank=False)
+    # apellidoPaterno = models.CharField(max_length=30, null=True)
+    # apellidoMaterno = models.CharField(max_length=30, null=True)
+    email = models.EmailField(max_length=254, null=True, blank=True)
     edad = models.PositiveSmallIntegerField(null=True)
     SEXO_OPCIONES = (
         (None, '-'),
@@ -21,9 +25,8 @@ class Usuario(models.Model):
         ('H', 'Hombre'),
         ('O', 'Otro'),
         )
-    sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES, default=None)
+    sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES, default='M')
     rfc = models.CharField(max_length=13, null=True)
-    email = models.EmailField(max_length=254, null=True)
     telefonoLada = models.CharField(max_length=3, null=True)
     telefono = models.CharField(max_length=7, null=True)
     calle = models.CharField(max_length=50, blank=True, null=True)
@@ -35,10 +38,11 @@ class Usuario(models.Model):
     codigoPostal = models.CharField(max_length=5, blank=True, null=True)
     class Meta:
         abstract = True
-    def __unicode__(self):
-        return "Usuario: " + self.nombre +" "+ self.apellidoPaterno +" "+ self.apellidoMaterno
 
-class Cliente(Usuario):
+class Cliente(Persona):
+    nombre = models.CharField(max_length=40, null=True, blank=False)
+    apellidoPaterno = models.CharField(max_length=30, null=True)
+    apellidoMaterno = models.CharField(max_length=30, null=True)
     linkRegistroRFC = models.URLField(null=True)
     linkComprobanteDomicilio = models.URLField(null=True)
     calleFact = models.CharField(max_length=50, null=True)
@@ -48,47 +52,37 @@ class Cliente(Usuario):
     ciudadFact = models.CharField(max_length=30, null=True)
     estadoFact = models.CharField(max_length=19, null=True)
     codigoPostalFact = models.CharField(max_length=5, null=True)
-    def __unicode__(self):
-        return "Cliente: " + self.nombre +" "+ self.apellidoPaterno +" "+ self.apellidoMaterno
 
 class ClienteFisico(Cliente):
-    def __unicode__(self):
-        return "Persona Física: " + self.nombre + " " + self.apellidoPaterno + " " + self.apellidoMaterno
+    def __str__(self):
+        return "Cliente fisico"
 
 class ClienteMoral(Cliente):
     razonSocial = models.CharField(max_length=100, null=True)
     linkActaConstitutiva = models.URLField(null=True)
     linkIdRepresentante = models.URLField(null=True)
-    def __unicode__(self):
-        return "Persona Moral: " + self.nombre +" "+ self.apellidoPaterno +" "+ self.apellidoMaterno
 
-class Agente(Usuario):
+class Agente(Persona):
+    userAgente = OneToOneField(User)
     claveAgente = models.IntegerField(blank=True, null=True)
     cuentaBancaria = models.CharField(max_length=34, null=True)
     banco = models.CharField(max_length=30, null=True)
-    def __unicode__(self):
-        return "Agente: " + self.nombre +" "+ self.apellidoPaterno +" "+ self.apellidoMaterno
 
-class TipoSeguro(models.Model):
-    ### No será mejor poner el ID como las iniciales de SEGUROS_OPCIONES? Si
-    # idTipoSeguro = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50, null=True)
-    SEGUROS_OPCIONES = (
-        ('AP', 'Automoviles y pickups'),
-        ('C', 'Camiones'),
-        ('R', 'Remolques, cajas secas y adaptaciones en general'),
-        ('G', 'Gastos medicos mayores'),
-        ('V', 'Vida'),
-        ('H', 'Hogares'),
-        ('I', 'Inversion'),
-        ('E', 'Empresas'),
-        ('EC', 'Equipo de contratistas'),
-        ('T', 'Transportes'),
-        ('ESP', 'Especializados'),
-    )
-    idTipoSeguro = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, primary_key=True)
-    def __unicode__(self):
-        return "Seguro: " + self.tipoSeguro
+    # many to many relationship with Cliente
+    clientes = models.ManyToManyField(Cliente, through='OrdenServicio')
+
+    def save(self, *args, **kwargs):
+        try:
+            groupAgente = Group.objects.get(name='agente')
+            self.userAgente.groups.add(groupAgente)
+        except Group.DoesNotExist:
+            groupAgente = Group.objects.create(name='agente')
+            self.userAgente.groups.add(groupAgente)
+        self.userAgente.groups.add(groupAgente)
+        super(Agente, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Agente: " + self.userAgente.username
 
 class Aseguradora(models.Model):
     idAseguradora = models.AutoField(primary_key=True)
@@ -104,8 +98,70 @@ class Aseguradora(models.Model):
     ciudad = models.CharField(max_length=30, blank=True, null=True)
     estado = models.CharField(max_length=19, blank=True, null=True)
     codigoPostal = models.CharField(max_length=5, blank=True, null=True)
-    def __unicode__(self):
+
+    def __str__(self):
         return "Aseguradora: " + self.nombre
+
+class DatoTipoSeguro(models.Model):
+    llave = models.CharField(max_length=40, primary_key=True)
+    valor = models.CharField(max_length=80)
+    class Meta:
+        unique_together = ("llave", "valor")
+    def __str__(self):
+        return self.llave + ": " + self.valor
+
+
+class TipoSeguro(models.Model):
+
+    SEGUROS_OPCIONES = (
+        ('AP', 'Automoviles y pickups'),
+        ('C', 'Camiones'),
+        ('R', 'Remolques, cajas secas y adaptaciones en general'),
+        ('G', 'Gastos medicos mayores'),
+        ('V', 'Vida'),
+        ('H', 'Hogares'),
+        ('I', 'Inversion'),
+        ('E', 'Empresas'),
+        ('EC', 'Equipo de contratistas'),
+        ('T', 'Transportes'),
+        ('ESP', 'Especializados'),
+    )
+    idTipoSeguro = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, primary_key=True)
+    datos = models.ManyToManyField(DatoTipoSeguro)
+    aseguradora = models.ForeignKey(Aseguradora, null=True)
+
+    class Meta:
+        unique_together = ("idTipoSeguro", "aseguradora")
+
+    def __str__(self):
+        return "Seguro: " + self.idTipoSeguro
+
+
+class DatoCobertura(models.Model):
+    llave = models.CharField(max_length=40, primary_key=True)
+    valor = models.CharField(max_length=80)
+    class Meta:
+        unique_together = ("llave", "valor")
+    def __str__(self):
+        return self.llave + ": " + self.valor
+
+class Cobertura(models.Model):
+    """
+        Considerar que la Cobertura puede tambien tener muchos datos y la descripcion
+        puede que no sea suficiente
+
+        Se creo DatoCobertura para solucionar esto.
+
+    """
+
+    idCobertura = models.AutoField(primary_key=True)
+    nombreCobertura = models.CharField(max_length=50, null=True)
+    tipoSeguro = models.ForeignKey(TipoSeguro, null=True)
+    datos = models.ManyToManyField(DatoCobertura)
+
+    def __str__(self):
+        return "Cobertura: " + self.nombreCobertura
+
 
 class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
@@ -113,9 +169,12 @@ class Comparativa(models.Model):
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True, null=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
     fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
-    cliente = models.ForeignKey(Cliente, null=True)
-    agente = models.ForeignKey(Agente, null=True)
-    def __unicode__(self):
+
+    ordenServicio = models.ForeignKey('OrdenServicio', null=True)
+    # cliente = models.ForeignKey(Cliente, null=True)
+    # agente = models.ForeignKey(Agente, null=True)
+
+    def __str__(self):
         return "Comparativa: " + self.idComparativa + " Cliente: " + self.cliente + " Agente: " + self.agente
 
 class Comision(models.Model):
@@ -124,7 +183,7 @@ class Comision(models.Model):
     fechaDeposito = models.DateTimeField(null=True)
     # asignacionComision = models.ForeignKey(AsignacionComision)
     agente = models.ForeignKey(Agente, null=True)
-    def __unicode__(self):
+    def __str__(self):
         return "Comisión " + self.idComision + " de Agente " + self.agente
 
 class Cotizacion(models.Model):
@@ -139,7 +198,7 @@ class Cotizacion(models.Model):
     formaPago = models.IntegerField(choices=FORMA_PAGO_OPCIONES, default=12, null=True)
     comparativa = models.ForeignKey(Comparativa, null=True)
     aseguradora = models.ForeignKey(Aseguradora, null=True)
-    def __unicode__(self):
+    def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa
 
 class Poliza(models.Model):
@@ -150,11 +209,12 @@ class Poliza(models.Model):
     fechaFin = models.DateTimeField('fecha de fin', null=True)
     endosoBeneficiario = models.CharField(max_length=50, null=True)
     linkCaratulaPDF = models.URLField(max_length=200, null=True)
-    cliente = models.ForeignKey(Cliente, null=True)
-    agente = models.ForeignKey(Agente, null=True)
-    comision = models.ForeignKey(Comision, null=True)
-    aseguradora = models.ForeignKey(Aseguradora, null=True)
-    def __unicode__(self):
+    # cliente = models.ForeignKey(Cliente, null=True)
+    # agente = models.ForeignKey(Agente, null=True)
+    comision = models.OneToOneField(Comision, null=True)
+    # aseguradora = models.ForeignKey(Aseguradora, null=True)
+    cotizacion = models.OneToOneField(Cotizacion, null=True)
+    def __str__(self):
         return "Póliza: " + self.idPoliza + "Cliente: " + self.cliente + "Agente: " + self.agente
 
 class Pago(models.Model):
@@ -163,7 +223,7 @@ class Pago(models.Model):
     fechaPago = models.DateTimeField('fecha de pago', null=True)
     numeroPago = models.PositiveSmallIntegerField(null=True)
     poliza = models.ForeignKey(Poliza, null=True)
-    def __unicode__(self):
+    def __str__(self):
         return "Pago " + self.numeroPago + " de Poliza " + self.poliza
 
 
@@ -174,7 +234,7 @@ class AsignacionComision(models.Model):
     tipoSeguro = models.ForeignKey(TipoSeguro, null=True)
     aseguradora = models.ForeignKey(Aseguradora, null=True)
     comision = models.ForeignKey(Comision, null=True)
-    def __unicode__(self):
+    def __str__(self):
         return "Asignacion de Comisión: " + self.idAsignacion + " Tipo de Seguro: " + self.tipoSeguro + " Aseguradora: " + self.aseguradora
 
 class Contacto(models.Model):
@@ -186,50 +246,16 @@ class Contacto(models.Model):
     telefonoLada = models.CharField(max_length=3, blank=True, null=True)
     telefono = models.CharField(max_length=7, blank=True, null=True)
     aseguradora = models.ForeignKey(Aseguradora, null=True)
-    def __unicode__(self):
+    def __str__(self):
         return "Contacto: " + self.idContacto + " Aseguradora: " + self.aseguradora
 
-class SegurosOfertados(models.Model):
-    aseguradora = models.ForeignKey(Aseguradora)
-    seguro = models.ForeignKey(TipoSeguro)
-    def __unicode__(self):
-        return "Aseguradora " + self.aseguradora + " oferta Seguro " + self.seguro
-
-class Dato(models.Model):
-    idDato = models.AutoField(primary_key=True)
-    nombreDato = models.CharField(max_length=50, null=True)
-    ### Está bien modelado esto? No estoy seguro cómo modelarlo, lo comentamos el lunes
-    tipoDato = models.CharField(max_length=50, null=True)
-    descripcion = models.TextField(blank=True, null=True)
-    def __unicode__(self):
-        return "Dato: " + self.nombreDato + " Tipo: " + self.tipoDato
-
-class DatosNecesitados(models.Model):
-    seguro = models.ForeignKey(TipoSeguro, null=True)
-    dato = models.ForeignKey(Dato, null=True)
-    def __unicode__(self):
-        return "Dato " + self.dato + " es necesario en Seguro " + self.seguro
-
-class Cobertura(models.Model):
-    idCobertura = models.AutoField(primary_key=True)
-    nombreCobertura = models.CharField(max_length=50, null=True)
-    descripcion = models.TextField(null=True)
-    porcentajeCobertura = models.DecimalField(max_digits=4, decimal_places=2, null=True)
-    seguro = models.ForeignKey(TipoSeguro, null=True)
-    def __unicode__(self):
-        return "Cobertura: " + self.nombreCobertura + " pertenece a Seguro: " + self.seguro
-
-class CoberturasRequeridas(models.Model):
-    comparativa = models.ForeignKey(Comparativa, null=True)
-    cobertura = models.ForeignKey(Cobertura, null=True)
-    def __unicode__(self):
-        return "Cobertura " + self.cobertura + " requerida en Comparativa " + self.comparativa
-
+"""
 class CoberturasUtilizadas(models.Model):
     poliza = models.ForeignKey(Poliza, null=True)
     cobertura = models.ForeignKey(Cobertura, null=True)
-    def __unicode__(self):
+    def __str__(self):
         return "Cobertura " + self.cobertura + " utilizada en Poliza " + self.poliza
+"""
 
 class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
@@ -238,7 +264,8 @@ class OrdenServicio(models.Model):
     cliente = models.ForeignKey(Cliente, null=True)
     agente = models.ForeignKey(Agente, null=True)
     tipoSeguro = models.ForeignKey(TipoSeguro, null=True)
-    comparativa = models.ForeignKey(Comparativa, null=True)
-    poliza = models.ForeignKey(Poliza, null=True)
-    def __unicode__ (self):
+    ### foreign key is under Comparativa
+    # comparativa = models.OneToOneField(Comparativa, null=True)
+    poliza = models.OneToOneField(Poliza, null=True)
+    def __str__ (self):
         return "Orden de Servicio: " + self.idServicio + " Cliente: " + self.cliente + " Agente: " + self.agente;

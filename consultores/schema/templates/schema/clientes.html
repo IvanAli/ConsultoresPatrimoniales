@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block head_title %}Clientes{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+
+{% endblock %}
+{% block head_javascript %}
+
+
+{% endblock %}
+
+
+{% block body_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Clientes</h3>
+                    <div class="pull-right">
+                    <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
+                        <a href="nuevo_cliente.html" class="btn btn-default btn-sm btn-new-pos">Nuevo cliente</a>
+                    </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <!-- start panel body -->
+                    <table class="table table-hover" id="clientesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cliente in clientesFisicos.all %}
+                                <tr id="cliente{{ forloop.counter }}">
+                                    <td>
+                                        {{ cliente.pk }}
+                                    </td>
+                                    <td>
+                                        {{ cliente.nombre }}
+                                    </td>
+                                    <td>
+                                        {{ cliente.apellidoPaterno }}
+                                    </td>
+                                    <td>
+                                        {{ cliente.apellidoMaterno }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- end panel body -->
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#clientesTable').DataTable();
+} );
+</script>
+{% endblock %}
+
+<!-- load the js file -->
+<script language="javascript" src="js/script_clientes.js"></script>
+</html>
