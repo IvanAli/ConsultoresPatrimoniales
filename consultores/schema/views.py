@@ -73,3 +73,7 @@ def comparativasView(request):
 def polizasView(request):
     context = {'ordenes': request.user.agente.ordenservicio_set}
     return render(request, 'schema/polizas.html', context)
+
+def infoClienteView(request, idCliente):
+    context = {'cliente': Cliente.objects.get(pk=idCliente)}
+    return render(request, 'schema/infocliente.html', context)
