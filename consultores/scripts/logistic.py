@@ -1,4 +1,4 @@
-from schema.models import Agente, Cliente, ClienteFisico, OrdenServicio, TipoSeguro, Aseguradora, DatoTipoSeguro, Cobertura, DatoCobertura
+from schema.models import Agente, Cliente, ClienteFisico, OrdenServicio, TipoSeguro, Aseguradora, DatoTipoSeguro, Cobertura, Comparativa, DatoCobertura
 from django.contrib.auth.models import User
 
 # whole logistic
@@ -91,11 +91,18 @@ def create_tipo_seguro_aseguradora_datos():
     # add to the set of the tipo seguro
     tipoSeguro.cobertura_set.add(c)
 
+    # spanglish rules
+
 
 def create_orden_servicio():
     orden = OrdenServicio(cliente=Cliente.objects.order_by('-pk')[0],
     agente=Agente.objects.order_by('-pk')[0], tipoSeguro=TipoSeguro.objects.order_by('-pk')[0])
     orden.save()
+
+def create_comparativa():
+    comparativa = Comparativa(ordenServicio=OrdenServicio.objects.get(agente__userAgente__username='ivanalejandro',
+    cliente__nombre='Ivan Alejandro'))
+    comparativa.save()
 
 def delete_all():
     User.objects.all().delete()
@@ -107,6 +114,7 @@ def delete_all():
     DatoCobertura.objects.all().delete()
     OrdenServicio.objects.all().delete()
     Aseguradora.objects.all().delete()
+    Comparativa.objects.all().delete()
 
 def run():
     delete_all()
@@ -114,3 +122,4 @@ def run():
     create_cliente()
     create_tipo_seguro_aseguradora_datos()
     create_orden_servicio()
+    create_comparativa()

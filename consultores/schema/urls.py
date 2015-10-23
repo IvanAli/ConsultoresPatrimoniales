@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^authentication$', views.loginAuthentication, name='loginAuthentication'),
     url(r'^home/$', views.home, name='home'),
     url(r'^clientes/$', views.clientesView, name='clientes'),
+    url(r'^comparativas/$', views.comparativasView, name='comparativas'),
 ]

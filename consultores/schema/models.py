@@ -165,12 +165,12 @@ class Cobertura(models.Model):
 
 class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
-    numeroCotizaciones = models.PositiveIntegerField(null=True)
+    # numeroCotizaciones = models.PositiveIntegerField(default=0, null=True)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True, null=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
     fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
 
-    ordenServicio = models.ForeignKey('OrdenServicio', null=True)
+    ordenServicio = models.OneToOneField('OrdenServicio', null=True)
     # cliente = models.ForeignKey(Cliente, null=True)
     # agente = models.ForeignKey(Agente, null=True)
 
@@ -268,4 +268,4 @@ class OrdenServicio(models.Model):
     # comparativa = models.OneToOneField(Comparativa, null=True)
     poliza = models.OneToOneField(Poliza, null=True)
     def __str__ (self):
-        return "Orden de Servicio: " + self.idServicio + " Cliente: " + self.cliente + " Agente: " + self.agente;
+        return "Orden de Servicio: " + str(self.idServicio)
