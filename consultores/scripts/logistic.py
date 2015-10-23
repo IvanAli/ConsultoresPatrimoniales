@@ -1,5 +1,7 @@
-from schema.models import Agente, Cliente, ClienteFisico, OrdenServicio, TipoSeguro, Aseguradora, DatoTipoSeguro, Cobertura, Comparativa, DatoCobertura
+from schema.models import Agente, Cliente, ClienteFisico, OrdenServicio, TipoSeguro, Aseguradora, DatoTipoSeguro, Cobertura, Comparativa, DatoCobertura, Poliza
 from django.contrib.auth.models import User
+from django.utils import timezone
+import datetime
 
 # whole logistic
 
@@ -104,6 +106,12 @@ def create_comparativa():
     cliente__nombre='Ivan Alejandro'))
     comparativa.save()
 
+def create_poliza():
+    poliza = Poliza(primaNeta=987, ordenServicio=OrdenServicio.objects.get(agente__userAgente__username='ivanalejandro',
+    cliente__nombre='Ivan Alejandro'), fechaFin=timezone.now() + datetime.timedelta(days=30), endosoBeneficiario="no se que va aqui")
+
+    poliza.save()
+
 def delete_all():
     User.objects.all().delete()
     Agente.objects.all().delete()
@@ -115,6 +123,7 @@ def delete_all():
     OrdenServicio.objects.all().delete()
     Aseguradora.objects.all().delete()
     Comparativa.objects.all().delete()
+    Poliza.objects.all().delete()
 
 def run():
     delete_all()
@@ -123,3 +132,4 @@ def run():
     create_tipo_seguro_aseguradora_datos()
     create_orden_servicio()
     create_comparativa()
+    create_poliza()

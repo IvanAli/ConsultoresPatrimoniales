@@ -214,6 +214,7 @@ class Poliza(models.Model):
     comision = models.OneToOneField(Comision, null=True)
     # aseguradora = models.ForeignKey(Aseguradora, null=True)
     cotizacion = models.OneToOneField(Cotizacion, null=True)
+    ordenServicio = models.OneToOneField('OrdenServicio', null=True)
     def __str__(self):
         return "Póliza: " + self.idPoliza + "Cliente: " + self.cliente + "Agente: " + self.agente
 
@@ -266,6 +267,6 @@ class OrdenServicio(models.Model):
     tipoSeguro = models.ForeignKey(TipoSeguro, null=True)
     ### foreign key is under Comparativa
     # comparativa = models.OneToOneField(Comparativa, null=True)
-    poliza = models.OneToOneField(Poliza, null=True)
+    # poliza = models.OneToOneField(Poliza, null=True)
     def __str__ (self):
         return "Orden de Servicio: " + str(self.idServicio)
