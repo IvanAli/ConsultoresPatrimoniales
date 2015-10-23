@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consultores Patrimoniales</title>
+
+    <!-- css styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles_clienteinfo.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <!-- navigation bar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="images/logo/logo.png" class="logo-size">
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li class="active"><a href="clientes.html">Clientes<span class="sr-only">(current)</span></a></li>
+                    <li><a href="comparativas.html">Comparativas</a></li>
+                    <li><a href="polizas.html">Pólizas</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="login.html"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Salir</a></li>
+            </div>
+        </div>
+    </nav>
+    <!-- end navigation bar -->
+
+    <div class="container">
+        <div class="col-md-8">
+            <ul class="nav nav-tabs">
+                <li class="active"><a aria-expanded="true" href="#polizas" data-toggle="tab">Pólizas</a></li>
+                <li class=""><a aria-expanded="false" href="#profile" data-toggle="tab">Comparativas</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="polizas">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Pólizas</h3>
+                            <div class="btn-new-pos">
+                                <a href="#" class="btn btn-default btn-sm btn-new-pos">Nueva póliza</a>
+                            </div>
+
+                        </div>
+
+                        <table class="table table-hover" id="dev-table">
+                            <thead>
+                                <tr>
+                                    <th># póliza</th>
+                                    <th>Tipo de seguro</th>
+                                    <th>Forma de pago</th>
+                                    <th>Pagos realizados</th>
+                                    <th>Fecha de expedición</th>
+                                    <th>Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>12345</td>
+                                    <td>Seguro de gastos médicos</td>
+                                    <td>Trimestral</td>
+                                    <td>2/4</td>
+                                    <td>2015/02/09</td>
+                                    <td>2015/09/20</td>
+                                </tr>
+                                <tr>
+                                    <td>23465</td>
+                                    <td>Seguro de autos</td>
+                                    <td>Trimestral</td>
+                                    <td>3/4</td>
+                                    <td>2015/02/09</td>
+                                    <td>2015/09/20</td>
+                                </tr>
+                                <tr>
+                                    <td>111</td>
+                                    <td>Seguro de vida</td>
+                                    <td>Semestral</td>
+                                    <td>1/2</td>
+                                    <td>2015/02/09</td>
+                                    <td>2015/09/20</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="profile">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Comparativas</h3>
+                            <div class="btn-new-pos">
+                                <a href="#" class="btn btn-default btn-sm btn-new-pos">Nueva comparativa</a>
+                            </div>
+
+                        </div>
+
+                        <table class="table table-hover" id="dev-table">
+                            <thead>
+                                <tr >
+                                    <th># Comparativa</th>
+                                    <th class="n-cotizacion">Tipo de comparativa</th>
+                                    <th class="n-cotizacion">Número de cotizaciones</th>
+                                    <th>Fecha de expedición</th>
+                                    <th>Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>12345</td>
+                                    <td>Seguro de gastos médicos</td>
+                                    <td class="n-cotizacion">5</td>
+                                    <td>2015/02/09</td>
+                                    <td>2015/09/20</td>
+                                </tr>
+                                <tr>
+                                    <td>23465</td>
+                                    <td>Seguro de autos</td>
+                                    <td class="n-cotizacion">3</td>
+                                    <td>2015/02/09</td>
+                                    <td>2015/09/20</td>
+                                </tr>
+                                <tr>
+                                    <td>111</td>
+                                    <td>Seguro de vida</td>
+                                    <td class="n-cotizacion">5</td>
+                                    <td>2015/02/09</td>
+                                    <td>2015/09/20</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Info del cliente</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>Ivan Alejandro Soto Velazquez</p>
+                        <p>Calle #123 Col. Colonia</p>
+                        <p>C.P. 12345</p>
+                        <p>Queretaro, Queretaro</p>
+                        <p>Telefono</p>
+                        <p>Email</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- load the js file -->
+<script language="javascript" src="js/script_clientes.js"></script>
+
+</html>

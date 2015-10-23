@@ -1,0 +1,5 @@
+Comando para correr los tests funcionales en test_all_users.py:
+
+Desde consultores/
+
+python3 manage.py test schema.functional_tests.test_all_users

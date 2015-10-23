@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consultores Patrimoniales</title>
+
+    <!-- css styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles_comparativas.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <!-- navigation bar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <img src="images/logo/logo.png" class="logo-size">
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li class="active"><a href="#">Clientes<span class="sr-only">(current)</span></a></li>
+                    <li><a href="comparativas.html">Comparativas</a></li>
+                    <li><a href="polizas.html">Pólizas</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="login.html"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Salir</a></li>
+            </div>
+        </div>
+    </nav>
+    <!-- end navigation bar -->
+
+    <div class="container">
+        <div class="col-md-12" >
+            <form class="form-horizontal">
+            <fieldset>
+            <legend>Nuevo cliente </legend>
+        <div class="row">
+                <div class="form-group1">
+                <label for="inputName" class="col-md-1 control-label">Nombre </label>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Nombre ">
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Apellido Paterno</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Apellido Paterno">
+                    </div>
+                </div>
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Apellido Materno</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Apellido Materno">
+                    </div>
+                </div>
+            </div>
+        <div class="row">
+            <div class="form-group1">
+                <label for="inputEmail" class="col-md-1 control-label" >Email</label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Télefono</label>
+                <div class="col-md-4">
+                 <input type="text" class="form-control" id="inputEmail" placeholder="télefono">
+                </div>
+            </div>
+        </div>
+         <div class="row">
+            <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Fecha de nacimiento</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Fecha de nacimiento">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <legend>Dirección </legend>
+            <div class="row">
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-1 control-label">País</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="País">
+                    </div>
+                </div>
+                <div class="form-group1">
+                <label for="inputTel" class="col-md-1 control-label">Estado</label>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Estado">
+                    </div>
+                </div>
+                 <div class="form-group1">
+                <label for="inputTel" class="col-md-1 control-label">Municipio</label>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Municipio">
+                    </div>
+                </div>
+            </div>
+        <div class="row">
+            <div class="form-group1">
+                <label for="inputEmail" class="col-md-1 control-label" >Colonia</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Colonia">
+                </div>
+            </div>
+            <div class="form-group1">
+                <label for="inputTel" class="col-md-2 control-label">Calle</label>
+                <div class="col-md-4">
+                 <input type="text" class="form-control" id="inputEmail" placeholder="Calle">
+                </div>
+            </div>
+        </div>
+       <div class="row">
+    <div class="form-group1">
+      <div class="col-md-6">
+        <button type="reset" class="btn btn-default">Cancel</button>
+    <form>
+<INPUT TYPE="button" onClick="parent.location='clientes.html'" class="btn btn-primary" value="submit">
+</form>
+      </div>
+    </div>
+</div>
+    </fieldset>
+    </form>
+    </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block head_title %}Consultores Patrimoniales{% endblock %}
+
+{% block home_tag %}class="active"{% endblock %}
+{% block body_content %}
+<!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
+<div class="container">
+        <div class="col-md-8">
+            <div class="well">
+                <h5>Bienvenido,
+                    {{ agente.userAgente.username }}
+                </h5>
+            </div>
+            <div id="agent_info">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Información</h3>
+                    </div>
+                    <div class="panel-body panel-body-agent">
+                        <p>
+                            <strong>Pólizas activas</strong>: -1
+                        </p>
+                        <p>
+                            <strong>Comparativas pendientes</strong>: -1
+                        </p>
+                        <p>
+                            <strong>Cliente más reciente</strong>: -----
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Clientes asegurados</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                -----
+                            </p>
+                            <p>
+                                -----
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Cotizaciones por confirmar</h3>
+                        </div>
+                        <div class="panel-body">
+                            <a href="#"><p>
+                                ID -1
+                            </p></a>
+                            <a href="#"><p>
+                                ID -1
+                            </p></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Comparativas sin terminar</h3>
+                        </div>
+                        <div class="panel-body">
+                            <a href="#"><p>
+                                ID 593 - Seguro de autos (3/?)
+                            </p></a>
+                            <a href="#"><p>
+                                ID 533 - Seguro de vida (6/7)
+                            </p></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Comisiones por cobrar</h3>
+                        </div>
+                        <div class="panel-body">
+                            <a href="#"><p>
+                                Póliza #-1
+                            </p></a>
+                            <a href="#"><p>
+                                Póliza #-1
+                            </p></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div id="deadline">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Vencimientos próximos</h3>
+                    </div>
+                    <div class="panel-body panel-body-deadline">
+                        <a href="#"><p>
+                            <strong>ID -1</strong>: 2015/09/18
+                        </p></a>
+                        <a href="#"><p>
+                            <strong>ID -1</strong>: 2015/09/18
+                        </p></a>
+                        <a href="#"><p>
+                            <strong>ID -1</strong>: 2015/09/18
+                        </p></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
