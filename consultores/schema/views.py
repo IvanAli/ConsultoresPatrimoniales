@@ -65,3 +65,7 @@ def home(request):
 def clientesView(request):
     context = {'clientesFisicos': request.user.agente.clientes}
     return render(request, 'schema/clientes.html', context)
+
+def comparativasView(request):
+    context = {'ordenes': request.user.agente.ordenservicio_set}
+    return render(request, 'schema/comparativas.html', context)
