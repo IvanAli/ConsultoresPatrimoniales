@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^clientes/(?P<idCliente>[0-9]+)/$', views.infoClienteView, name='infoClientes'),
     url(r'^comparativas/$', views.comparativasView, name='comparativas'),
     url(r'^polizas/$', views.polizasView, name='polizas'),
+    url(r'^nuevoCliente/$', views.nuevoCliente, name='nuevoCliente'),
+    url(r'^authenticationC$', views.nuevoClienteAuthentication, name='nuevoClienteAuthentication'),
 ]

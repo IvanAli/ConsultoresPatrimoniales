@@ -77,3 +77,17 @@ def polizasView(request):
 def infoClienteView(request, idCliente):
     context = {'cliente': Cliente.objects.get(pk=idCliente)}
     return render(request, 'schema/infocliente.html', context)
+
+def nuevoCliente(request):
+    context = {'cliente': request.user.agente.cliente_set}
+    return render(request, "schema/nuevoCliente.html", context)
+
+def nuevoClienteAuthentication(request):
+    if request.method == "POST":
+        datos_form = forms.nuevoClienteForm(request.POST)
+        if datos_form.is_valid():
+            datos_form.save()
+            return HttpResponseRedirect(reverse('schema:login'))
+        else:
+            context = {'error_missingfields': "Campos sin llenar"}
+            return render(request, 'schema/nuevoCliente.html', context)

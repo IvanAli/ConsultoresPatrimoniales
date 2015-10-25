@@ -17,18 +17,18 @@ class Persona(models.Model):
     # nombre = models.CharField(max_length=40, null=True, blank=False)
     # apellidoPaterno = models.CharField(max_length=30, null=True)
     # apellidoMaterno = models.CharField(max_length=30, null=True)
-    email = models.EmailField(max_length=254, null=True, blank=True)
-    edad = models.PositiveSmallIntegerField(null=True)
+    email = models.EmailField(max_length=254, null=True, blank=False)
+    edad = models.PositiveSmallIntegerField(null=True, blank=True)
     SEXO_OPCIONES = (
         (None, '-'),
         ('M', 'Mujer'),
         ('H', 'Hombre'),
         ('O', 'Otro'),
         )
-    sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES, default='M')
-    rfc = models.CharField(max_length=13, null=True)
-    telefonoLada = models.CharField(max_length=3, null=True)
-    telefono = models.CharField(max_length=7, null=True)
+    sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES, default=None, blank=True)
+    rfc = models.CharField(max_length=13, null=True, blank=True)
+    telefonoLada = models.CharField(max_length=3, null=True, blank=False)
+    telefono = models.CharField(max_length=7, null=True, blank=False)
     calle = models.CharField(max_length=50, blank=True, null=True)
     numeroExt = models.PositiveSmallIntegerField(blank=True, null=True)
     numeroInt = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -41,8 +41,8 @@ class Persona(models.Model):
 
 class Cliente(Persona):
     nombre = models.CharField(max_length=40, null=True, blank=False)
-    apellidoPaterno = models.CharField(max_length=30, null=True)
-    apellidoMaterno = models.CharField(max_length=30, null=True)
+    apellidoPaterno = models.CharField(max_length=30, null=True, blank=True)
+    apellidoMaterno = models.CharField(max_length=30, null=True, blank=True)
     linkRegistroRFC = models.URLField(null=True)
     linkComprobanteDomicilio = models.URLField(null=True)
     calleFact = models.CharField(max_length=50, null=True)
