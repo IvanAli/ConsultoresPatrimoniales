@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block head_title %}Consultores Patrimoniales{% endblock %}
+
+{% block head_css %}
+<link rel="stylesheet" type="text/css" href="/static/css/custom/styles_nueva_comparativa.css"/>
+{% endblock %}
+
+{% block head_javascript %}
+<!-- JS here -->
+{% endblock %}
+
+{% block comparativas_tag %}class="active"{% endblock %}
+
+{% block body_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Nueva Comparativa</h3>
+                </div>
+                <div class="panel-body">
+                    <!-- start panel body -->
+                    <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                        <div class="form-group">
+                            <label for="select" class="col-lg-2 control-label">Tipo de Seguro</label>
+                            <div class="col-lg-10">
+                            <!-- select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro($('#select').val())"> -->
+
+                                <select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro(value)">
+                                    <option selected value="none">Selecciona un tipo</option>
+                                    {% for tipo in seguros.all %}
+                                    <option value="{{ tipo.idTipoSeguro}}">{{ tipo.get_idTipoSeguro_display }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                        <div id="forma"></div>
+                        <div id="none"></div>
+                        <div id="AP">{{ APform }}</div>
+                        <div id="C">C datos</div>
+                        <div id="R">R datos</div>
+                        <!-- Poner todos los otros id con su respectiva forma -->
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-0">
+                                <button type="submit" class="btn btn-primary">Crear comparativa</button>
+                                <button type="reset" class="btn btn-danger">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- end panel body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+<script src="/static/js/custom/nueva_comparativa.js"></script>
+{% endblock %}

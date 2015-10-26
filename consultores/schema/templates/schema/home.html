@@ -8,7 +8,7 @@
         <div class="col-md-8">
             <div class="well">
                 <h5>Bienvenido,
-                    {{ agente.userAgente.username }}
+                    {{ request.user.first_name }} {{ request.user.last_name }}
                 </h5>
             </div>
             <div id="agent_info">

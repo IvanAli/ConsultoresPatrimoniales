@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . import forms
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -77,3 +77,28 @@ def polizasView(request):
 def infoClienteView(request, idCliente):
     context = {'cliente': Cliente.objects.get(pk=idCliente)}
     return render(request, 'schema/infocliente.html', context)
+
+def preNuevaComparativaView(request):
+    context = {'clientes': request.user.agente.clientes}
+    return render(request, 'schema/preNuevaComparativa.html', context)
+
+def nuevaComparativaView(request, idCliente):
+    APform = forms.SeguroAPForm()
+    context = {
+        'cliente': request.user.agente.clientes.get(pk=idCliente),
+        'seguros': TipoSeguro.objects,
+        'APform': APform}
+    return render(request, 'schema/nuevaComparativa.html', context)
+
+def nuevaComparativaAuthView(request, idCliente):
+    if request.method == "POST":
+        nuevaComparativaForm = forms.SeguroAPForm(request.POST)
+        if nuevaComparativaForm.is_valid():
+            nuevaComparativaForm.save()
+            return HttpResponseRedirect('http://www.google.com/')
+            # request.user.agente.ordenservicio_set.get(cliente__idCliente=idCliente).comparativa = nuevaComparativaForm
+        else:
+            return HttpResponse('Error de datos')
+        
+
+    return HttpResponse('Autenticando nueva Comparativa...')
