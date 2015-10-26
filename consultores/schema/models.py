@@ -25,7 +25,7 @@ class Persona(models.Model):
         ('H', 'Hombre'),
         ('O', 'Otro'),
         )
-    sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES, default=None, blank=True)
+    sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES)
     rfc = models.CharField(max_length=13, null=True, blank=True)
     telefonoLada = models.CharField(max_length=3, null=True, blank=False)
     telefono = models.CharField(max_length=7, null=True, blank=False)
