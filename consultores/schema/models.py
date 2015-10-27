@@ -45,7 +45,7 @@ class Cliente(Persona):
     apellidoPaterno = models.CharField(max_length=30)
     apellidoMaterno = models.CharField(max_length=30)
     # Tal vez los siguientes campos deban ser obligatorios para cuando se ingresen
-	linkRegistroRFC = models.URLField(blank=True, null=True)
+    linkRegistroRFC = models.URLField(blank=True, null=True)
     linkComprobanteDomicilio = models.URLField(blank=True, null=True)
     calleFact = models.CharField(max_length=50, blank=True)
     numeroExtFact = models.PositiveSmallIntegerField(blank=True, null=True)
