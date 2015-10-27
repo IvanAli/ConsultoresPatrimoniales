@@ -99,6 +99,18 @@ def nuevaComparativaAuthView(request, idCliente):
             # request.user.agente.ordenservicio_set.get(cliente__idCliente=idCliente).comparativa = nuevaComparativaForm
         else:
             return HttpResponse('Error de datos')
-        
-
     return HttpResponse('Autenticando nueva Comparativa...')
+
+def nuevoCliente(request):
+    context = {'cliente': request.user.agente.cliente_set}
+    return render(request, "schema/nuevoCliente.html", context)
+
+def nuevoClienteAuthentication(request):
+    if request.method == "POST":
+        datos_form = forms.nuevoClienteForm(request.POST)
+        if datos_form.is_valid():
+            datos_form.save()
+            return HttpResponseRedirect(reverse('schema:login'))
+        else:
+            context = {'error_missingfields': "Campos sin llenar"}
+            return render(request, 'schema/nuevoCliente.html', context)

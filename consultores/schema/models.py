@@ -44,6 +44,7 @@ class Cliente(Persona):
     nombre = models.CharField(max_length=40)
     apellidoPaterno = models.CharField(max_length=30)
     apellidoMaterno = models.CharField(max_length=30)
+    # Tal vez los siguientes campos deban ser obligatorios para cuando se ingresen
     linkRegistroRFC = models.URLField(blank=True, null=True)
     linkComprobanteDomicilio = models.URLField(blank=True, null=True)
     calleFact = models.CharField(max_length=50, blank=True)
@@ -107,16 +108,7 @@ class Aseguradora(models.Model):
     def __str__(self):
         return "Aseguradora: " + self.nombre
 
-### DEPRECATED
-# class DatoTipoSeguro(models.Model):
-#     llave = models.CharField(max_length=40, primary_key=True)
-#     valor = models.CharField(max_length=80)
-#     class Meta:
-#         unique_together = ("llave", "valor")
-#     def __str__(self):
-#         return self.llave + ": " + self.valor
-
-### SOMETHING IS WRONG HERE
+# NECESARIO CHECAR .ptr Y COBERTURAS DE CADA SEGURO
 class TipoSeguro(models.Model):
     SEGUROS_OPCIONES = (
         ('AP', 'Automoviles y pickups'),
@@ -132,15 +124,9 @@ class TipoSeguro(models.Model):
         ('ESP', 'Especializados'),
     )
     idTipoSeguro = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, primary_key=True)
-    # aseguradora = models.ForeignKey('Aseguradora', null=True)
-    # # NECESARIO CHECAR ESTO
 
-    # class Meta:
-    #     # SERÁ CIERTO? abstract = True
-    #     unique_together = ("idTipoSeguro", "aseguradora")
-
-    # def __str__(self):
-    #     return "Seguro: " + self.idTipoSeguro
+    def __str__(self):
+    	return "Seguro: " + self.idTipoSeguro
 
 class SegurosOfertados(models.Model):
     aseguradora = models.ForeignKey('Aseguradora')
@@ -178,7 +164,6 @@ class SegurosOfertados(models.Model):
 #     def __str__(self):
 #         return "Cobertura: " + self.nombreCobertura
 
-
 class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
@@ -193,6 +178,7 @@ class Comparativa(models.Model):
     def __str__(self):
         return "Comparativa: " + self.idComparativa + " Cliente: " + self.cliente + " Agente: " + self.agente
 
+### HACE FALTA RESOLVER LO DE COBERTURAS
 class Cotizacion(models.Model):
     idCotizacion = models.AutoField(primary_key=True)
     costo = models.DecimalField(max_digits=11, decimal_places=2)
@@ -205,7 +191,6 @@ class Cotizacion(models.Model):
     formaPago = models.IntegerField(choices=FORMA_PAGO_OPCIONES, default=12)
     comparativa = models.ForeignKey('Comparativa')
     aseguradora = models.ForeignKey('Aseguradora')
-    ### Hace falta poner aquí las coberturas que se ofrecen
     def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa
 
@@ -215,7 +200,7 @@ class Poliza(models.Model):
     fechaEmision = models.DateTimeField('fecha emitida')
     fechaInicio = models.DateTimeField('fecha de inicio')
     fechaFin = models.DateTimeField('fecha de fin')
-    endosoBeneficiario = models.CharField(max_length=50, blank=True)
+    endosoBeneficiario = models.CharField(max_length=100, blank=True)
     linkCaratulaPDF = models.URLField(max_length=200)
     # cliente = models.ForeignKey(Cliente, null=True)
     # agente = models.ForeignKey(Agente, null=True)
@@ -300,6 +285,7 @@ class SeguroAP(TipoSeguro):
     def __str__(self):
         return "SeguroAP" + self.idSeguro
 
+# NECESARIO RESOLVER ASUNTO DE COBERTURAS
 class CoberturaAP(models.Model):
     idCobertura = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=41)
@@ -310,7 +296,6 @@ class CoberturaAP(models.Model):
     ampliaUno = models.NullBooleanField(blank=True)
     limitado = models.NullBooleanField(blank=True)
     seguroAP = models.ForeignKey('SeguroAP')
-    ### Se deberá relacionar con alguna cotización?
 
     
  
