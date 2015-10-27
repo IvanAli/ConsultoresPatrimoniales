@@ -73,7 +73,6 @@ class Agente(Persona):
     claveAgente = models.IntegerField(blank=True, null=True)
     cuentaBancaria = models.CharField(max_length=34, blank=True)
     banco = models.CharField(max_length=30, blank=True)
-    # NECESARIO HACER RELACION AGENTE-CLIENTES INDEPENDIENTE
     clientes = models.ManyToManyField(Cliente, through='OrdenServicio')
 
     def save(self, *args, **kwargs):
@@ -168,7 +167,7 @@ class Comparativa(models.Model):
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
     fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
-
+    tipoSeguro = models.ForeignKey('TipoSeguro')
     # one to one relationship with OrdenServicio
     ordenServicio = models.OneToOneField('OrdenServicio')
     # cliente = models.ForeignKey(Cliente, null=True)
@@ -263,7 +262,7 @@ class OrdenServicio(models.Model):
     fechaConclusion = models.DateTimeField(blank=True, null=True)
     cliente = models.ForeignKey('Cliente')
     agente = models.ForeignKey('Agente')
-    tipoSeguro = models.ForeignKey('TipoSeguro')
+
     ### foreign key is under Comparativa
     # comparativa = models.OneToOneField(Comparativa, null=True)
     # poliza = models.OneToOneField(Poliza, null=True)
@@ -296,8 +295,8 @@ class CoberturaAP(models.Model):
     limitado = models.NullBooleanField(blank=True)
     seguroAP = models.ForeignKey('SeguroAP')
 
-    
- 
+
+
 # class SeguroC(models.Model)
 # class CoberturaC(models.Model)
 # class SeguroR(models.Model)

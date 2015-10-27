@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^nuevaComparativaAuth/(?P<idCliente>[0-9]+)/$', views.nuevaComparativaAuth, name='nuevaComparativaAuth'),
     url(r'^comparativas/$', views.comparativasView, name='comparativas'),
     url(r'^polizas/$', views.polizasView, name='polizas'),
+    url(r'^nuevoClienteAuth/$', views.nuevoClienteAuth, name='nuevoClienteAuthentication')
 ]

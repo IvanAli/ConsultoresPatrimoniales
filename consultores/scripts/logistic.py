@@ -54,7 +54,7 @@ def create_tipoSeguro():
 #     estadoCirculacion = models.CharField(max_length=19, blank=True, null=True))
 
 #     # save the datos
-    
+
 
 #     # create the tiposeguro
 #     tipoSeguro = TipoSeguro(idTipoSeguro='AP')
@@ -78,7 +78,7 @@ def create_tipoSeguro():
 #     # create the cobertura
 #     c = Cobertura(nombreCobertura='Danos materiales')
 
-    
+
 
 #     # save the aseguradora
 #     aseguradora.save()
@@ -135,9 +135,9 @@ def delete_all():
 def run():
     delete_all()
     create_agente()
-    create_cliente()
+    # create_cliente()
     create_tipoSeguro()
-    create_orden_servicio()
+    # create_orden_servicio()
     #create_tipo_seguro_aseguradora_datos()
     #create_orden_servicio()
     #create_comparativa()

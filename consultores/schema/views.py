@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from . import forms
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro
-from django.http import HttpResponseRedirect
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -62,15 +62,17 @@ def home(request):
         print("NOT AN AGENT")
 
 def nuevoClienteView(request):
-    context = {'cliente': request.user.agente.cliente_set}
+    context = {'cliente': request.user.agente.clientes}
     return render(request, "schema/nuevoCliente.html", context)
 
 def nuevoClienteAuth(request):
     if request.method == "POST":
         datos_form = forms.nuevoClienteForm(request.POST)
         if datos_form.is_valid():
-            datos_form.save()
-            return HttpResponseRedirect(reverse('schema:login'))
+            cliente = datos_form.save()
+            ordenServicio = OrdenServicio(cliente=cliente, agente=request.user.agente)
+            ordenServicio.save()
+            return HttpResponseRedirect(reverse('schema:clientes'))
         else:
             context = {'error_missingfields': "Campos sin llenar"}
             return render(request, 'schema/nuevoCliente.html', context)
