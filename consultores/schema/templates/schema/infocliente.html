@@ -85,9 +85,7 @@
                     <p>{{ telefonoLada }} {{ telefono }}</p>
                     <p>{{ cliente.calle }} #{{ cliente.numeroExt }}
                     {% if cliente.numeroInt %} Int. {{ cliente.numeroInt }}{% endif %}</p>
-                    <p>{{ cliente.ciudad }}</p>
-                    <p>{{ cliente.estado }}</p>
-                    <p>{{ cliente.codigoPostal }}</p>
+                    <p>{{ cliente.codigoPostal }} {{ cliente.ciudad }}, {{ cliente.estado }}</p>
                 </div>
             </div>
         </div>
