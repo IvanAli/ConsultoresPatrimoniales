@@ -40,7 +40,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for orden in ordenes.all %}
+                            {% for cliente in clientes.all %}
+                            {% for orden in cliente.ordenservicio_set.all %}
                                 <tr id="poliza{{ forloop.counter }}">
                                     <td>
                                         {{ orden.poliza.pk }}
@@ -63,6 +64,7 @@
                                         {{ orden.poliza.fechaFin|date }}
                                     </td>
                                 </tr>
+                            {% endfor %}
                             {% endfor %}
                         </tbody>
                     </table>

@@ -121,7 +121,8 @@ class TipoSeguro(models.Model):
         ('T', 'Transportes'),
         ('ESP', 'Especializados'),
     )
-    idTipoSeguro = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, primary_key=True)
+    # idTipoSeguro = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, primary_key=True)
+    idTipoSeguro = models.AutoField(primary_key=True)
 
     def __str__(self):
     	return "Seguro: " + self.idTipoSeguro
@@ -258,6 +259,7 @@ class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
     fechaServicio = models.DateTimeField('fecha de servicio', auto_now_add=True)
     fechaConclusion = models.DateTimeField(blank=True, null=True)
+    # agente = models.ForeignKey('Agente')
     cliente = models.ForeignKey('Cliente')
     comparativa = models.OneToOneField(Comparativa, null=True)
     # poliza = models.OneToOneField(Poliza, null=True)
@@ -266,14 +268,12 @@ class OrdenServicio(models.Model):
 
 class SeguroAP(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
-    idTipoSeguro = 'AP'
-    marca = models.CharField(max_length=30, blank=True, null=True)
+    marca = models.CharField(max_length=30, null=True, blank=True)
     modelo = models.CharField(max_length=30, blank=True, null=True)
     ano = models.PositiveSmallIntegerField(blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
     pasajeros = models.PositiveSmallIntegerField(blank=True, null=True)
     estadoCirculacion = models.CharField(max_length=19, blank=True, null=True)
-    ### Se deberá relacionar con alguna cotización?
 
     def __str__(self):
         return "SeguroAP" + self.idSeguro

@@ -39,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody class="rowlink" data-link="row">
-                            {% for cliente in clientesFisicos.all %}
+                            {% for cliente in clientes.all %}
                                 <tr id="cliente{{ forloop.counter }}">
                                     <td>
                                         <a href="{% url 'schema:infoCliente' cliente.pk %}">{{ cliente.pk }}</a>

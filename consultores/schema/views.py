@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . import forms
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -70,15 +70,14 @@ def nuevoClienteAuth(request):
         datos_form = forms.nuevoClienteForm(request.POST)
         if datos_form.is_valid():
             cliente = datos_form.save()
-            ordenServicio = OrdenServicio(cliente=cliente, agente=request.user.agente)
-            ordenServicio.save()
+            request.user.agente.clientes.add(cliente)
             return HttpResponseRedirect(reverse('schema:clientes'))
         else:
             context = {'error_missingfields': "Campos sin llenar"}
             return render(request, 'schema/nuevoCliente.html', context)
 
 def clientesView(request):
-    context = {'clientesFisicos': request.user.agente.clientes}
+    context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/clientes.html', context)
 
 def infoClienteView(request, idCliente):
@@ -99,20 +98,44 @@ def nuevaComparativaView(request, idCliente):
 
 def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
-        nuevaComparativaForm = forms.SeguroAPForm(request.POST)
-        if nuevaComparativaForm.is_valid():
-            nuevaComparativaForm.save()
-            return render (request, 'schema/home.html')
-            # request.user.agente.ordenservicio_set.get(cliente__idCliente=idCliente).comparativa = nuevaComparativaForm
-        else:
-            return HttpResponse('Error de datos')
+        """
+        tipoSeguro = request.POST['tipoSeguro']
+        if tipoSeguro == 'None':
+            return render(request, 'schema/nuevaComparativa.html', {})
+        if tipoSeguro == 'AP':
+        """
+        if request.POST['idTipoSeguro'] == 'None':
+            return HttpResponse('Tipo de seguro no seleccionado')
+        if request.POST['idTipoSeguro'] == 'AP':
+            seguroAPf = forms.SeguroAPForm(request.POST)
+            if seguroAPf.is_valid():
+                seguroComparativa = seguroAPf.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+                Comparativa.objects.order_by('-pk')[0].tipoSeguro_id = 'AP'
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                for err in nuevaComparativaForm.errors:
+                    print("error:")
+                    print(err)
+                return HttpResponse('Error de datos')
+        if request.POST['idTipoSeguro'] == 'C':
+            return HttpResponse('C')
+        if request.POST['idTipoSeguro'] == 'R':
+            return HttpResponse('R')
+        if request.POST['idTipoSeguro'] == 'G':
+            return HttpResponse('G')
+
+    # tmp
     return HttpResponse('Autenticando nueva Comparativa...')
 
 
 def comparativasView(request):
-    context = {'ordenes': request.user.agente.ordenservicio_set}
+    context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/comparativas.html', context)
 
 def polizasView(request):
-    context = {'ordenes': request.user.agente.ordenservicio_set}
+    context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/polizas.html', context)

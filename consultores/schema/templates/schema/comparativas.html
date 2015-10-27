@@ -31,16 +31,18 @@
                     <table class="table table-hover" id="comparativasTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th># Comparativa</th>
                                 <th>Cliente</th>
-                                <th>Tipo de Seguro</th>
+                                <!-- <th>Tipo de Seguro</th> -->
                                 <th>Número de cotizaciones</th>
                                 <th>Concluida</th>
                                 <th>Enviada</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for orden in ordenes.all %}
+                            {% for cliente in clientes.all %}
+                            {{ cliente.pk }}
+                            {% for orden in cliente.ordenservicio_set.all %}
                                 <tr id="comparativa{{ forloop.counter }}">
                                     <td>
                                         {{ orden.comparativa.pk }}
@@ -50,9 +52,9 @@
                                         {{ orden.cliente.apellidoPaterno }}
                                         {{ orden.cliente.apellidoMaterno }}
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         {{ orden.tipoSeguro.get_idTipoSeguro_display }}
-                                    </td>
+                                    </td> -->
                                     <td>
                                         {{ orden.comparativa.cotizacion_set.all.count }}
                                         <!-- numero de cotizaciones -->
@@ -72,6 +74,7 @@
                                         {% endif %}
                                     </td>
                                 </tr>
+                            {% endfor %}
                             {% endfor %}
                         </tbody>
                     </table>

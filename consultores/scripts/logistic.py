@@ -136,7 +136,7 @@ def run():
     delete_all()
     create_agente()
     # create_cliente()
-    create_tipoSeguro()
+    # create_tipoSeguro()
     # create_orden_servicio()
     #create_tipo_seguro_aseguradora_datos()
     #create_orden_servicio()
