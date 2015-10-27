@@ -14,7 +14,7 @@ from . import managers
     PS: Me gusta codear en ingles
 """
 
-# helper functions
+# HELPER FUNCTIONS
 def getUser(username):
     try:
         user = User.objects.get(username=username)
@@ -25,8 +25,7 @@ def getUser(username):
 def isAgente(user):
     return user.groups.filter(name='agente').exists()
 
-# views
-
+# VIEWS
 def loginView(request):
     return render(request, "schema/login.html", {})
 
@@ -62,17 +61,23 @@ def home(request):
     else:
         print("NOT AN AGENT")
 
+def nuevoClienteView(request):
+    context = {'cliente': request.user.agente.cliente_set}
+    return render(request, "schema/nuevoCliente.html", context)
+
+def nuevoClienteAuth(request):
+    if request.method == "POST":
+        datos_form = forms.nuevoClienteForm(request.POST)
+        if datos_form.is_valid():
+            datos_form.save()
+            return HttpResponseRedirect(reverse('schema:login'))
+        else:
+            context = {'error_missingfields': "Campos sin llenar"}
+            return render(request, 'schema/nuevoCliente.html', context)
+
 def clientesView(request):
     context = {'clientesFisicos': request.user.agente.clientes}
     return render(request, 'schema/clientes.html', context)
-
-def comparativasView(request):
-    context = {'ordenes': request.user.agente.ordenservicio_set}
-    return render(request, 'schema/comparativas.html', context)
-
-def polizasView(request):
-    context = {'ordenes': request.user.agente.ordenservicio_set}
-    return render(request, 'schema/polizas.html', context)
 
 def infoClienteView(request, idCliente):
     context = {'cliente': Cliente.objects.get(pk=idCliente)}
@@ -90,27 +95,22 @@ def nuevaComparativaView(request, idCliente):
         'APform': APform}
     return render(request, 'schema/nuevaComparativa.html', context)
 
-def nuevaComparativaAuthView(request, idCliente):
+def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
         nuevaComparativaForm = forms.SeguroAPForm(request.POST)
         if nuevaComparativaForm.is_valid():
             nuevaComparativaForm.save()
-            return HttpResponseRedirect('http://www.google.com/')
+            return render (request, 'schema/home.html')
             # request.user.agente.ordenservicio_set.get(cliente__idCliente=idCliente).comparativa = nuevaComparativaForm
         else:
             return HttpResponse('Error de datos')
     return HttpResponse('Autenticando nueva Comparativa...')
 
-def nuevoCliente(request):
-    context = {'cliente': request.user.agente.cliente_set}
-    return render(request, "schema/nuevoCliente.html", context)
 
-def nuevoClienteAuthentication(request):
-    if request.method == "POST":
-        datos_form = forms.nuevoClienteForm(request.POST)
-        if datos_form.is_valid():
-            datos_form.save()
-            return HttpResponseRedirect(reverse('schema:login'))
-        else:
-            context = {'error_missingfields': "Campos sin llenar"}
-            return render(request, 'schema/nuevoCliente.html', context)
+def comparativasView(request):
+    context = {'ordenes': request.user.agente.ordenservicio_set}
+    return render(request, 'schema/comparativas.html', context)
+
+def polizasView(request):
+    context = {'ordenes': request.user.agente.ordenservicio_set}
+    return render(request, 'schema/polizas.html', context)

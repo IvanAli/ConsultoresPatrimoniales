@@ -73,8 +73,7 @@ class Agente(Persona):
     claveAgente = models.IntegerField(blank=True, null=True)
     cuentaBancaria = models.CharField(max_length=34, blank=True)
     banco = models.CharField(max_length=30, blank=True)
-
-    # many to many relationship with Cliente
+    # NECESARIO HACER RELACION AGENTE-CLIENTES INDEPENDIENTE
     clientes = models.ManyToManyField(Cliente, through='OrdenServicio')
 
     def save(self, *args, **kwargs):
