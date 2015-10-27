@@ -23,33 +23,67 @@
                 </div>
                 <div class="panel-body">
                     <!-- start panel body -->
-                    <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post" autocomplete="off">
                         <div class="form-group">
-                            <label for="select" class="col-lg-2 control-label">Tipo de Seguro</label>
-                            <div class="col-lg-10">
-                            <!-- select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro($('#select').val())"> -->
-
+                            <label for="select" class="col-md-2 control-label">Tipo de Seguro:</label>
+                            <div class="col-md-10">
                                 <select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro(value)">
-                                    <option selected value="none">Selecciona un tipo</option>
                                     {% for tipo in seguros.all %}
-                                    <option value="{{ tipo.idTipoSeguro}}">{{ tipo.get_idTipoSeguro_display }}</option>
+                                        <option value="{{ tipo.idTipoSeguro}}">{{ tipo.get_idTipoSeguro_display }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
-                        {% csrf_token %}
-                        <div id="forma"></div>
-                        <div id="none"></div>
-                        <div id="AP">{{ APform }}</div>
-                        <div id="C">C datos</div>
-                        <div id="R">R datos</div>
-                        <!-- Poner todos los otros id con su respectiva forma -->
-                        <div class="form-group">
-                            <div class="col-lg-10 col-lg-offset-0">
-                                <button type="submit" class="btn btn-primary">Crear comparativa</button>
-                                <button type="reset" class="btn btn-danger">Cancelar</button>
+                        <div class="row">
+                            {% csrf_token %}
+                            <div id="forma" class="col-md-offset-1"></div>
+                            {{ form.non_field_errors }}
+                            
+                            <div id="AP">
+                                <!--{{ APform }}-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="fieldWrapper">
+                                            {{ APform.estadoCirculacion.errors }}
+                                            <label for="{{ APform.estadoCirculacion.id_for_label }}">Estado de circulación:</label>
+                                            {{ APform.estadoCirculacion }}
+                                        </div>
+                                        <div class="fieldWrapper">
+                                            {{ APform.marca.errors }}
+                                            <label for="{{ APform.marca.id_for_label }}">Marca:</label>
+                                            {{ APform.marca }}
+                                        </div>
+                                        <div class="fieldWrapper">
+                                            {{ APform.modelo.errors }}
+                                            <label for="{{ APform.modelo.id_for_label }}">Modelo:</label>
+                                            {{ APform.modelo }}
+                                        </div>
+                                        <div class="fieldWrapper">
+                                            {{ APform.ano.errors }}
+                                            <label for="{{ APform.ano.id_for_label }}">Año:</label>
+                                            {{ APform.ano }}
+                                        </div>
+                                        <div class="fieldWrapper">
+                                            {{ APform.pasajeros.errors }}
+                                            <label for="{{ APform.pasajeros.id_for_label }}"># Pasajeros:</label>
+                                            {{ APform.pasajeros }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="fieldWrapper">
+                                            {{ APform.descripcion.errors }}
+                                            <label for="{{ APform.descripcion.id_for_label }}">Descripción:</label>
+                                            {{ APform.descripcion }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            
+                            <div id="C">C datos</div>
+                            <div id="R">R datos</div>
                         </div>
+                        <button type="submit" class="btn btn-primary">Crear comparativa</button>
+                        <button type="reset" class="btn btn-danger">Cancelar</button>
                     </form>
                     <!-- end panel body -->
                 </div>
