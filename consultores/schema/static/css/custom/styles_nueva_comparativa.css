@@ -1,11 +1,22 @@
+#None {
+
+}
+
 #AP{
-	visibility: hidden;
+	display: none;
+	/*visibility: hidden;*/
 }
 
 #C{
-	visibility: hidden;
+	display: none;
+	/*visibility: hidden;*/
 }
 
 #R{
-	visibility: hidden;
+	display: none;
+	/*visibility: hidden;*/
+}
+
+#G {
+	display: none;
 }

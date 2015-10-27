@@ -5,6 +5,9 @@ import datetime
 
 # whole logistic
 
+def create_seguroAP():
+    seguroAP = SeguroAP(idTipoSeguro='AP', marca)
+
 def create_agente():
     user = User.objects.create_user(username='ivanalejandro', password='ivan',
     email='ivanali@outlook.com', first_name='Ivan', last_name='Soto')
@@ -136,7 +139,7 @@ def run():
     delete_all()
     create_agente()
     # create_cliente()
-    # create_tipoSeguro()
+    create_tipoSeguro()
     # create_orden_servicio()
     #create_tipo_seguro_aseguradora_datos()
     #create_orden_servicio()

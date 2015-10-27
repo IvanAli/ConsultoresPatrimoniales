@@ -24,26 +24,28 @@
                 <div class="panel-body">
                     <!-- start panel body -->
                     <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
-                        <div class="form-group">
-                            <label for="select" class="col-lg-2 control-label">Tipo de Seguro</label>
-                            <div class="col-lg-10">
-                            <!-- select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro($('#select').val())"> -->
-
-                                <select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro(value)">
-                                    <option selected value="none">Selecciona un tipo</option>
-                                    {% for tipo in seguros.all %}
-                                    <option value="{{ tipo.idTipoSeguro}}">{{ tipo.get_idTipoSeguro_display }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
                         {% csrf_token %}
+                        <select class="form-control" name="idTipoSeguro" id="select" placeholder="Tipo de Seguro" onchange="checaSeguroV(value)">
+                            <option selected value="None">Selecciona un tipo</option>
+                            <option value="AP" name="idTipoSeguro">
+                                Automóviles y pickups
+                            </option>
+                            <option value="C" name="idTipoSeguro">
+                                Camiones
+                            </option>
+                            <option value="R" name="idTipoSeguro">
+                                Remolques, cajas secas y adaptaciones en general
+                            </option>
+                            <option value="G" name="idTipoSeguro">
+                                Gastos médicos mayores
+                            </option>
+                        </select>
                         <div id="forma"></div>
-                        <div id="none"></div>
-                        <div id="AP">{{ APform }}</div>
+                        <div id="None"></div>
+                        <div id="AP">{{ APform.as_p }}</div>
                         <div id="C">C datos</div>
                         <div id="R">R datos</div>
-                        <!-- Poner todos los otros id con su respectiva forma -->
+                        <div id="G">G datos</div>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-0">
                                 <button type="submit" class="btn btn-primary">Crear comparativa</button>
