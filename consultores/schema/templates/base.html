@@ -63,7 +63,7 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <li><a>{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
-                        <li><a href="login.html"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Salir</a></li>
+                        <li><a href="{% url 'schema:login' %}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Salir</a></li>
                 </div>
             </div>
         </nav>
