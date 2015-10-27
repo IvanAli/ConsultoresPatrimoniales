@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block head_title %}Nuevo Cliente{% endblock %}
+{% block head_css %}
+  
+    <link rel="stylesheet" href="../../static/css/custom/styles_nuevocliente.css">
+    <script type = "text/javascript" src = "../../static/js/custom/datosClientes.js"></script>
+  
+    <!-- <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css"> -->
+{% endblock %}
+
+
+{% block body_content %}
+<!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
+
+
+
+    <form action="{% url 'schema:nuevoClienteAuthentication' %}" method="post">
+        {% csrf_token %} 
+     <div class="container">   
+        <div class="col-md-12" >
+        	<div class="row">
+				<form>
+   	  			<fieldset>
+   	  				<h3 >Nuevo Cliente</h3></br>
+    				<div class="form-group">
+      					<label for="inputName" class="col-md-2 control-label">Nombre</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="nombre" placeholder="gerardo">
+      						</div>
+      					<label class="col-md-2 control-label">Sexo</label>
+      						<div class="col-md-4">
+          		  			<label>
+            					<input type="radio" name="sexo" id="optionsRadios1" value="M">
+            					Mujer
+          		 			 </label>
+          	  	  			<label>
+            					<input type="radio" name="sexo" id="optionsRadios2" value="H">
+            					Hombre
+          	  	  			</label>
+          	  	  			<label>
+            					<input type="radio" name="sexo" id="optionsRadios3" value="O">
+            					Otro
+          		 			 </label>
+      						</div>
+      				</div>	
+      		</div>	
+      		<div class="row">			
+    				<div class="form-group">
+      					<label for="inputApellidoP" class="col-md-2 control-label">Apellido Paterno</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="apellidoPaterno" placeholder="García">
+      						</div>
+      				
+      					<label for="inputApellidoM" class="col-md-2 control-label">Apellido Materno</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="apellidoMaterno" placeholder="Sánchez">
+      						</div>
+      				</div>		
+      		</div>
+      		<div class="row">			
+    				<div class="form-group">
+      					<label for="inputEmail" class="col-md-2 control-label">Edad</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="edad" placeholder="22">
+      						</div>
+      				
+      					<label for="inputTel" class="col-md-2 control-label">Email</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="email" placeholder="gerchez93@gmail.com">
+      						</div>
+      				</div>		
+      		</div>
+      		<div class="row">			
+    				<div class="form-group">
+      					<label for="inputEmail" class="col-md-2 control-label">Lada</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="telefonoLada" placeholder="(477)">
+      						</div>
+      				
+      					<label for="inputTel" class="col-md-2 control-label">Télefono</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="telefono" placeholder="7152032">
+      						</div>
+      				</div>		
+      		</div>
+      		<div class="row">			
+    				<div class="form-group">
+      					<label for="inputRFC" class="col-md-2 control-label">RFC</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="rfc" placeholder="GORM931202Z5C">
+      						</div>
+      				
+      				</div>		
+      		</div>
+      			<div class="row">			
+    				<div class="form-group">
+     	 					<div class="col-md-4">
+        						<legend>Dirección</legend>
+        					</div>	
+     	 					<div class="col-md-4">
+        						<input type= "button"   value="Dirección" class="nuevoClientemodal-submit" onclick="mostrar()">
+      						</div>
+      				</div>		
+      		</div>
+
+    		
+      		<div  id='direccion' class="row" style='display:none;'>	
+      		
+		
+    				<div class="form-group">
+      					<label for="inputEstado" class="col-md-2 control-label">Estado</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="estado" placeholder="Guanajuato">
+      						</div>
+      				
+      					<label for="inputCiudad" class="col-md-2 control-label">Ciudad</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="ciudad" placeholder="León">
+      						</div>
+      				</div>
+      				<div class="form-group">
+      					<label for="inputColonia" class="col-md-2 control-label">Colonia</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="colonia" placeholder="Jardines del Campestre">
+      						</div>
+      				
+      					<label for="inputCalle" class="col-md-2 control-label">Calle</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="calle" placeholder="Volcan">
+      						</div>
+      				</div>
+      				<div class="form-group">
+      					<label for="inputNumExt" class="col-md-2 control-label">Numero Exterior</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="numeroExt" placeholder="109">
+      						</div>
+      				
+      					<label for="inputNumInt" class="col-md-2 control-label">Numero Interior </label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="numeroInt" placeholder="E-19">
+      						</div>
+      				</div>
+      				<div class="form-group">
+      					<label for="inputCodigoP" class="col-md-2 control-label">Codigo Postal</label>
+     	 					<div class="col-md-4">
+        						<input type="text" class="form-control" name="codigoPostal" placeholder="37150">
+      						</div>
+      				</div>					
+      		</div>
+
+
+
+      	</br>	
+   	 		 		<div class="form-group">
+      					<div class="col-lg-10 col-lg-offset-2">
+        					<input type="reset" name ="cancelar" class="nuevoClientemodal-submit" value="Cancelar">
+        					<input type="submit" name="crear" class=" nuevoClientemodal-submit" value="Crear">
+      					</div>
+    				</div>
+    	
+     			</fieldset>
+				</form>
+			</div>
+		</div>
+	  </div>
+    </form>
+
+ 
+    {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
+    {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
+
+
+{% endblock %}
