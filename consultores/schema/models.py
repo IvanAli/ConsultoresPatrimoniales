@@ -73,7 +73,7 @@ class Agente(Persona):
     claveAgente = models.IntegerField(blank=True, null=True)
     cuentaBancaria = models.CharField(max_length=34, blank=True)
     banco = models.CharField(max_length=30, blank=True)
-    clientes = models.ManyToManyField(Cliente, through='OrdenServicio')
+    clientes = models.ManyToManyField(Cliente)
 
     def save(self, *args, **kwargs):
         try:
@@ -168,8 +168,6 @@ class Comparativa(models.Model):
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
     fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
     tipoSeguro = models.ForeignKey('TipoSeguro')
-    # one to one relationship with OrdenServicio
-    ordenServicio = models.OneToOneField('OrdenServicio')
     # cliente = models.ForeignKey(Cliente, null=True)
     # agente = models.ForeignKey(Agente, null=True)
 
@@ -261,10 +259,7 @@ class OrdenServicio(models.Model):
     fechaServicio = models.DateTimeField('fecha de servicio', auto_now_add=True)
     fechaConclusion = models.DateTimeField(blank=True, null=True)
     cliente = models.ForeignKey('Cliente')
-    agente = models.ForeignKey('Agente')
-
-    ### foreign key is under Comparativa
-    # comparativa = models.OneToOneField(Comparativa, null=True)
+    comparativa = models.OneToOneField(Comparativa, null=True)
     # poliza = models.OneToOneField(Poliza, null=True)
     def __str__ (self):
         return "Orden de Servicio: " + str(self.idServicio)
