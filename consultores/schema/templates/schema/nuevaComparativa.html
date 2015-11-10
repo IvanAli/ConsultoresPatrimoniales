@@ -27,9 +27,10 @@
                         <div class="form-group">
                             <label for="select" class="col-md-2 control-label">Tipo de Seguro:</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro(value)">
+                                <select class="form-control" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro(value)" name="idTipoSeguro">
+                                    <option value="NULL">Selecciona...</option>
                                     {% for tipo in seguros.all %}
-                                        <option value="{{ tipo.idTipoSeguro}}">{{ tipo.get_idTipoSeguro_display }}</option>
+                                        <option value="{{ tipo.tipo}}">{{ tipo.get_tipo_display }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -38,9 +39,9 @@
                             {% csrf_token %}
                             <div id="forma" class="col-md-offset-1"></div>
                             {{ form.non_field_errors }}
-                            
+                            <div id="NULL"></div>
                             <div id="AP">
-                                <!--{{ APform }}-->
+                                <!-- {{ APform }} -->
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="fieldWrapper">
@@ -77,14 +78,79 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
+                            <div id="C">
+                                <!--{{ Cform }}-->
+                                C datos
                             </div>
-                            
-                            <div id="C">C datos</div>
-                            <div id="R">R datos</div>
+                            <div id="R">
+                                <!--{{ Rform }}-->
+                                R datos
+                            </div>
+                            <div id="G">
+                                <!--{{ Gform }}-->
+                                G datos
+                            </div>
+                            <div id="V">
+                                <!--{{ Vform }}-->
+                                V datos
+                            </div>
+                            <div id="H">
+                                <!--{{ Hform }}-->
+                                H datos
+                            </div>
+                            <div id="I">
+                                <!--{{ Iform }}-->
+                                I datos
+                            </div>
+                            <div id="E">
+                                <!--{{ Eform }}-->
+                                E datos
+                            </div>
+                            <div id="EC">
+                                <!--{{ ECform }}-->
+                                EC datos
+                            </div>
+                            <div id="RT">
+                                <!--{{ RTform }}-->
+                                RT datos
+                            </div>
+                            <div id="ESP">
+                                <!--{{ ESPform }}-->
+                                ESP datos
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Crear comparativa</button>
                         <button type="reset" class="btn btn-danger">Cancelar</button>
                     </form>
+<!--
+                    <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                        <select class="form-control" name="idTipoSeguro" id="select" placeholder="Tipo de Seguro" onchange="checaSeguroV(value)">
+                            <option selected value="None">Selecciona un tipo</option>
+                            <option value="AP" name="idTipoSeguro">
+                                Automóviles y pickups
+                            </option>
+                            <option value="C" name="idTipoSeguro">
+                                Camiones
+                            </option>
+                            <option value="R" name="idTipoSeguro">
+                                Remolques, cajas secas y adaptaciones en general
+                            </option>
+                            <option value="G" name="idTipoSeguro">
+                                Gastos médicos mayores
+                            </option>
+                        </select>
+                        <div id="forma"></div>
+                        <div id="None"></div>
+                        <div id="AP">{{ APform.as_p }}</div>
+                        <div id="C">C datos</div>
+                        <div id="R">R datos</div>
+                        <div id="G">G datos</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear comparativa</button>
+                        <button type="reset" class="btn btn-danger">Cancelar</button>
+                    </form>
+-->
                     <!-- end panel body -->
                 </div>
             </div>

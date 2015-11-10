@@ -5,6 +5,9 @@ import datetime
 
 # whole logistic
 
+def create_seguroAP():
+    seguroAP = SeguroAP(idTipoSeguro='AP', marca)
+
 def create_agente():
     user = User.objects.create_user(username='ivanalejandro', password='ivan',
     email='ivanali@outlook.com', first_name='Ivan', last_name='Soto')
@@ -24,17 +27,14 @@ def create_cliente():
     cf1.save()
 
 def create_tipoSeguro():
-    seguroAP = TipoSeguro(tipo='AP')
+    seguroAP = TipoSeguro(idTipoSeguro='AP')
     seguroAP.save()
 
-    seguroC = TipoSeguro(tipo='C')
+    seguroC = TipoSeguro(idTipoSeguro='C')
     seguroC.save()
 
-    seguroR = TipoSeguro(tipo='R')
+    seguroR = TipoSeguro(idTipoSeguro='R')
     seguroR.save()
-
-    seguroG = TipoSeguro(tipo='G')
-    seguroG.save()
 # def create_tipo_seguro_aseguradora_datos():
 #     # create Tipo de Seguro
 #     seguroAP = TipoSeguro(idTipoSeguro='AP')

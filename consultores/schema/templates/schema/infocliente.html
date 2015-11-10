@@ -26,26 +26,16 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Cliente</th>
-                                <th>Tipo de Seguro</th>
                                 <th>Número de cotizaciones</th>
                                 <th>Concluida</th>
                                 <th>Enviada</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for orden in ordenes.all %}
+                            {% for orden in cliente.ordenservicio_set.all %}
                                 <tr id="comparativa{{ forloop.counter }}">
                                     <td>
                                         {{ orden.comparativa.pk }}
-                                    </td>
-                                    <td>
-                                        {{ orden.cliente.nombre }}
-                                        {{ orden.cliente.apellidoPaterno }}
-                                        {{ orden.cliente.apellidoMaterno }}
-                                    </td>
-                                    <td>
-                                        {{ orden.tipoSeguro.get_idTipoSeguro_display }}
                                     </td>
                                     <td>
                                         {{ orden.comparativa.cotizacion_set.all.count }}

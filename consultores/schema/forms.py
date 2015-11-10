@@ -11,11 +11,12 @@ class nuevoClienteForm(forms.ModelForm):
  		model = Cliente
  		fields= ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
  		'numeroInt','colonia','ciudad','estado','codigoPostal']
-   
+
 class SeguroAPForm(forms.ModelForm):
 	class Meta:
 		model = SeguroAP
 		fields = ['marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
+        # fields = ['idTipoSeguro', 'marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
 
 # class SeguroCForm(forms.Form):
 # 	class Meta:

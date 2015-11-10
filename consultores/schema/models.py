@@ -73,8 +73,7 @@ class Agente(Persona):
     claveAgente = models.IntegerField(blank=True, null=True)
     cuentaBancaria = models.CharField(max_length=34, blank=True)
     banco = models.CharField(max_length=30, blank=True)
-    # NECESARIO HACER RELACION AGENTE-CLIENTES INDEPENDIENTE
-    clientes = models.ManyToManyField(Cliente, through='OrdenServicio')
+    clientes = models.ManyToManyField(Cliente)
 
     def save(self, *args, **kwargs):
         try:
@@ -122,7 +121,8 @@ class TipoSeguro(models.Model):
         ('T', 'Transportes'),
         ('ESP', 'Especializados'),
     )
-    idTipoSeguro = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, primary_key=True)
+    tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
+    idTipoSeguro = models.AutoField(primary_key=True)
 
     def __str__(self):
     	return "Seguro: " + self.idTipoSeguro
@@ -168,9 +168,7 @@ class Comparativa(models.Model):
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
     fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
-
-    # one to one relationship with OrdenServicio
-    ordenServicio = models.OneToOneField('OrdenServicio')
+    tipoSeguro = models.ForeignKey('TipoSeguro')
     # cliente = models.ForeignKey(Cliente, null=True)
     # agente = models.ForeignKey(Agente, null=True)
 
@@ -261,25 +259,21 @@ class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
     fechaServicio = models.DateTimeField('fecha de servicio', auto_now_add=True)
     fechaConclusion = models.DateTimeField(blank=True, null=True)
+    # agente = models.ForeignKey('Agente')
     cliente = models.ForeignKey('Cliente')
-    agente = models.ForeignKey('Agente')
-    tipoSeguro = models.ForeignKey('TipoSeguro')
-    ### foreign key is under Comparativa
-    # comparativa = models.OneToOneField(Comparativa, null=True)
+    comparativa = models.OneToOneField(Comparativa, null=True)
     # poliza = models.OneToOneField(Poliza, null=True)
     def __str__ (self):
         return "Orden de Servicio: " + str(self.idServicio)
 
 class SeguroAP(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
-    idTipoSeguro = 'AP'
-    marca = models.CharField(max_length=30, blank=True, null=True)
+    marca = models.CharField(max_length=30, null=True, blank=True)
     modelo = models.CharField(max_length=30, blank=True, null=True)
     ano = models.PositiveSmallIntegerField(blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
     pasajeros = models.PositiveSmallIntegerField(blank=True, null=True)
     estadoCirculacion = models.CharField(max_length=19, blank=True, null=True)
-    ### Se deberá relacionar con alguna cotización?
 
     def __str__(self):
         return "SeguroAP" + self.idSeguro
@@ -296,8 +290,8 @@ class CoberturaAP(models.Model):
     limitado = models.NullBooleanField(blank=True)
     seguroAP = models.ForeignKey('SeguroAP')
 
-    
- 
+
+
 # class SeguroC(models.Model)
 # class CoberturaC(models.Model)
 # class SeguroR(models.Model)

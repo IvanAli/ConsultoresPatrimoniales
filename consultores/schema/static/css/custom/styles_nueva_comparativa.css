@@ -1,11 +1,33 @@
-#AP{
+#AP {
     display: none;
 }
-
-#C{
+#C {
     display: none;
 }
-
-#R{
-    display: none;
+#R {
+	display: none;
+}
+#G {
+	display: none;
+}
+#V {
+	display: none;
+}
+#H {
+	display: none;
+}
+#I {
+	display: none;
+}
+#E {
+	display: none;
+}
+#EC {
+	display: none;
+}
+#RT {
+	display: none;
+}
+#ESP {
+	display: none;
 }

@@ -13,6 +13,7 @@
 {% endblock %}
 
 {% block comparativas_tag %}class="active"{% endblock %}
+
 {% block body_content %}
 <div class="container">
     <div class="row">
@@ -21,9 +22,9 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Comparativas</h3>
                     <div class="pull-right">
-                    <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
-                        <a href="{% url 'schema:preNuevaComparativa' %}" class="btn btn-default btn-sm btn-new-pos">Nueva comparativa</a>
-                    </div>
+                        <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
+                            <a href="{% url 'schema:preNuevaComparativa' %}" class="btn btn-default btn-sm btn-new-pos">Nueva comparativa</a>
+                        </div>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -31,55 +32,55 @@
                     <table class="table table-hover" id="comparativasTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th># Comparativa</th>
                                 <th>Cliente</th>
-                                <th>Tipo de Seguro</th>
+                                <!-- <th>Tipo de Seguro</th> -->
                                 <th>Número de cotizaciones</th>
                                 <th>Concluida</th>
                                 <th>Enviada</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for orden in ordenes.all %}
-                                <tr id="comparativa{{ forloop.counter }}">
-                                    <td>
-                                        {{ orden.comparativa.pk }}
-                                    </td>
-                                    <td>
-                                        {{ orden.cliente.nombre }}
-                                        {{ orden.cliente.apellidoPaterno }}
-                                        {{ orden.cliente.apellidoMaterno }}
-                                    </td>
-                                    <td>
-                                        {{ orden.tipoSeguro.get_idTipoSeguro_display }}
-                                    </td>
-                                    <td>
-                                        {{ orden.comparativa.cotizacion_set.all.count }}
-                                        <!-- numero de cotizaciones -->
-                                    </td>
-                                    <td>
-                                        {% if orden.comparativa.fechaConclusion %}
-                                            Sí
-                                        {% else %}
-                                            No
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if orden.comparativa.fechaEnviada %}
-                                            Sí
-                                        {% else %}
-                                            No
-                                        {% endif %}
-                                    </td>
-                                </tr>
+                        {% for cliente in clientes.all %}
+                            {% for orden in cliente.ordenservicio_set.all %}
+                            <tr id="comparativa{{ forloop.counter }}">
+                                <td>
+                                    {{ orden.comparativa.pk }}
+                                </td>
+                                <td>
+                                    {{ orden.cliente.nombre }}
+                                    {{ orden.cliente.apellidoPaterno }}
+                                    {{ orden.cliente.apellidoMaterno }}
+                                </td>
+                                <!-- <td>
+                                    {{ orden.tipoSeguro.get_idTipoSeguro_display }}
+                                </td> -->
+                                <td>
+                                    {{ orden.comparativa.cotizacion_set.all.count }}
+                                    <!-- numero de cotizaciones -->
+                                </td>
+                                <td>
+                                    {% if orden.comparativa.fechaConclusion %}
+                                        Sí
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if orden.comparativa.fechaEnviada %}
+                                        Sí
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </td>
+                            </tr>
                             {% endfor %}
+                        {% endfor %}
                         </tbody>
                     </table>
                     <!-- end panel body -->
                 </div>
             </div>
-        </div>
-
         </div>
     </div>
 </div>
