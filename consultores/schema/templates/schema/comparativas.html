@@ -5,11 +5,10 @@
 
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
 {% endblock %}
 {% block head_javascript %}
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 {% endblock %}
 
 {% block comparativas_tag %}class="active"{% endblock %}
@@ -40,40 +39,40 @@
                                 <th>Enviada</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="rowlink" data-link="row">
                         {% for cliente in clientes.all %}
                             {% for orden in cliente.ordenservicio_set.all %}
-                            <tr id="comparativa{{ forloop.counter }}">
-                                <td>
-                                    {{ orden.comparativa.pk }}
-                                </td>
-                                <td>
-                                    {{ orden.cliente.nombre }}
-                                    {{ orden.cliente.apellidoPaterno }}
-                                    {{ orden.cliente.apellidoMaterno }}
-                                </td>
-                                <!-- <td>
-                                    {{ orden.tipoSeguro.get_idTipoSeguro_display }}
-                                </td> -->
-                                <td>
-                                    {{ orden.comparativa.cotizacion_set.all.count }}
-                                    <!-- numero de cotizaciones -->
-                                </td>
-                                <td>
-                                    {% if orden.comparativa.fechaConclusion %}
-                                        Sí
-                                    {% else %}
-                                        No
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if orden.comparativa.fechaEnviada %}
-                                        Sí
-                                    {% else %}
-                                        No
-                                    {% endif %}
-                                </td>
-                            </tr>
+                                <tr id="comparativa{{ forloop.counter }}">
+                                    <td>
+                                        <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
+                                    </td>
+                                    <td>
+                                        {{ orden.cliente.nombre }}
+                                        {{ orden.cliente.apellidoPaterno }}
+                                        {{ orden.cliente.apellidoMaterno }}
+                                    </td>
+                                    <!-- <td>
+                                        {{ orden.tipoSeguro.get_idTipoSeguro_display }}
+                                    </td> -->
+                                    <td>
+                                        {{ orden.comparativa.cotizacion_set.all.count }}
+                                        <!-- numero de cotizaciones -->
+                                    </td>
+                                    <td>
+                                        {% if orden.comparativa.fechaConclusion %}
+                                            Sí
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if orden.comparativa.fechaEnviada %}
+                                            Sí
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% endfor %}
                         {% endfor %}
                         </tbody>

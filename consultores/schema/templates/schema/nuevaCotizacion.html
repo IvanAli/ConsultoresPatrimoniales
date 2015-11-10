@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block head_title %}Nuevo Cliente{% endblock %}
+{% block head_css %}
+
+    <link rel="stylesheet" href="../../static/css/custom/styles_nuevocliente.css">
+    <script type = "text/javascript" src = "../../static/js/custom/datosClientes.js"></script>
+
+    <!-- <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css"> -->
+{% endblock %}
+
+
+{% block body_content %}
+<!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
+
+
+
+    <form action="{% url 'schema:nuevaCotizacionAuth' comparativa.pk %}" method="post">
+        {% csrf_token %}
+     <div class="container">
+        <div class="col-md-12" >
+        	<div class="row">
+                <h3>WORK IN PROGRESS</h3>
+   	  				<!-- <h3>Nueva cotización</h3></br>
+                    <select id="aseguradoras">
+                        <option value="None">
+                            Selecciona una aseguradora
+                        </option>
+                        <option value="GNP">
+                            Seguros GNP
+                        </option>
+                        <option value="Potosi">
+                            Seguros Potosi
+                        </option>
+                        <option value="MAPFRE">
+                            Seguros MAPFRE
+                        </option>
+                    </select>
+                    -- >
+      		</div>
+            <!--
+            <label for="costo" class="col-md-2 control-label">Costo</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="costo" placeholder="">
+                </div>
+            -->
+      	</br>
+   	 		 		<div class="form-group">
+      					<div class="col-lg-10 col-lg-offset-2">
+        					<input type="reset" name ="cancelar" class="nuevoClientemodal-submit" value="Cancelar">
+        					<input type="submit" name="crear" class=" nuevoClientemodal-submit" value="Crear">
+      					</div>
+    				</div>
+
+			</div>
+		</div>
+	  </div>
+    </form>
+
+
+    {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
+    {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
+
+
+{% endblock %}

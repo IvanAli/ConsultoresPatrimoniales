@@ -136,6 +136,17 @@ def comparativasView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/comparativas.html', context)
 
+def comparativaClienteView(request, idComparativa):
+    context = {'comparativa': Comparativa.objects.get(pk=idComparativa)}
+    return render(request, 'schema/comparativacliente.html', context)
+
+def nuevaCotizacionView(request, idComparativa):
+    context = {'comparativa': Comparativa.objects.get(pk=idComparativa)}
+    return render(request, 'schema/nuevaCotizacion.html', context)
+
+def nuevaCotizacionAuth(request, idComparativa):
+    return HttpResponse("WIP")
+
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/polizas.html', context)
