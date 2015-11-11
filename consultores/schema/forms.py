@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Agente, Cliente, SeguroAP
+from .models import Agente, Cliente, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
 
 class LoginForm(forms.Form):
     user = forms.CharField(max_length=30)
@@ -15,15 +15,51 @@ class nuevoClienteForm(forms.ModelForm):
 class SeguroAPForm(forms.ModelForm):
 	class Meta:
 		model = SeguroAP
-		fields = ['marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
-        # fields = ['idTipoSeguro', 'marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
+		fields = ['marca', 'modelo', 'tipoPlan', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion', 'version', 'transmision']
 
-# class SeguroCForm(forms.Form):
-# 	class Meta:
-# 		model = SeguroC
-# 		fields = ['marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
+class SeguroCForm(forms.ModelForm):
+	class Meta:
+		model = SeguroC
+		fields = ['marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'unidad', 'transmision']
 
-# class SeguroRForm(forms.Form):
-# 	class Meta:
-# 		model = SeguroR
-# 		fields = ['marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
+class SeguroRForm(forms.ModelForm):
+    class Meta:
+        model = SeguroR
+        fields = ['capacidad', 'ejes', 'descripcion']
+
+class SeguroGForm(forms.ModelForm):
+    class Meta:
+        model = SeguroG
+        fields = ['nombreAsegurado', 'coaseguro', 'topeCoaseguro']
+
+class SeguroVForm(forms.ModelForm):
+    class Meta:
+        model = SeguroV
+        fields = ['nombreAsegurado', 'edad', 'sexo', 'fumador', 'link']
+
+class SeguroHForm(forms.ModelForm):
+    class Meta:
+        model = SeguroH
+        fields = ['codigoPostal', 'tipoVivienda', 'primeraResidencia', 'metrosCuadrados', 'capitalContinente', 'capitalContenido']
+
+class SeguroIForm(forms.ModelForm):
+    class Meta:
+        model = SeguroI
+        fields = ['sumaAsegurada', 'planAhorro', 'identificacion']
+
+class SeguroEForm(forms.ModelForm):
+    class Meta:
+        model = SeguroE
+        fields = ['nombreEmpresa', 'direccion', 'tipoConstruccion', 'tipoMuro', 'numeroPisos', 'numeroSotanos', 'numeroExt',
+        'numeroInt', 'colonia', 'ciudad', 'estado', 'codigoPostal']
+
+class SeguroECForm(forms.ModelForm):
+    class Meta:
+        model = SeguroEC
+        fields = ['tipoSeguro', 'caracteristicas']
+
+class SeguroTForm(forms.ModelForm):
+    class Meta:
+        model = SeguroT
+        fields = ['tipoMedio', 'bienTransportado', 'sumaAsegurada', 'ciudadOrigen', 'estadoOrigen',
+        'ciudadDestino', 'estadoDestino', 'tipoTrabajo']
