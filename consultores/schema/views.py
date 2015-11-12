@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . import forms
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -101,19 +101,16 @@ def nuevaComparativaView(request, idCliente):
         'Iform': forms.SeguroIForm(),
         'Eform': forms.SeguroEForm(),
         'ECform': forms.SeguroECForm(),
+        'coberturas': Cobertura.objects.all(),
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
 def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
         """
-        tipoSeguro = request.POST['tipoSeguro']
-        if tipoSeguro == 'None':
-            return render(request, 'schema/nuevaComparativa.html', {})
-        if tipoSeguro == 'AP':
-        """
         for key in request.POST:
             print(request.POST[key])
+        """
         if request.POST['tipo'] == 'NULL':
             return HttpResponse('Tipo de seguro no seleccionado')
 
@@ -124,6 +121,11 @@ def nuevaComparativaAuth(request, idCliente):
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
                 comparativa.tipoSeguro.tipo = 'AP'
                 comparativa.save()
+
+                checklist = request.POST.getlist('coberturaAP')
+                for checked in checklist:
+                    print("id cobertura:", checked)
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 # Comparativa.objects.order_by('-pk')[0].tipoSeguro_id = 'AP'
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()

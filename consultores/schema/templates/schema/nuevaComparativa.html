@@ -57,7 +57,20 @@
                         </select>
                         <div id="forma"></div>
                         <div id="None"></div>
-                        <div id="AP">{{ APform.as_p }}</div>
+                        <div id="AP">
+                            {{ APform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturas.all %}
+                                    {% if cobertura.tipo == 'AP' %}
+                                        <input type="checkbox" name="coberturaAP" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                    {% endif %}
+                                {% endfor %}
+                            </fieldset>
+
+                        </div>
                         <div id="C">{{ Cform.as_p }}</div>
                         <div id="R">{{ Rform.as_p }}</div>
                         <div id="G">{{ Gform.as_p }}</div>

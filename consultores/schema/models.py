@@ -11,6 +11,20 @@ from django.contrib.auth.models import User, Group
 http://stackoverflow.com/questions/12567151/how-to-add-column-in-manytomany-table-django
 """
 
+SEGUROS_OPCIONES = (
+    ('AP', 'Automoviles y pickups'),
+    ('C', 'Camiones'),
+    ('R', 'Remolques, cajas secas y adaptaciones en general'),
+    ('G', 'Gastos medicos mayores'),
+    ('V', 'Vida'),
+    ('H', 'Hogares'),
+    ('I', 'Inversion'),
+    ('E', 'Empresas'),
+    ('EC', 'Equipo de contratistas'),
+    ('T', 'Transportes'),
+    ('ESP', 'Especializados'),
+)
+
 # Create your models here.
 class Persona(models.Model):
     email = models.EmailField(max_length=254)
@@ -85,20 +99,6 @@ class Agente(Persona):
 
 
 class TipoSeguro(models.Model):
-    SEGUROS_OPCIONES = (
-        ('AP', 'Automoviles y pickups'),
-        ('C', 'Camiones'),
-        ('R', 'Remolques, cajas secas y adaptaciones en general'),
-        ('G', 'Gastos medicos mayores'),
-        ('V', 'Vida'),
-        ('H', 'Hogares'),
-        ('I', 'Inversion'),
-        ('E', 'Empresas'),
-        ('EC', 'Equipo de contratistas'),
-        ('T', 'Transportes'),
-        ('ESP', 'Especializados'),
-    )
-
     tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
     idTipoSeguro = models.AutoField(primary_key=True)
 
@@ -228,7 +228,7 @@ class OrdenServicio(models.Model):
 class Cobertura(models.Model):
     idCobertura = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
-    idTipoSeguro = models.ForeignKey(TipoSeguro)
+    tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
 
 class CoberturaUtilizada(models.Model):
     idCoberturaUtilizada = models.AutoField(primary_key=True)
