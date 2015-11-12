@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from . import forms
+from django.forms import formset_factory
 from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -224,12 +225,14 @@ def nuevaCotizacionView(request, idComparativa):
         'comparativa': Comparativa.objects.get(pk=idComparativa),
         'aseguradoras': Aseguradora.objects.all(),
         'cotizacionForm': forms.CotizacionForm(),
+        'coberturaUtilizadaForm': forms.CoberturaUtilizadaForm(),
+        'coberturas': Cobertura.objects.all(),
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
+# VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
 def nuevaCotizacionAuth(request, idComparativa):
     cotizacionForm = forms.CotizacionForm(request.POST)
-    print('formaPago: ', request.POST['formaPago'])
     if cotizacionForm.is_valid():
         cotizacion = cotizacionForm.save()
         cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)

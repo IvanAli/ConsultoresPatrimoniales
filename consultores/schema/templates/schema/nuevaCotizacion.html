@@ -8,7 +8,6 @@
     <!-- <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css"> -->
 {% endblock %}
 
-
 {% block body_content %}
 <!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
 
@@ -21,6 +20,28 @@
             	<div class="row">
                     {{ cotizacionForm.as_p }}
     			</div>
+                <fieldset>
+                    <legend>
+                        Coberturas <input style="float: right;" type="button" value="Agregar" class="btn btn-warning btn-sm" id="addNew">
+                    </legend>
+                    <!-- {{ coberturaUtilizadaForm }} <button name="p_new" id="addNew">Agregar cobertura</button> -->
+                    <div id="addinput">
+                        <p>
+                            <select name="cobertura" id="select">
+                                {% for cobertura in coberturas.all %}
+                                    {% if cobertura.tipo == comparativa.tipoSeguro.tipo %}
+                                        <option value="{{ cobertura.pk }}">
+                                            {{ cobertura.nombre }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <label for="sumaAsegurada">Suma asegurada</label> <input type="text" size="15" name="sumaAsegurada">
+                            <label for="deducible">Deducible</label> <input type="text" size="10" name="deducible">
+                        </p>
+                    </div>
+
+                </fieldset>
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
                         <input type="reset" name="cancelar" class="nuevoClientemodal-submit" value="Cancelar">
@@ -36,5 +57,33 @@
     {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
     {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
 
+
+{% endblock %}
+
+{% block footer_javascript %}
+<script type="text/javascript">
+    $(function() {
+        var addDiv = $('#addinput');
+        var i = $('#addinput p').size() + 1;
+
+        $('#addNew').on('click', function() {
+            textToAdd = '<p><select name="cobertura" id="select"> {% for cobertura in coberturas.all %}{% if cobertura.tipo == comparativa.tipoSeguro.tipo %}<option value="{{ cobertura.pk }}">{{ cobertura.nombre }}</option>{% endif %}{% endfor %}</select> <label for="sumaAsegurada">Suma asegurada</label> <input type="text" size="15" name="sumaAsegurada"> <label for="deducible">Deducible</label> <input type="text" size="10" name="deducible"> <input type="button" value="Remover (no funcional)" class="btn btn-sm btn-danger" id="remNew"></p>'
+            console.log("test");
+            $(textToAdd).appendTo(addDiv);
+            i++;
+            return false;
+        });
+
+        $('#remNew').on('click', function() {
+            console.log("test 2");
+            if( i > 2 ) {
+                $(this).parents('p').remove();
+                i--;
+            }
+            return false;
+        });
+    });
+
+</script>
 
 {% endblock %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Agente, Cliente, Cotizacion, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
+from .models import Agente, Cliente, Cotizacion, CoberturaUtilizada, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
 
 class LoginForm(forms.Form):
     user = forms.CharField(max_length=30)
@@ -15,7 +15,12 @@ class nuevoClienteForm(forms.ModelForm):
 class CotizacionForm(forms.ModelForm):
     class Meta:
         model = Cotizacion
-        fields = ['costo', 'formaPago', 'aseguradora'] 
+        fields = ['costo', 'formaPago', 'aseguradora']
+
+class CoberturaUtilizadaForm(forms.ModelForm):
+    class Meta:
+        model = CoberturaUtilizada
+        fields = ['idCobertura', 'sumaAsegurada', 'deducible']
 
 class SeguroAPForm(forms.ModelForm):
 	class Meta:
