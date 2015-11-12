@@ -226,7 +226,16 @@ def nuevaCotizacionView(request, idComparativa):
     return render(request, 'schema/nuevaCotizacion.html', context)
 
 def nuevaCotizacionAuth(request, idComparativa):
-    return HttpResponse("WIP")
+    cotizacionForm = forms.CotizacionForm(request.POST)
+    print('formaPago: ', request.POST['formaPago'])
+    if cotizacionForm.is_valid():
+        cotizacion = cotizacionForm.save()
+        cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)
+        cotizacion.save()
+        return HttpResponseRedirect(reverse('schema:comparativas'))
+    else:
+        for err in cotizacionForm.errors:
+            print("error:", err)
 
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}

@@ -145,12 +145,12 @@ class Cotizacion(models.Model):
     costo = models.DecimalField(max_digits=11, decimal_places=2)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
     FORMA_PAGO_OPCIONES = (
-        ('Anual', 1),
-        ('Semestral', 2),
-        ('Trimestral', 4),
+        (1, 'Anual'),
+        (2, 'Semestral'),
+        (4, 'Trimestral'),
     )
     formaPago = models.IntegerField(choices=FORMA_PAGO_OPCIONES, default=12)
-    comparativa = models.ForeignKey('Comparativa')
+    comparativa = models.ForeignKey('Comparativa', null=True)
     aseguradora = models.ForeignKey('Aseguradora')
     def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa
