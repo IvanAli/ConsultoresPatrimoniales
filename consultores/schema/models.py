@@ -83,23 +83,6 @@ class Agente(Persona):
     def __str__(self):
         return "Agente: " + self.userAgente.username
 
-class Aseguradora(models.Model):
-    idAseguradora = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50)
-    sitioWeb = models.URLField(blank=True, null=True)
-    telefonoLada = models.CharField(max_length=3)
-    telefono = models.CharField(max_length=7)
-    calle = models.CharField(max_length=50, blank=True)
-    numeroExt = models.PositiveSmallIntegerField(blank=True)
-    numeroInt = models.PositiveSmallIntegerField(blank=True)
-    colonia = models.CharField(max_length=40, blank=True)
-    ciudad = models.CharField(max_length=30, blank=True)
-    estado = models.CharField(max_length=19, blank=True)
-    codigoPostal = models.CharField(max_length=5, blank=True)
-    seguros = models.ManyToManyField('TipoSeguro')
-
-    def __str__(self):
-        return "Aseguradora: " + self.nombre
 
 class TipoSeguro(models.Model):
     SEGUROS_OPCIONES = (
@@ -115,11 +98,30 @@ class TipoSeguro(models.Model):
         ('T', 'Transportes'),
         ('ESP', 'Especializados'),
     )
+
     tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
     idTipoSeguro = models.AutoField(primary_key=True)
 
     def __str__(self):
     	return "Seguro: " + self.idTipoSeguro
+
+class Aseguradora(models.Model):
+    idAseguradora = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50)
+    sitioWeb = models.URLField(blank=True, null=True)
+    telefonoLada = models.CharField(max_length=3)
+    telefono = models.CharField(max_length=7)
+    calle = models.CharField(max_length=50, blank=True)
+    numeroExt = models.PositiveSmallIntegerField(blank=True)
+    numeroInt = models.PositiveSmallIntegerField(blank=True, null=True)
+    colonia = models.CharField(max_length=40, blank=True)
+    ciudad = models.CharField(max_length=30, blank=True)
+    estado = models.CharField(max_length=19, blank=True)
+    codigoPostal = models.CharField(max_length=5, blank=True)
+    seguros = models.ManyToManyField(TipoSeguro)
+
+    def __str__(self):
+        return "Aseguradora: " + self.nombre
 """
 class SegurosOfertados(models.Model):
     aseguradora = models.ForeignKey('Aseguradora')
@@ -128,6 +130,7 @@ class SegurosOfertados(models.Model):
     class Meta:
         unique_together = ("aseguradora", "tipoSeguro")
 """
+
 class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
@@ -136,16 +139,15 @@ class Comparativa(models.Model):
     tipoSeguro = models.ForeignKey('TipoSeguro')
     coberturas = models.ManyToManyField('Cobertura')
 
-
 ### HACE FALTA RESOLVER LO DE COBERTURAS
 class Cotizacion(models.Model):
     idCotizacion = models.AutoField(primary_key=True)
     costo = models.DecimalField(max_digits=11, decimal_places=2)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
     FORMA_PAGO_OPCIONES = (
-        (12, 'Anual'),
-        (6, 'Semestral'),
-        (3, 'Trimestral'),
+        ('Anual', 1),
+        ('Semestral', 2),
+        ('Trimestral', 4),
     )
     formaPago = models.IntegerField(choices=FORMA_PAGO_OPCIONES, default=12)
     comparativa = models.ForeignKey('Comparativa')
@@ -236,6 +238,10 @@ class CoberturaUtilizada(models.Model):
     cotizacion = models.ForeignKey('Cotizacion', null=True)
 
 class SeguroAP(TipoSeguro):
+    def __init__(self, *args, **kwargs):
+        super(SeguroAP, self).__init__(*args, **kwargs)
+        self.tipo = 'AP'
+
     idSeguro = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=30, null=True, blank=True)
     modelo = models.CharField(max_length=30, blank=True, null=True)
@@ -249,12 +255,16 @@ class SeguroAP(TipoSeguro):
         ("M", "Manual"),
         ("A", "Automatica"),
     )
-    transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES, null=True)
+    transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES, null=True, blank=True)
 
     def __str__(self):
         return "SeguroAP" + self.idSeguro
 
 class SeguroC(TipoSeguro):
+    def __init__(self, *args, **kwargs):
+        super(SeguroC, self).__init__(*args, **kwargs)
+        self.tipo = 'C'
+
     idSeguro = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=30, null=True, blank=True)
     modelo = models.CharField(max_length=30, blank=True, null=True)
@@ -269,19 +279,30 @@ class SeguroC(TipoSeguro):
     transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES)
 
 class SeguroR(TipoSeguro):
+    def __init__(self, *args, **kwargs):
+        super(SeguroR, self).__init__(*args, **kwargs)
+        self.tipo = 'R'
+
     idSeguro = models.AutoField(primary_key=True)
     capacidad = models.CharField(max_length=15)
     ejes = models.PositiveSmallIntegerField()
     descripcion = models.TextField(blank=True, null=True)
 
 class SeguroG(TipoSeguro):
+    def __init__(self, *args, **kwargs):
+        super(SeguroG, self).__init__(*args, **kwargs)
+        self.tipo = 'G'
+
     idSeguro = models.AutoField(primary_key=True)
     nombreAsegurado = models.CharField(max_length=80)
-    coaseguro = models.DecimalField(max_digits=4, decimal_places=2)
+    coaseguro = models.DecimalField(max_digits=11, decimal_places=2)
     topeCoaseguro = models.DecimalField(max_digits=11, decimal_places=2)
     # preferencias = models.ForeignKey(Cobertura)
 
 class SeguroV(TipoSeguro):
+    def __init__(self, *args, **kwargs):
+        super(SeguroV, self).__init__(*args, **kwargs)
+        self.tipo = 'V'
     idSeguro = models.AutoField(primary_key=True)
     nombreAsegurado = models.CharField(max_length=80)
     edad = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -294,6 +315,9 @@ class SeguroV(TipoSeguro):
     link = models.URLField(blank=True)
 
 class SeguroH(TipoSeguro):
+    def __init__(self, *args, **kwargs):
+        super(SeguroH, self).__init__(*args, **kwargs)
+        self.tipo = 'H'
     idSeguro = models.AutoField(primary_key=True)
     codigoPostal = models.CharField(max_length=5)
     TIPO_VIVIENDA_OPCIONES = (
@@ -313,6 +337,9 @@ class SeguroH(TipoSeguro):
     capitalContenido = models.TextField(blank=True, default="")
 
 class SeguroI(TipoSeguro):
+    def __init__(self, *args, **kwargs):
+        super(SeguroI, self).__init__(*args, **kwargs)
+        self.tipo = 'I'
     idSeguro = models.AutoField(primary_key=True)
     sumaAsegurada = models.DecimalField(max_digits=11, decimal_places=2)
     planAhorro = models.CharField(max_length=20)

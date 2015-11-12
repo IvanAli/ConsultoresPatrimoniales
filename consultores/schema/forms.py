@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Agente, Cliente, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
+from .models import Agente, Cliente, Cotizacion, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
 
 class LoginForm(forms.Form):
     user = forms.CharField(max_length=30)
@@ -9,8 +9,13 @@ class LoginForm(forms.Form):
 class nuevoClienteForm(forms.ModelForm):
 	class Meta:
  		model = Cliente
- 		fields= ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
+ 		fields = ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
  		'numeroInt','colonia','ciudad','estado','codigoPostal']
+
+class CotizacionForm(forms.ModelForm):
+    class Meta:
+        model = Cotizacion
+        fields = ['costo', 'formaPago', 'aseguradora'] 
 
 class SeguroAPForm(forms.ModelForm):
 	class Meta:
@@ -56,7 +61,7 @@ class SeguroEForm(forms.ModelForm):
 class SeguroECForm(forms.ModelForm):
     class Meta:
         model = SeguroEC
-        fields = ['tipoSeguro', 'caracteristicas']
+        fields = ['tipoEquipo', 'caracteristicas']
 
 class SeguroTForm(forms.ModelForm):
     class Meta:

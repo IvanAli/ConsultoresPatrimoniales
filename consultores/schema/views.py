@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . import forms
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -89,11 +89,19 @@ def preNuevaComparativaView(request):
     return render(request, 'schema/preNuevaComparativa.html', context)
 
 def nuevaComparativaView(request, idCliente):
-    APform = forms.SeguroAPForm()
     context = {
         'cliente': request.user.agente.clientes.get(pk=idCliente),
         'seguros': TipoSeguro.objects,
-        'APform': APform}
+        'APform': forms.SeguroAPForm(),
+        'Cform': forms.SeguroCForm(),
+        'Rform': forms.SeguroRForm(),
+        'Gform': forms.SeguroGForm(),
+        'Vform': forms.SeguroVForm(),
+        'Hform': forms.SeguroHForm(),
+        'Iform': forms.SeguroIForm(),
+        'Eform': forms.SeguroEForm(),
+        'ECform': forms.SeguroECForm(),
+    }
     return render(request, 'schema/nuevaComparativa.html', context)
 
 def nuevaComparativaAuth(request, idCliente):
@@ -104,30 +112,99 @@ def nuevaComparativaAuth(request, idCliente):
             return render(request, 'schema/nuevaComparativa.html', {})
         if tipoSeguro == 'AP':
         """
-        if request.POST['idTipoSeguro'] == 'NULL':
+        for key in request.POST:
+            print(request.POST[key])
+        if request.POST['tipo'] == 'NULL':
             return HttpResponse('Tipo de seguro no seleccionado')
-        if request.POST['idTipoSeguro'] == 'AP':
-            seguroAPf = forms.SeguroAPForm(request.POST)
-            if seguroAPf.is_valid():
-                seguroComparativa = seguroAPf.save()
+
+        if request.POST['tipo'] == 'AP':
+            APform = forms.SeguroAPForm(request.POST)
+            if APform.is_valid():
+                seguroComparativa = APform.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.tipoSeguro.tipo = 'AP'
                 comparativa.save()
-                Comparativa.objects.order_by('-pk')[0].tipoSeguro_id = 'AP'
+                # Comparativa.objects.order_by('-pk')[0].tipoSeguro_id = 'AP'
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
             else:
-                for err in nuevaComparativaForm.errors:
+                for err in APform.errors:
                     print("error:")
                     print(err)
                 return HttpResponse('Error de datos')
-        if request.POST['idTipoSeguro'] == 'C':
-            return HttpResponse('C')
-        if request.POST['idTipoSeguro'] == 'R':
-            return HttpResponse('R')
-        if request.POST['idTipoSeguro'] == 'G':
-            return HttpResponse('G')
-
+        if request.POST['tipo'] == 'C':
+            Cform = forms.SeguroCForm(request.POST)
+            if Cform.is_valid():
+                seguroComparativa = Cform.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'R':
+            Rform = forms.SeguroRForm(request.POST)
+            if Rform.is_valid():
+                seguroComparativa = Rform.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'G':
+            print("Nombre", request.POST['nombreAsegurado'])
+            print("Coaseguro", request.POST['coaseguro'])
+            print("Topecoaseguro", request.POST['topeCoaseguro'])
+            Gform = forms.SeguroGForm(request.POST)
+            if Gform.is_valid():
+                seguroComparativa = Gform.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                for err in Gform.errors:
+                    print("error:")
+                    print(err)
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'V':
+            Vform = forms.SeguroVForm(request.POST)
+            if Vform.is_valid():
+                seguroComparativa = Vform.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'H':
+            Hform = forms.SeguroHForm(request.POST)
+            if Hform.is_valid():
+                seguroComparativa = Hform.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'I':
+            Iform = forms.SeguroIForm(request.POST)
+            if Iform.is_valid():
+                seguroComparativa = Iform.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
     # tmp
     return HttpResponse('Autenticando nueva Comparativa...')
 
@@ -141,7 +218,11 @@ def comparativaClienteView(request, idComparativa):
     return render(request, 'schema/comparativacliente.html', context)
 
 def nuevaCotizacionView(request, idComparativa):
-    context = {'comparativa': Comparativa.objects.get(pk=idComparativa)}
+    context = {
+        'comparativa': Comparativa.objects.get(pk=idComparativa),
+        'aseguradoras': Aseguradora.objects.all(),
+        'cotizacionForm': forms.CotizacionForm(),
+    }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
 def nuevaCotizacionAuth(request, idComparativa):
