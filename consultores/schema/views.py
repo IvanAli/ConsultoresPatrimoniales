@@ -73,8 +73,30 @@ def nuevoClienteAuth(request):
             request.user.agente.clientes.add(cliente)
             return HttpResponseRedirect(reverse('schema:clientes'))
         else:
-            context = {'error_missingfields': "Campos sin llenar"}
+            context = {
+                    "datos_form": datos_form,        
+                    'error_missingfields': "Campo obligatorio sin llenar",
+                    'error_lada': "Campo obligatorio, ingresa unicamente numeros",
+                    'error_telefono': "Campo obligatorio, ingresa unicamente numeros",
+                    'error_email':"Campo obligatorio, ingresa un email valido",
+                    'error_NE':"Ingresa unicamente numeros",
+                    'error_CP':"Ingresa unicamente numeros"}
             return render(request, 'schema/nuevoCliente.html', context)
+
+def datosFacturacionView(request):
+    #context = {'clientes': request.user.agente.clientes}
+    return render(request, 'schema/datosFacturacion.html', {})
+
+def datosFacturacionAuth(request, idCliente):
+     if request.method == "POST":
+         datos_form = forms.nuevoClienteForm(request.POST)
+         if datos_form.is_valid():
+             cliente = datos_form.save()
+             request.user.agente.clientes.add(cliente)
+             return HttpResponseRedirect(reverse('schema:clientes'))
+         else:
+             context = {'error_missingfields': "Campos sin llenar"}
+             return render(request, 'schema/datosFacturacion.html', context)
 
 def clientesView(request):
     context = {'clientes': request.user.agente.clientes}

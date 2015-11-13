@@ -7,10 +7,21 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=30)
 
 class nuevoClienteForm(forms.ModelForm):
+	
 	class Meta:
  		model = Cliente
  		fields= ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
- 		'numeroInt','colonia','ciudad','estado','codigoPostal']
+ 		'numeroInt','colonia','ciudad','estado','codigoPostal','calleFact','numeroExtFact','numeroIntFact','coloniaFact','ciudadFact'
+ 		,'estadoFact','codigoPostalFact']
+
+ 		def clean_email(self):
+ 			email = self.cleaned_data.get('email')
+ 			provider = email.split("@")
+ 			extension = provider.split('.')
+
+ 			if not extension == "edu" :
+ 				raise forms.ValidationError("lalalala")
+ 			return email
 
 class SeguroAPForm(forms.ModelForm):
 	class Meta:

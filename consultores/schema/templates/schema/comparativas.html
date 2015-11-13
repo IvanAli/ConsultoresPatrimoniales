@@ -44,7 +44,7 @@
                             {% for orden in cliente.ordenservicio_set.all %}
                                 <tr id="comparativa{{ forloop.counter }}">
                                     <td>
-                                        <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}"{{ orden.comparativa.pk }}</a>
+                                        <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
                                     </td>
                                     <td>
                                         {{ orden.cliente.nombre }}

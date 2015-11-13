@@ -10,7 +10,7 @@
 
 
 {% block body_content %}
-<!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
+
 
 
 
@@ -26,6 +26,9 @@
       					<label for="inputName" class="col-md-2 control-label">Nombre</label>
      	 					<div class="col-md-4">
         						<input type="text" class="form-control" name="nombre" placeholder="gerardo">
+                    {% for error in datos_form.nombre.errors %}
+                    <p class="red-color">{{ error_missingfields }}</p>
+                    {% endfor %}
       						</div>
       					<label class="col-md-2 control-label">Sexo</label>
       						<div class="col-md-4">
@@ -37,71 +40,90 @@
             					<input type="radio" name="sexo" id="optionsRadios2" value="M">
             					Mujer
           	  	  			</label>
-          	  	  			<label>
-            					<input type="radio" name="sexo" id="optionsRadios3" value="O">
-            					Otro
-          		 			 </label>
+                     {% for error in datos_form.sexo.errors %}
+                    <p class="red-color">{{ error_missingfields }}</p>
+                    {% endfor %}
       						</div>
       				</div>
       		</div>
       		<div class="row">
     				<div class="form-group">
+
       					<label for="inputApellidoP" class="col-md-2 control-label">Apellido Paterno</label>
      	 					<div class="col-md-4">
         						<input type="text" class="form-control" name="apellidoPaterno" placeholder="García">
+                    {% for error in datos_form.apellidoPaterno.errors %}
+                    <p class="red-color">{{ error_missingfields }}</p>
+                    {% endfor %}
       						</div>
 
-      					<label for="inputApellidoM" class="col-md-2 control-label">Apellido Materno</label>
-     	 					<div class="col-md-4">
-        						<input type="text" class="form-control" name="apellidoMaterno" placeholder="Sánchez">
-      						</div>
-      				</div>
-      		</div>
-      		<div class="row">
-    				<div class="form-group">
       					<label for="inputEmail" class="col-md-2 control-label">Edad</label>
-     	 					<div class="col-md-4">
-        						<input type="text" class="form-control" name="edad" placeholder="22">
-      						</div>
-
-      					<label for="inputTel" class="col-md-2 control-label">Email</label>
-     	 					<div class="col-md-4">
-        						<input type="text" class="form-control" name="email" placeholder="gerchez93@gmail.com">
-      						</div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="edad" placeholder="22">
+                  </div>
       				</div>
       		</div>
       		<div class="row">
     				<div class="form-group">
-      					<label for="inputEmail" class="col-md-2 control-label">Lada</label>
-     	 					<div class="col-md-4">
-        						<input type="text" class="form-control" name="telefonoLada" placeholder="(477)">
-      						</div>
+      					<label for="inputApellidoM" class="col-md-2 control-label">Apellido Materno</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="apellidoMaterno" placeholder="Sánchez">
+                    {% for error in datos_form.apellidoMaterno.errors %}
+                    <p class="red-color">{{ error_missingfields }}</p>
+                    {% endfor %}
+                </div>
 
+      					<label for="inputLada" class="col-md-2 control-label">Lada</label>
+                <div class="col-md-4">
+                    <input type="text" maxlength="3" class="form-control" name="telefonoLada" placeholder="(477)">
+                    {% for error in datos_form.telefonoLada.errors %}
+                    <p class="red-color">{{ error_lada }}</p>
+                    {% endfor %}
+                </div>
+      				</div>
+      		</div>
+      		<div class="row">
+    				<div class="form-group">
+      					<label for="inputTel" class="col-md-2 control-label">Email</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="email" placeholder="gerchez93@gmail.com">
+                    {% for error in datos_form.email.errors %}
+                    <p class="red-color">{{ error_email }}</p>
+                    {% endfor %}
+                </div>
       					<label for="inputTel" class="col-md-2 control-label">Télefono</label>
      	 					<div class="col-md-4">
-        						<input type="text" class="form-control" name="telefono" placeholder="7152032">
-      						</div>
+                
+             
+        						<input type="text" maxlength="7"class="form-control" name="telefono" placeholder="7152032">
+                     {% for error in datos_form.telefono.errors %}
+                    <p class="red-color">{{ error_telefono }}</p>
+                    {% endfor %}
+      					</div>
       				</div>
       		</div>
       		<div class="row">
     				<div class="form-group">
       					<label for="inputRFC" class="col-md-2 control-label">RFC</label>
      	 					<div class="col-md-4">
-        						<input type="text" class="form-control" name="rfc" placeholder="GORM931202Z5C">
+        						<input type="text" maxlength="13" class="form-control" name="rfc" placeholder="GORM931202Z5C"> 
       						</div>
 
       				</div>
       		</div>
+         
       			<div class="row">
     				<div class="form-group">
      	 					<div class="col-md-4">
         						<legend>Dirección</legend>
         					</div>
      	 					<div class="col-md-4">
-        						<input type= "button"   value="Dirección" class="nuevoClientemodal-submit" onclick="mostrar()">
+        						<input type= "button"   value="Dirección" class="btn btn-primary" onclick="mostrar()">
       						</div>
       				</div>
       		</div>
+
+
 
 
       		<div  id='direccion' class="row" style='display:none;'>
@@ -133,7 +155,10 @@
       					<label for="inputNumExt" class="col-md-2 control-label">Numero Exterior</label>
      	 					<div class="col-md-4">
         						<input type="text" class="form-control" name="numeroExt" placeholder="109">
-      						</div>
+                     {% for error in datos_form.numeroExt.errors %}
+                    <p class="red-color">{{ error_NE }}</p>
+                    {% endfor %}
+      					</div>
 
       					<label for="inputNumInt" class="col-md-2 control-label">Numero Interior </label>
      	 					<div class="col-md-4">
@@ -143,7 +168,10 @@
       				<div class="form-group">
       					<label for="inputCodigoP" class="col-md-2 control-label">Codigo Postal</label>
      	 					<div class="col-md-4">
-        						<input type="text" class="form-control" name="codigoPostal" placeholder="37150">
+        						<input type="text" maxlength="5" class="form-control" name="codigoPostal" placeholder="37150">
+                     {% for error in datos_form.codigoPostal.errors %}
+                    <p class="red-color">{{ error_CP }}</p>
+                    {% endfor %}
       						</div>
       				</div>
       		</div>
@@ -153,8 +181,9 @@
       	</br>
    	 		 		<div class="form-group">
       					<div class="col-lg-10 col-lg-offset-2">
-        					<input type="reset" name ="cancelar" class="nuevoClientemodal-submit" value="Cancelar">
-        					<input type="submit" name="crear" class=" nuevoClientemodal-submit" value="Crear">
+                  <input type="submit" name="crear" class="btn btn-primary " value="Crear">
+        					<input type="reset" name ="cancelar" class="btn btn-warning" value="Cancelar">
+        					
       					</div>
     				</div>
 
@@ -164,10 +193,9 @@
 		</div>
 	  </div>
     </form>
+    
 
-
-    {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
-    {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
+  
 
 
 {% endblock %}
