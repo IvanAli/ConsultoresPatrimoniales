@@ -130,7 +130,7 @@ def nuevaComparativaAuth(request, idCliente):
             if APform.is_valid():
                 seguroComparativa = APform.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
-                comparativa.tipoSeguro.tipo = 'AP'
+                comparativa.tipoSeguro.nombre = Seguro.objects.get(pk='AP')
                 comparativa.save()
 
                 checklist = request.POST.getlist('coberturaAP')

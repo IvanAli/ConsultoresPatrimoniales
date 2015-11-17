@@ -100,6 +100,7 @@ class Agente(Persona):
 
 class TipoSeguro(models.Model):
     # tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
+    nombre = models.ForeignKey('Seguro', null=True)
     idTipoSeguro = models.AutoField(primary_key=True)
 
     def __str__(self):
@@ -244,7 +245,6 @@ class Seguro(models.Model):
     nombre = models.CharField(max_length=80)
 
 class SeguroAP(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
     def __init__(self, *args, **kwargs):
         super(SeguroAP, self).__init__(*args, **kwargs)
         self.tipo = 'AP'
@@ -268,8 +268,6 @@ class SeguroAP(TipoSeguro):
         return "SeguroAP" + self.idSeguro
 
 class SeguroC(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
-
     def __init__(self, *args, **kwargs):
         super(SeguroC, self).__init__(*args, **kwargs)
         self.tipo = 'C'
@@ -288,7 +286,6 @@ class SeguroC(TipoSeguro):
     transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES)
 
 class SeguroR(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     def __init__(self, *args, **kwargs):
         super(SeguroR, self).__init__(*args, **kwargs)
@@ -300,7 +297,6 @@ class SeguroR(TipoSeguro):
     descripcion = models.TextField(blank=True, null=True)
 
 class SeguroG(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     def __init__(self, *args, **kwargs):
         super(SeguroG, self).__init__(*args, **kwargs)
@@ -313,7 +309,6 @@ class SeguroG(TipoSeguro):
     # preferencias = models.ForeignKey(Cobertura)
 
 class SeguroV(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     def __init__(self, *args, **kwargs):
         super(SeguroV, self).__init__(*args, **kwargs)
@@ -330,7 +325,6 @@ class SeguroV(TipoSeguro):
     link = models.URLField(blank=True)
 
 class SeguroH(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     def __init__(self, *args, **kwargs):
         super(SeguroH, self).__init__(*args, **kwargs)
@@ -354,7 +348,6 @@ class SeguroH(TipoSeguro):
     capitalContenido = models.TextField(blank=True, default="")
 
 class SeguroI(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     def __init__(self, *args, **kwargs):
         super(SeguroI, self).__init__(*args, **kwargs)
@@ -365,7 +358,6 @@ class SeguroI(TipoSeguro):
     identificacion = models.URLField(blank=True)
 
 class SeguroE(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     idSeguro = models.AutoField(primary_key=True)
     nombreEmpresa = models.CharField(max_length=50)
@@ -383,14 +375,12 @@ class SeguroE(TipoSeguro):
     codigoPostal = models.CharField(max_length=5, blank=True)
 
 class SeguroEC(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     idSeguro = models.AutoField(primary_key=True)
     tipoEquipo = models.CharField(max_length=30)
     caracteristicas = models.TextField()
 
 class SeguroT(TipoSeguro):
-    nombre = models.ForeignKey(Seguro, null=True)
 
     idSeguro = models.AutoField(primary_key=True)
     tipoMedio = models.CharField(max_length=30)
