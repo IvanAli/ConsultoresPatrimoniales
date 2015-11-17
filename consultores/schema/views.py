@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from . import forms
 from django.forms import formset_factory
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from easy_pdf.views import PDFTemplateView
 from . import managers
 # Create your views here.
 
@@ -92,7 +93,7 @@ def preNuevaComparativaView(request):
 def nuevaComparativaView(request, idCliente):
     context = {
         'cliente': request.user.agente.clientes.get(pk=idCliente),
-        'seguros': TipoSeguro.objects,
+        'seguros': Seguro.objects.all(),
         'APform': forms.SeguroAPForm(),
         'Cform': forms.SeguroCForm(),
         'Rform': forms.SeguroRForm(),
@@ -103,6 +104,15 @@ def nuevaComparativaView(request, idCliente):
         'Eform': forms.SeguroEForm(),
         'ECform': forms.SeguroECForm(),
         'coberturas': Cobertura.objects.all(),
+        'coberturasAP': Cobertura.objects.filter(seguro__pk='AP'),
+        'coberturasC': Cobertura.objects.filter(seguro__pk='C'),
+        'coberturasR': Cobertura.objects.filter(seguro__pk='R'),
+        'coberturasG': Cobertura.objects.filter(seguro__pk='G'),
+        'coberturasV': Cobertura.objects.filter(seguro__pk='V'),
+        'coberturasV': Cobertura.objects.filter(seguro__pk='V'),
+        'coberturasV': Cobertura.objects.filter(seguro__pk='V'),
+        'coberturasE': Cobertura.objects.filter(seguro__pk='E'),
+        'coberturasEC': Cobertura.objects.filter(seguro__pk='EC'),
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
@@ -249,3 +259,13 @@ def nuevaCotizacionAuth(request, idComparativa):
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/polizas.html', context)
+
+class ComparativaPDFView(PDFTemplateView):
+    template_name = "schema/pdf/comparativapdf.html"
+
+    def get_context_data(self, **kwargs):
+        return super(ComparativaPDFView, self).get_context_data(
+            pagesize="A4",
+            title="Comparativa",
+            **kwargs
+        )

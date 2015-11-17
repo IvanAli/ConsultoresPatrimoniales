@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^polizas/$', views.polizasView, name='polizas'),
     url(r'^nuevoClienteAuth/$', views.nuevoClienteAuth, name='nuevoClienteAuthentication'),
     url(r'^cotizaciones/(?P<idCotizacion>[0-9]+)/$', views.cotizacionClienteView, name='cotizacionCliente'),
+    url(r'^comparativa.pdf$', views.ComparativaPDFView.as_view(), name='comparativapdf'),
 ]
