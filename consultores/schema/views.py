@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from . import forms
 from django.forms import formset_factory
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -219,6 +219,10 @@ def comparativasView(request):
 def comparativaClienteView(request, idComparativa):
     context = {'comparativa': Comparativa.objects.get(pk=idComparativa)}
     return render(request, 'schema/comparativacliente.html', context)
+
+def cotizacionClienteView(request, idCotizacion):
+    context = {'cotizacion': Cotizacion.objects.get(pk=idCotizacion)}
+    return render(request, 'schema/cotizacioncliente.html', context)
 
 def nuevaCotizacionView(request, idComparativa):
     context = {

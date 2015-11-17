@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^comparativas/$', views.comparativasView, name='comparativas'),
     url(r'^comparativas/(?P<idComparativa>[0-9]+)/$', views.comparativaClienteView, name='comparativaCliente'),
     url(r'^polizas/$', views.polizasView, name='polizas'),
-    url(r'^nuevoClienteAuth/$', views.nuevoClienteAuth, name='nuevoClienteAuthentication')
+    url(r'^nuevoClienteAuth/$', views.nuevoClienteAuth, name='nuevoClienteAuthentication'),
+    url(r'^cotizaciones/(?P<idCotizacion>[0-9]+)/$', views.cotizacionClienteView, name='cotizacionCliente'),
 ]

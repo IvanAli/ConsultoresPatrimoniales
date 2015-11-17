@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block head_title %}Cliente: {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}{% endblock %}
+{% block head_title %}Cliente: {{ comparativa.cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}{% endblock %}
 {% block head_css %}
 
 <!-- DataTables CSS -->
@@ -36,7 +36,7 @@
                     {% endfor %}
                     <br />
                     <!-- start panel body -->
-                    <table class="table table-hover" id="clienteTable">
+                    <table class="table table-hover" id="cotizacionesTable">
                         <thead>
                             <tr>
                                 <th>ID Cotización</th>
@@ -46,11 +46,11 @@
                                 <th>Fecha de creación</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="rowlink" data-link="row">
                             {% for cotizacion in comparativa.cotizacion_set.all %}
                                 <tr id="comparativa{{ forloop.counter }}">
                                     <td>
-                                        {{ cotizacion.pk }}
+                                        <a href="{% url 'schema:cotizacionCliente' cotizacion.pk %}">{{ cotizacion.pk }}</a>
                                     </td>
                                     <td>
                                         {{ cotizacion.aseguradora.nombre }}
@@ -59,7 +59,7 @@
                                         {{ cotizacion.costo }}
                                     </td>
                                     <td>
-                                        {{ cotizacion.formaPago }}
+                                        {{ cotizacion.get_formaPago_display }}
                                     </td>
                                     <td>
                                         {{ cotizacion.fechaCreacion }}
@@ -87,7 +87,7 @@
 <script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
 <script>
 $(document).ready( function () {
-    $('#clienteTable').DataTable();
+    $('#cotizacionesTable').DataTable();
 } );
 </script>
 {% endblock %}
