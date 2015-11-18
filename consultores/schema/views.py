@@ -118,10 +118,6 @@ def nuevaComparativaView(request, idCliente):
 
 def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
-        """
-        for key in request.POST:
-            print(request.POST[key])
-        """
         if request.POST['tipo'] == 'NULL':
             return HttpResponse('Tipo de seguro no seleccionado')
 
@@ -129,15 +125,19 @@ def nuevaComparativaAuth(request, idCliente):
             APform = forms.SeguroAPForm(request.POST)
             if APform.is_valid():
                 seguroComparativa = APform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='AP')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
-                comparativa.tipoSeguro.nombre = Seguro.objects.get(pk='AP')
+                # comparativa.tipoSeguro.nombre = Seguro.objects.get(pk='AP')
+                # seguroNombre = Seguro.objects.get(pk='AP')
+                # comparativa.tipoSeguro = TipoSeguro(nombre=seguroNombre)
+                # comparativa.tipoSeguro.save()
                 comparativa.save()
 
                 checklist = request.POST.getlist('coberturaAP')
                 for checked in checklist:
                     print("id cobertura:", checked)
                     comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
-                # Comparativa.objects.order_by('-pk')[0].tipoSeguro_id = 'AP'
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))

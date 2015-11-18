@@ -50,7 +50,7 @@
                                         <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
                                     </td>
                                     <td>
-                                        {{ orden.comparativa.tipoSeguro.get_tipo_display }}
+                                        {{ orden.comparativa.tipoSeguro.nombre.nombre }}
                                     </td>
                                     <td>
                                         {{ orden.cliente.nombre }}

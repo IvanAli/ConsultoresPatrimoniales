@@ -100,11 +100,8 @@ class Agente(Persona):
 
 class TipoSeguro(models.Model):
     # tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
-    nombre = models.ForeignKey('Seguro', null=True)
     idTipoSeguro = models.AutoField(primary_key=True)
-
-    def __str__(self):
-    	return "Seguro: " + self.idTipoSeguro
+    nombre = models.ForeignKey('Seguro', null=True)
 
 class Aseguradora(models.Model):
     idAseguradora = models.AutoField(primary_key=True)
