@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block head_title %}Nuevo Cliente{% endblock %}
+{% block head_title %}Nuevo Cotización{% endblock %}
 {% block head_css %}
 
     <link rel="stylesheet" href="../../static/css/custom/styles_nuevocliente.css">
@@ -15,7 +15,7 @@
         {% csrf_token %}
          <div class="container">
             <h3>Nueva cotización</h3>
-            <h4>Tipo de seguro: {{ comparativa.tipoSeguro.get_tipo_display }}</h4>
+            <h4>Tipo de seguro: {{ comparativa.tipoSeguro.nombre.nombre }}</h4>
             <div class="col-md-12" >
             	<div class="row">
                     {{ cotizacionForm.as_p }}
@@ -65,15 +65,15 @@
         var i = $('#addinput p').size() + 1;
 
         $('#addNew').on('click', function() {
-            textToAdd = '<p><select name="cobertura" id="select"> {% for cobertura in coberturas.all %}{% if cobertura.tipo == comparativa.tipoSeguro.tipo %}<option value="{{ cobertura.pk }}">{{ cobertura.nombre }}</option>{% endif %}{% endfor %}</select> <label for="sumaAsegurada">Suma asegurada</label> <input type="text" size="15" name="sumaAsegurada"> <label for="deducible">Deducible</label> <input type="text" size="10" name="deducible"> <input type="button" value="Remover (no funcional)" class="btn btn-sm btn-danger" id="remNew"></p>'
+            textToAdd = '<p><select name="cobertura" id="select"> {% for cobertura in coberturas.all %}{% if cobertura.tipo == comparativa.tipoSeguro.tipo %}<option value="{{ cobertura.pk }}">{{ cobertura.nombre }}</option>{% endif %}{% endfor %}</select> <label for="sumaAsegurada">Suma asegurada</label> <input type="text" size="15" name="sumaAsegurada"> <label for="deducible">Deducible</label> <input type="text" size="10" name="deducible"> <input type="button" value="Remover" class="btn btn-sm btn-danger" id="remNew"></p>'
             console.log("test");
             $(textToAdd).appendTo(addDiv);
             i++;
             return false;
         });
 
-        $('#remNew').on('click', function() {
-            console.log("test 2");
+        $('#addinput').on('click', 'input#remNew', function() {
+            console.log("ivan esta chavo");
             if( i > 2 ) {
                 $(this).parents('p').remove();
                 i--;

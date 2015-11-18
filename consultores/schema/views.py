@@ -236,20 +236,21 @@ def cotizacionClienteView(request, idCotizacion):
 
 def nuevaCotizacionView(request, idComparativa):
     comparativa = Comparativa.objects.get(pk=idComparativa)
-    print(str(comparativa.tipoSeguro))
-    # tipo = comparativa.tipoSeguro.nombre.idSeguro
+    tipo = comparativa.tipoSeguro.nombre.idSeguro
     context = {
         'comparativa': Comparativa.objects.get(pk=idComparativa),
         'aseguradoras': Aseguradora.objects.all(),
         'cotizacionForm': forms.CotizacionForm(),
         'coberturaUtilizadaForm': forms.CoberturaUtilizadaForm(),
-        'coberturas': Cobertura.objects.filter(seguro__pk='AP'),
+        'coberturas': Cobertura.objects.filter(seguro__pk=tipo),
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
 # VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
 def nuevaCotizacionAuth(request, idComparativa):
     cotizacionForm = forms.CotizacionForm(request.POST)
+    print(request.POST['sumaAsegurada'])
+    return HttpResponse('asdf')
     if cotizacionForm.is_valid():
         cotizacion = cotizacionForm.save()
         cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)

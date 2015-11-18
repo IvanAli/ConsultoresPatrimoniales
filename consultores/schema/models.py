@@ -119,7 +119,7 @@ class Aseguradora(models.Model):
     seguros = models.ManyToManyField(TipoSeguro)
 
     def __str__(self):
-        return "Aseguradora: " + self.nombre
+        return self.nombre
 """
 class SegurosOfertados(models.Model):
     aseguradora = models.ForeignKey('Aseguradora')
