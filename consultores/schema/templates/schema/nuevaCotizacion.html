@@ -29,11 +29,9 @@
                         <p>
                             <select name="cobertura" id="select">
                                 {% for cobertura in coberturas.all %}
-                                    {% if cobertura.tipo == comparativa.tipoSeguro.tipo %}
                                         <option value="{{ cobertura.pk }}">
                                             {{ cobertura.nombre }}
                                         </option>
-                                    {% endif %}
                                 {% endfor %}
                             </select>
                             <label for="sumaAsegurada">Suma asegurada</label> <input type="text" size="15" name="sumaAsegurada">

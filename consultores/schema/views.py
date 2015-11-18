@@ -235,12 +235,15 @@ def cotizacionClienteView(request, idCotizacion):
     return render(request, 'schema/cotizacioncliente.html', context)
 
 def nuevaCotizacionView(request, idComparativa):
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    print(str(comparativa.tipoSeguro))
+    # tipo = comparativa.tipoSeguro.nombre.idSeguro
     context = {
         'comparativa': Comparativa.objects.get(pk=idComparativa),
         'aseguradoras': Aseguradora.objects.all(),
         'cotizacionForm': forms.CotizacionForm(),
         'coberturaUtilizadaForm': forms.CoberturaUtilizadaForm(),
-        'coberturas': Cobertura.objects.all(),
+        'coberturas': Cobertura.objects.filter(seguro__pk='AP'),
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
