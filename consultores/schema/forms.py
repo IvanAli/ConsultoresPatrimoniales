@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Agente, Cliente, SeguroAP
+from .models import Agente, Cliente, SeguroAP, ClienteFisico, ClienteMoral
 
 class LoginForm(forms.Form):
     user = forms.CharField(max_length=30)
@@ -12,7 +12,7 @@ class nuevoClienteForm(forms.ModelForm):
  		model = Cliente
  		fields= ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
  		'numeroInt','colonia','ciudad','estado','codigoPostal','calleFact','numeroExtFact','numeroIntFact','coloniaFact','ciudadFact'
- 		,'estadoFact','codigoPostalFact']
+ 		,'estadoFact','codigoPostalFact',]
 
  		def clean_email(self):
  			email = self.cleaned_data.get('email')
@@ -28,6 +28,16 @@ class SeguroAPForm(forms.ModelForm):
 		model = SeguroAP
 		fields = ['marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
         # fields = ['idTipoSeguro', 'marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion']
+
+# class nuevoClienteFisicoForm(forms.ModelForm):
+# 	class Meta:
+# 		model = ClienteFisico
+
+
+class nuevoClienteMoralForm(forms.ModelForm):
+	class Meta :
+		model =ClienteMoral
+		fields =['razonSocial','linkActaConstitutiva','linkIdRepresentante']
 
 # class SeguroCForm(forms.Form):
 # 	class Meta:

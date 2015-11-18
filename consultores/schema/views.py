@@ -62,7 +62,10 @@ def home(request):
         print("NOT AN AGENT")
 
 def nuevoClienteView(request):
-    context = {'cliente': request.user.agente.clientes}
+    datos_form = forms.nuevoClienteForm()
+    context = {
+        "datos_form": datos_form, 
+        'cliente': request.user.agente.clientes}
     return render(request, "schema/nuevoCliente.html", context)
 
 def nuevoClienteAuth(request):
@@ -74,7 +77,7 @@ def nuevoClienteAuth(request):
             return HttpResponseRedirect(reverse('schema:clientes'))
         else:
             context = {
-                    "datos_form": datos_form,        
+                    'datos_form': datos_form,        
                     'error_missingfields': "Campo obligatorio sin llenar",
                     'error_lada': "Campo obligatorio, ingresa unicamente numeros",
                     'error_telefono': "Campo obligatorio, ingresa unicamente numeros",
