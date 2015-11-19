@@ -27,6 +27,14 @@
                 </div>
                 <div class="panel-body">
                     <legend>
+                        Características
+                    </legend>
+                    {{ comparativa.tipoSeguro }}
+                    {% for field, value in comparativa.tipoSeguro.attrs %}
+                        <li><b>{{ field }}:</b> {{ value }}</li>
+                    {% endfor %}
+                    {{ comparativa.tipoSeguro.seguroap.modelo }}
+                    <legend>
                         Coberturas deseadas
                     </legend>
                     {% for cobertura in comparativa.coberturas.all %}

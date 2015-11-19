@@ -102,6 +102,8 @@ class TipoSeguro(models.Model):
     # tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
     idTipoSeguro = models.AutoField(primary_key=True)
     nombre = models.ForeignKey('Seguro', null=True)
+    def attrs(self):
+        print("Not implemented")
 
 class Aseguradora(models.Model):
     idAseguradora = models.AutoField(primary_key=True)
@@ -258,8 +260,11 @@ class SeguroAP(TipoSeguro):
     )
     transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES, null=True, blank=True)
 
-    def __str__(self):
-        return "SeguroAP" + self.idSeguro
+    def attrs(self):
+        print("Implemented")
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
+
 
 class SeguroC(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
@@ -275,11 +280,19 @@ class SeguroC(TipoSeguro):
     )
     transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES)
 
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
+
 class SeguroR(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
     capacidad = models.CharField(max_length=15)
     ejes = models.PositiveSmallIntegerField()
     descripcion = models.TextField(blank=True, null=True)
+
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
 
 class SeguroG(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
@@ -287,6 +300,10 @@ class SeguroG(TipoSeguro):
     coaseguro = models.DecimalField(max_digits=11, decimal_places=2)
     topeCoaseguro = models.DecimalField(max_digits=11, decimal_places=2)
     # preferencias = models.ForeignKey(Cobertura)
+
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
 
 class SeguroV(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
@@ -299,6 +316,10 @@ class SeguroV(TipoSeguro):
     sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES, blank=True)
     fumador = models.BooleanField()
     link = models.URLField(blank=True)
+
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
 
 class SeguroH(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
@@ -319,11 +340,19 @@ class SeguroH(TipoSeguro):
     capitalContinente = models.TextField(blank=True, default="")
     capitalContenido = models.TextField(blank=True, default="")
 
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
+
 class SeguroI(TipoSeguro):
     idSeguro = models.AutoField(primary_key=True)
     sumaAsegurada = models.DecimalField(max_digits=11, decimal_places=2)
     planAhorro = models.CharField(max_length=20)
     identificacion = models.URLField(blank=True)
+
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
 
 class SeguroE(TipoSeguro):
 
@@ -342,11 +371,19 @@ class SeguroE(TipoSeguro):
     estado = models.CharField(max_length=19, blank=True)
     codigoPostal = models.CharField(max_length=5, blank=True)
 
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
+
 class SeguroEC(TipoSeguro):
 
     idSeguro = models.AutoField(primary_key=True)
     tipoEquipo = models.CharField(max_length=30)
     caracteristicas = models.TextField()
+
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
 
 class SeguroT(TipoSeguro):
 
@@ -359,5 +396,9 @@ class SeguroT(TipoSeguro):
     ciudadDestino = models.CharField(max_length=31)
     estadoDestino = models.CharField(max_length=19)
     tipoTrabajo = models.CharField(max_length=20)
+
+    def attrs(self):
+        for attr, value in self.__dict__.iteritems():
+            yield attr, value
 
 # class SeguroESP(models.Model) # Especializados
