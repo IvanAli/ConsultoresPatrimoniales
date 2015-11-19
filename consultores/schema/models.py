@@ -35,15 +35,15 @@ class Persona(models.Model):
     )
     sexo = models.CharField(max_length=1, choices=SEXO_OPCIONES)
     rfc = models.CharField(max_length=13, blank=True)
-    telefonoLada = models.CharField(max_length=3)
-    telefono = models.CharField(max_length=7)
+    telefonoLada = models.PositiveSmallIntegerField()
+    telefono = models.PositiveIntegerField()
     calle = models.CharField(max_length=50, blank=True)
     numeroExt = models.PositiveSmallIntegerField(blank=True, null=True)
-    numeroInt = models.PositiveSmallIntegerField(blank=True, null=True)
+    numeroInt = models.CharField(max_length=6,blank=True, null=True)
     colonia = models.CharField(max_length=40, blank=True)
     ciudad = models.CharField(max_length=30, blank=True)
     estado = models.CharField(max_length=19, blank=True)
-    codigoPostal = models.CharField(max_length=5, blank=True)
+    codigoPostal = models.PositiveIntegerField(blank=True, null=True)
     class Meta:
         abstract = True
     def __str__(self):
@@ -62,7 +62,7 @@ class Cliente(Persona):
     coloniaFact = models.CharField(max_length=40, blank=True)
     ciudadFact = models.CharField(max_length=30, blank=True)
     estadoFact = models.CharField(max_length=19, blank=True)
-    codigoPostalFact = models.CharField(max_length=5, blank=True)
+    codigoPostalFact = models.PositiveIntegerField(blank=True, null=True)
     def __str__(self):
         return "Cliente fisico: " + self.nombre + " " +self.apellidoPaterno + " " + self.apellidoMaterno
 

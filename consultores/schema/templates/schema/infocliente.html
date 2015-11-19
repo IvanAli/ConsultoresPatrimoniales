@@ -72,7 +72,7 @@
                     <p>{{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}</p>
                     <p>{{ cliente.email }}</p>
                     <p>{{ cliente.rfc }}</p>
-                    <p>{{ telefonoLada }} {{ telefono }}</p>
+                    <p>({{ cliente.telefonoLada }}) {{ cliente.telefono }}</p>
                     <p>{{ cliente.calle }} #{{ cliente.numeroExt }}
                     {% if cliente.numeroInt %} Int. {{ cliente.numeroInt }}{% endif %}</p>
                     <p>{{ cliente.codigoPostal }} {{ cliente.ciudad }}, {{ cliente.estado }}</p>
