@@ -227,8 +227,8 @@ class Cobertura(models.Model):
     idCobertura = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
     seguro = models.ForeignKey('Seguro', null=True)
-    def get_coberturas_AP(self):
-        return self.objects.filter(seguro__pk='AP')
+    def __str__(self):
+        return self.nombre
 
 class CoberturaUtilizada(models.Model):
     idCoberturaUtilizada = models.AutoField(primary_key=True)

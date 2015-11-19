@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from . import forms
 from django.forms import formset_factory
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -237,28 +237,38 @@ def cotizacionClienteView(request, idCotizacion):
 def nuevaCotizacionView(request, idComparativa):
     comparativa = Comparativa.objects.get(pk=idComparativa)
     tipo = comparativa.tipoSeguro.nombre.idSeguro
+    coberturaUtilizadaForm = forms.CoberturaUtilizadaForm()
+    coberturaUtilizadaForm.fields['idCobertura'].queryset = Cobertura.objects.filter(seguro__pk=tipo)
     context = {
         'comparativa': Comparativa.objects.get(pk=idComparativa),
         'aseguradoras': Aseguradora.objects.all(),
         'cotizacionForm': forms.CotizacionForm(),
-        'coberturaUtilizadaForm': forms.CoberturaUtilizadaForm(),
+        'coberturaUtilizadaForm': coberturaUtilizadaForm,
         'coberturas': Cobertura.objects.filter(seguro__pk=tipo),
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
 # VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
 def nuevaCotizacionAuth(request, idComparativa):
-    cotizacionForm = forms.CotizacionForm(request.POST)
-    print(request.POST['sumaAsegurada'])
-    return HttpResponse('asdf')
-    if cotizacionForm.is_valid():
+    cotizacionForm = forms.CotizacionForm(request.POST, instance=Cotizacion())
+    cuForms = [forms.CoberturaUtilizadaForm(request.POST, prefix=str(x), instance=CoberturaUtilizada()) for x in range(0, 3)]
+    if cotizacionForm.is_valid() and any([coberturaForm.is_valid() for coberturaForm in cuForms]):
         cotizacion = cotizacionForm.save()
+        for coberturaForm in cuForms:
+            print(coberturaForm)
+            newCobertura = coberturaForm.save(commit=False)
+            newCobertura.cotizacion = cotizacion
+            newCobertura.save()
         cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)
         cotizacion.save()
         return HttpResponseRedirect(reverse('schema:comparativas'))
     else:
         for err in cotizacionForm.errors:
             print("error:", err)
+        for element in cuForms:
+            for err in element.errors:
+                print("error cobertura:", err)
+    return HttpResponse("error")
 
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}

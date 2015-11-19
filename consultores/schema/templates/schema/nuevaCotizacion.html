@@ -27,15 +27,7 @@
                     <!-- {{ coberturaUtilizadaForm }} <button name="p_new" id="addNew">Agregar cobertura</button> -->
                     <div id="addinput">
                         <p>
-                            <select name="cobertura" id="select">
-                                {% for cobertura in coberturas.all %}
-                                        <option value="{{ cobertura.pk }}">
-                                            {{ cobertura.nombre }}
-                                        </option>
-                                {% endfor %}
-                            </select>
-                            <label for="sumaAsegurada">Suma asegurada</label> <input type="text" size="15" name="sumaAsegurada">
-                            <label for="deducible">Deducible</label> <input type="text" size="10" name="deducible">
+                            {{ coberturaUtilizadaForm }}
                         </p>
                     </div>
 
@@ -65,10 +57,10 @@
         var i = $('#addinput p').size() + 1;
 
         $('#addNew').on('click', function() {
-            textToAdd = '<p><select name="cobertura" id="select"> {% for cobertura in coberturas.all %}{% if cobertura.tipo == comparativa.tipoSeguro.tipo %}<option value="{{ cobertura.pk }}">{{ cobertura.nombre }}</option>{% endif %}{% endfor %}</select> <label for="sumaAsegurada">Suma asegurada</label> <input type="text" size="15" name="sumaAsegurada"> <label for="deducible">Deducible</label> <input type="text" size="10" name="deducible"> <input type="button" value="Remover" class="btn btn-sm btn-danger" id="remNew"></p>'
-            console.log("test");
+            textToAdd = `<p>{{ coberturaUtilizadaForm }} <input type="button" value="Remover" class="btn btn-sm btn-danger" id="remNew"></p>`;
             $(textToAdd).appendTo(addDiv);
             i++;
+            console.log(i);
             return false;
         });
 
@@ -77,10 +69,15 @@
             if( i > 2 ) {
                 $(this).parents('p').remove();
                 i--;
+                console.log(i);
             }
             return false;
         });
     });
+
+    function getCoberturaCount() {
+        return i;
+    }
 
 </script>
 
