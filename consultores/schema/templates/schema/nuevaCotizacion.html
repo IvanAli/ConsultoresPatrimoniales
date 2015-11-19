@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block head_title %}Nuevo Cliente{% endblock %}
+{% block head_title %}Nuevo Cotización{% endblock %}
 {% block head_css %}
 
     <link rel="stylesheet" href="../../static/css/custom/styles_nuevocliente.css">
@@ -8,7 +8,6 @@
     <!-- <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css"> -->
 {% endblock %}
 
-
 {% block body_content %}
 <!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
 
@@ -16,11 +15,30 @@
         {% csrf_token %}
          <div class="container">
             <h3>Nueva cotización</h3>
-            <h4>Tipo de seguro: {{ comparativa.tipoSeguro.get_tipo_display }}</h4>
+            <h4>Tipo de seguro: {{ comparativa.tipoSeguro.nombre.nombre }}</h4>
             <div class="col-md-12" >
             	<div class="row">
                     {{ cotizacionForm.as_p }}
     			</div>
+                <fieldset>
+                    <legend>
+                        Coberturas <input style="float: right;" type="button" value="Agregar" class="btn btn-warning btn-sm" id="addNew">
+                    </legend>
+                    {{ formset.management_form }}
+                    <div id="addinput">
+                        {% for form in formset.forms %}
+                            {{ form }}
+                        {% endfor %}
+                    </div>
+
+                    <!--
+                    <div id="addinput">
+                        <p>
+                            {{ coberturaUtilizadaForm }}
+                        </p>
+                    </div>
+                    -->
+                </fieldset>
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
                         <input type="reset" name="cancelar" class="nuevoClientemodal-submit" value="Cancelar">
@@ -32,9 +50,41 @@
     	  </div>
     </form>
 
-
+    <div id="origin-item" class="item well hide">
+        {{ coberturaUtilizadaForm.as_p }}
+    </div>
     {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
     {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
 
 
+{% endblock %}
+
+{% block footer_javascript %}
+<!-- Taken from: https://www.djangosnippets.org/snippets/1389/ -->
+<!-- <script language="javascript" src="/static/js/custom/dynamic-formset.js"></script> -->
+<script type="text/javascript">
+    $(function() {
+        var addDiv = $('#addinput');
+        var i = $('#addinput p').size() + 1;
+
+        $('#addNew').on('click', function() {
+            textToAdd = `<p>{{ coberturaUtilizadaForm }} <input type="button" value="Remover" class="btn btn-sm btn-danger" id="remNew"></p>`;
+            $(textToAdd).appendTo(addDiv);
+            i++;
+            console.log(i);
+            return false;
+        });
+
+        $('#addinput').on('click', 'input#remNew', function() {
+            console.log("ivan esta chavo");
+            if( i > 2 ) {
+                $(this).parents('p').remove();
+                i--;
+                console.log(i);
+            }
+            return false;
+        });
+    });
+
+</script>
 {% endblock %}

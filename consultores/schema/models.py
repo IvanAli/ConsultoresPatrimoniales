@@ -11,6 +11,20 @@ from django.contrib.auth.models import User, Group
 http://stackoverflow.com/questions/12567151/how-to-add-column-in-manytomany-table-django
 """
 
+SEGUROS_OPCIONES = (
+    ('AP', 'Automoviles y pickups'),
+    ('C', 'Camiones'),
+    ('R', 'Remolques, cajas secas y adaptaciones en general'),
+    ('G', 'Gastos medicos mayores'),
+    ('V', 'Vida'),
+    ('H', 'Hogares'),
+    ('I', 'Inversion'),
+    ('E', 'Empresas'),
+    ('EC', 'Equipo de contratistas'),
+    ('T', 'Transportes'),
+    ('ESP', 'Especializados'),
+)
+
 # Create your models here.
 class Persona(models.Model):
     email = models.EmailField(max_length=254)
@@ -85,25 +99,9 @@ class Agente(Persona):
 
 
 class TipoSeguro(models.Model):
-    SEGUROS_OPCIONES = (
-        ('AP', 'Automoviles y pickups'),
-        ('C', 'Camiones'),
-        ('R', 'Remolques, cajas secas y adaptaciones en general'),
-        ('G', 'Gastos medicos mayores'),
-        ('V', 'Vida'),
-        ('H', 'Hogares'),
-        ('I', 'Inversion'),
-        ('E', 'Empresas'),
-        ('EC', 'Equipo de contratistas'),
-        ('T', 'Transportes'),
-        ('ESP', 'Especializados'),
-    )
-
-    tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
+    # tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)
     idTipoSeguro = models.AutoField(primary_key=True)
-
-    def __str__(self):
-    	return "Seguro: " + self.idTipoSeguro
+    nombre = models.ForeignKey('Seguro', null=True)
 
 class Aseguradora(models.Model):
     idAseguradora = models.AutoField(primary_key=True)
@@ -121,7 +119,7 @@ class Aseguradora(models.Model):
     seguros = models.ManyToManyField(TipoSeguro)
 
     def __str__(self):
-        return "Aseguradora: " + self.nombre
+        return self.nombre
 """
 class SegurosOfertados(models.Model):
     aseguradora = models.ForeignKey('Aseguradora')
@@ -228,7 +226,9 @@ class OrdenServicio(models.Model):
 class Cobertura(models.Model):
     idCobertura = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
-    idTipoSeguro = models.ForeignKey(TipoSeguro)
+    seguro = models.ForeignKey('Seguro', null=True)
+    def __str__(self):
+        return self.nombre
 
 class CoberturaUtilizada(models.Model):
     idCoberturaUtilizada = models.AutoField(primary_key=True)
@@ -237,10 +237,11 @@ class CoberturaUtilizada(models.Model):
     deducible = models.DecimalField(max_digits=4, decimal_places=2, blank=True)
     cotizacion = models.ForeignKey('Cotizacion', null=True)
 
+class Seguro(models.Model):
+    idSeguro = models.CharField(max_length=3, primary_key=True)
+    nombre = models.CharField(max_length=80)
+
 class SeguroAP(TipoSeguro):
-    def __init__(self, *args, **kwargs):
-        super(SeguroAP, self).__init__(*args, **kwargs)
-        self.tipo = 'AP'
 
     idSeguro = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=30, null=True, blank=True)
@@ -261,10 +262,6 @@ class SeguroAP(TipoSeguro):
         return "SeguroAP" + self.idSeguro
 
 class SeguroC(TipoSeguro):
-    def __init__(self, *args, **kwargs):
-        super(SeguroC, self).__init__(*args, **kwargs)
-        self.tipo = 'C'
-
     idSeguro = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=30, null=True, blank=True)
     modelo = models.CharField(max_length=30, blank=True, null=True)
@@ -279,20 +276,12 @@ class SeguroC(TipoSeguro):
     transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES)
 
 class SeguroR(TipoSeguro):
-    def __init__(self, *args, **kwargs):
-        super(SeguroR, self).__init__(*args, **kwargs)
-        self.tipo = 'R'
-
     idSeguro = models.AutoField(primary_key=True)
     capacidad = models.CharField(max_length=15)
     ejes = models.PositiveSmallIntegerField()
     descripcion = models.TextField(blank=True, null=True)
 
 class SeguroG(TipoSeguro):
-    def __init__(self, *args, **kwargs):
-        super(SeguroG, self).__init__(*args, **kwargs)
-        self.tipo = 'G'
-
     idSeguro = models.AutoField(primary_key=True)
     nombreAsegurado = models.CharField(max_length=80)
     coaseguro = models.DecimalField(max_digits=11, decimal_places=2)
@@ -300,9 +289,6 @@ class SeguroG(TipoSeguro):
     # preferencias = models.ForeignKey(Cobertura)
 
 class SeguroV(TipoSeguro):
-    def __init__(self, *args, **kwargs):
-        super(SeguroV, self).__init__(*args, **kwargs)
-        self.tipo = 'V'
     idSeguro = models.AutoField(primary_key=True)
     nombreAsegurado = models.CharField(max_length=80)
     edad = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -315,9 +301,6 @@ class SeguroV(TipoSeguro):
     link = models.URLField(blank=True)
 
 class SeguroH(TipoSeguro):
-    def __init__(self, *args, **kwargs):
-        super(SeguroH, self).__init__(*args, **kwargs)
-        self.tipo = 'H'
     idSeguro = models.AutoField(primary_key=True)
     codigoPostal = models.CharField(max_length=5)
     TIPO_VIVIENDA_OPCIONES = (
@@ -337,15 +320,13 @@ class SeguroH(TipoSeguro):
     capitalContenido = models.TextField(blank=True, default="")
 
 class SeguroI(TipoSeguro):
-    def __init__(self, *args, **kwargs):
-        super(SeguroI, self).__init__(*args, **kwargs)
-        self.tipo = 'I'
     idSeguro = models.AutoField(primary_key=True)
     sumaAsegurada = models.DecimalField(max_digits=11, decimal_places=2)
     planAhorro = models.CharField(max_length=20)
     identificacion = models.URLField(blank=True)
 
 class SeguroE(TipoSeguro):
+
     idSeguro = models.AutoField(primary_key=True)
     nombreEmpresa = models.CharField(max_length=50)
     direccion = models.CharField(max_length=100)
@@ -362,11 +343,13 @@ class SeguroE(TipoSeguro):
     codigoPostal = models.CharField(max_length=5, blank=True)
 
 class SeguroEC(TipoSeguro):
+
     idSeguro = models.AutoField(primary_key=True)
     tipoEquipo = models.CharField(max_length=30)
     caracteristicas = models.TextField()
 
 class SeguroT(TipoSeguro):
+
     idSeguro = models.AutoField(primary_key=True)
     tipoMedio = models.CharField(max_length=30)
     bienTransportado = models.CharField(max_length=40)

@@ -27,54 +27,123 @@
                         {% csrf_token %}
                         <select class="form-control" name="tipo" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro(value)">
                             <option selected value="None">Selecciona un tipo</option>
-                            <option value="AP" name="tipo">
-                                Automóviles y pickups
+                            {% for seguro in seguros.all %}
+                            <option value="{{ seguro.pk }}">
+                                {{ seguro.nombre }}
                             </option>
-                            <option value="C" name="tipo">
-                                Camiones
-                            </option>
-                            <option value="R" name="tipo">
-                                Remolques, cajas secas y adaptaciones en general
-                            </option>
-                            <option value="G" name="tipo">
-                                Gastos médicos mayores
-                            </option>
-                            <option value="V" name="tipo">
-                                Vida
-                            </option>
-                            <option value="H" name="tipo">
-                                Hogares
-                            </option>
-                            <option value="I" name="tipo">
-                                Inversiones
-                            </option>
-                            <option value="E" name="tipo">
-                                Empresas
-                            </option>
-                            <option value="EC" name="tipo">
-                                Equipo de contratistas
-                            </option>
+                            {% endfor %}
                         </select>
                         <div id="forma"></div>
                         <div id="None"></div>
-                        <div id="AP">{{ APform.as_p }}</div>
-                        <div id="C">{{ Cform.as_p }}</div>
-                        <div id="R">{{ Rform.as_p }}</div>
-                        <div id="G">{{ Gform.as_p }}</div>
+                        <div id="AP">
+                            {{ APform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasAP.all %}
+                                    <input type="checkbox" name="coberturaAP" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
+                        </div>
+                        <div id="C">
+                            {{ Cform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasC.all %}
+                                    <input type="checkbox" name="coberturaC" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
+                        </div>
+                        <div id="R">
+                            {{ Rform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasR.all %}
+                                    <input type="checkbox" name="coberturaR" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
+                        </div>
+                        <div id="G">
+                            {{ Gform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasG.all %}
+                                    <input type="checkbox" name="coberturaG" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
+                        </div>
                         <div id="V">
                             {{ Vform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasG.all %}
+                                    <input type="checkbox" name="coberturaG" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
                         </div>
                         <div id="H">
                             {{ Hform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasH.all %}
+                                    <input type="checkbox" name="coberturaH" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
                         </div>
                         <div id="I">
                             {{ Iform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasI.all %}
+                                    <input type="checkbox" name="coberturaI" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
                         </div>
                         <div id="E">
                             {{ Eform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasE.all %}
+                                    <input type="checkbox" name="coberturaE" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
                         </div>
                         <div id="EC">
                             {{ ECform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasEC.all %}
+                                    <input type="checkbox" name="coberturaEC" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
+                        </div>
+                        <div id="T">
+                            {{ Tform.as_p }}
+                            <fieldset>
+                                <legend>
+                                    Coberturas deseadas
+                                </legend>
+                                {% for cobertura in coberturasT.all %}
+                                    <input type="checkbox" name="coberturaT" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% endfor %}
+                            </fieldset>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-0">

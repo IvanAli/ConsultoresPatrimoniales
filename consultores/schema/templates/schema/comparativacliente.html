@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block head_title %}Cliente: {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}{% endblock %}
+{% block head_title %}Cliente: {{ comparativa.cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}{% endblock %}
 {% block head_css %}
 
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
 {% endblock %}
 {% block head_javascript %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 {% endblock %}
 
 {% block clientes_tag %}class="active"{% endblock %}
@@ -26,22 +26,32 @@
                     </div>
                 </div>
                 <div class="panel-body">
+                    <legend>
+                        Coberturas deseadas
+                    </legend>
+                    {% for cobertura in comparativa.coberturas.all %}
+                        <li>
+                            {{ cobertura.nombre }}
+                        </li>
+                    {% endfor %}
+                    <br />
                     <!-- start panel body -->
-                    <table class="table table-hover" id="clienteTable">
+                    <table class="table table-hover" id="cotizacionesTable">
                         <thead>
                             <tr>
                                 <th>ID Cotización</th>
                                 <th>Aseguradora</th>
                                 <th>Costo</th>
+                                <th>Coberturas</th>
                                 <th>Forma de pago</th>
                                 <th>Fecha de creación</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="rowlink" data-link="row">
                             {% for cotizacion in comparativa.cotizacion_set.all %}
                                 <tr id="comparativa{{ forloop.counter }}">
                                     <td>
-                                        {{ cotizacion.pk }}
+                                        <a href="{% url 'schema:cotizacionCliente' cotizacion.pk %}">{{ cotizacion.pk }}</a>
                                     </td>
                                     <td>
                                         {{ cotizacion.aseguradora.nombre }}
@@ -50,7 +60,10 @@
                                         {{ cotizacion.costo }}
                                     </td>
                                     <td>
-                                        {{ cotizacion.formaPago }}
+                                        {{ cotizacion.coberturautilizada_set.all.count }}
+                                    </td>
+                                    <td>
+                                        {{ cotizacion.get_formaPago_display }}
                                     </td>
                                     <td>
                                         {{ cotizacion.fechaCreacion }}
@@ -78,7 +91,7 @@
 <script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
 <script>
 $(document).ready( function () {
-    $('#clienteTable').DataTable();
+    $('#cotizacionesTable').DataTable();
 } );
 </script>
 {% endblock %}

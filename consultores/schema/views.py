@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from . import forms
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora
+from django.forms import formset_factory
+from django.forms import BaseFormSet
+from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from easy_pdf.views import PDFTemplateView
 from . import managers
 # Create your views here.
 
@@ -91,7 +94,7 @@ def preNuevaComparativaView(request):
 def nuevaComparativaView(request, idCliente):
     context = {
         'cliente': request.user.agente.clientes.get(pk=idCliente),
-        'seguros': TipoSeguro.objects,
+        'seguros': Seguro.objects.all(),
         'APform': forms.SeguroAPForm(),
         'Cform': forms.SeguroCForm(),
         'Rform': forms.SeguroRForm(),
@@ -101,19 +104,23 @@ def nuevaComparativaView(request, idCliente):
         'Iform': forms.SeguroIForm(),
         'Eform': forms.SeguroEForm(),
         'ECform': forms.SeguroECForm(),
+        'Tform': forms.SeguroTForm(),
+        'coberturas': Cobertura.objects.all(),
+        'coberturasAP': Cobertura.objects.filter(seguro__pk='AP'),
+        'coberturasC': Cobertura.objects.filter(seguro__pk='C'),
+        'coberturasR': Cobertura.objects.filter(seguro__pk='R'),
+        'coberturasG': Cobertura.objects.filter(seguro__pk='G'),
+        'coberturasV': Cobertura.objects.filter(seguro__pk='V'),
+        'coberturasH': Cobertura.objects.filter(seguro__pk='H'),
+        'coberturasI': Cobertura.objects.filter(seguro__pk='I'),
+        'coberturasE': Cobertura.objects.filter(seguro__pk='E'),
+        'coberturasEC': Cobertura.objects.filter(seguro__pk='EC'),
+        'coberturasT': Cobertura.objects.filter(seguro__pk='T'),
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
 def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
-        """
-        tipoSeguro = request.POST['tipoSeguro']
-        if tipoSeguro == 'None':
-            return render(request, 'schema/nuevaComparativa.html', {})
-        if tipoSeguro == 'AP':
-        """
-        for key in request.POST:
-            print(request.POST[key])
         if request.POST['tipo'] == 'NULL':
             return HttpResponse('Tipo de seguro no seleccionado')
 
@@ -121,10 +128,15 @@ def nuevaComparativaAuth(request, idCliente):
             APform = forms.SeguroAPForm(request.POST)
             if APform.is_valid():
                 seguroComparativa = APform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='AP')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
-                comparativa.tipoSeguro.tipo = 'AP'
                 comparativa.save()
-                # Comparativa.objects.order_by('-pk')[0].tipoSeguro_id = 'AP'
+
+                checklist = request.POST.getlist('coberturaAP')
+                for checked in checklist:
+                    print("id cobertura:", checked)
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -137,8 +149,14 @@ def nuevaComparativaAuth(request, idCliente):
             Cform = forms.SeguroCForm(request.POST)
             if Cform.is_valid():
                 seguroComparativa = Cform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='C')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
                 comparativa.save()
+
+                checklist = request.POST.getlist('coberturaC')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -148,8 +166,14 @@ def nuevaComparativaAuth(request, idCliente):
             Rform = forms.SeguroRForm(request.POST)
             if Rform.is_valid():
                 seguroComparativa = Rform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='R')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
                 comparativa.save()
+
+                checklist = request.POST.getlist('coberturaR')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -162,8 +186,14 @@ def nuevaComparativaAuth(request, idCliente):
             Gform = forms.SeguroGForm(request.POST)
             if Gform.is_valid():
                 seguroComparativa = Gform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='G')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
                 comparativa.save()
+
+                checklist = request.POST.getlist('coberturaG')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -176,8 +206,14 @@ def nuevaComparativaAuth(request, idCliente):
             Vform = forms.SeguroVForm(request.POST)
             if Vform.is_valid():
                 seguroComparativa = Vform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='V')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
                 comparativa.save()
+
+                checklist = request.POST.getlist('coberturaV')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -187,8 +223,14 @@ def nuevaComparativaAuth(request, idCliente):
             Hform = forms.SeguroHForm(request.POST)
             if Hform.is_valid():
                 seguroComparativa = Hform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='H')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
                 comparativa.save()
+
+                checklist = request.POST.getlist('coberturaH')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -198,8 +240,65 @@ def nuevaComparativaAuth(request, idCliente):
             Iform = forms.SeguroIForm(request.POST)
             if Iform.is_valid():
                 seguroComparativa = Iform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='I')
+                seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
                 comparativa.save()
+
+                checklist = request.POST.getlist('coberturaI')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'E':
+            Eform = forms.SeguroEForm(request.POST)
+            if Eform.is_valid():
+                seguroComparativa = Eform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='E')
+                seguroComparativa.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+
+                checklist = request.POST.getlist('coberturaE')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'EC':
+            ECform = forms.SeguroECForm(request.POST)
+            if ECform.is_valid():
+                seguroComparativa = ECform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='EC')
+                seguroComparativa.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+
+                checklist = request.POST.getlist('coberturaEC')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio.save()
+                return HttpResponseRedirect(reverse('schema:comparativas'))
+            else:
+                return HttpResponse("Forma invalida")
+        if request.POST['tipo'] == 'T':
+            Tform = forms.SeguroTForm(request.POST)
+            if Tform.is_valid():
+                seguroComparativa = Tform.save()
+                seguroComparativa.nombre = Seguro.objects.get(pk='T')
+                seguroComparativa.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                comparativa.save()
+
+                checklist = request.POST.getlist('coberturaT')
+                for checked in checklist:
+                    comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -217,26 +316,89 @@ def comparativaClienteView(request, idComparativa):
     context = {'comparativa': Comparativa.objects.get(pk=idComparativa)}
     return render(request, 'schema/comparativacliente.html', context)
 
+def cotizacionClienteView(request, idCotizacion):
+    context = {'cotizacion': Cotizacion.objects.get(pk=idCotizacion)}
+    return render(request, 'schema/cotizacioncliente.html', context)
+
 def nuevaCotizacionView(request, idComparativa):
+    class RequiredFormSet(BaseFormSet):
+        def __init__(self, *args, **kwargs):
+            super(RequiredFormSet, self).__init__(*args, **kwargs)
+            for form in self.forms:
+                form.empty_permitted = False
+
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    tipo = comparativa.tipoSeguro.nombre.idSeguro
+
+    formset = formset_factory(forms.CoberturaUtilizadaForm, max_num=20, formset=RequiredFormSet)
+    cuformset = formset()
+    for form in cuformset.forms:
+        form.fields['idCobertura'].queryset = Cobertura.objects.filter(seguro__pk=tipo)
+
+    coberturaUtilizadaForm = forms.CoberturaUtilizadaForm()
+    coberturaUtilizadaForm.fields['idCobertura'].queryset = Cobertura.objects.filter(seguro__pk=tipo)
     context = {
         'comparativa': Comparativa.objects.get(pk=idComparativa),
         'aseguradoras': Aseguradora.objects.all(),
         'cotizacionForm': forms.CotizacionForm(),
+        'coberturaUtilizadaForm': coberturaUtilizadaForm,
+        'coberturas': Cobertura.objects.filter(seguro__pk=tipo),
+        'formset': cuformset,
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
+# VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
 def nuevaCotizacionAuth(request, idComparativa):
-    cotizacionForm = forms.CotizacionForm(request.POST)
-    print('formaPago: ', request.POST['formaPago'])
-    if cotizacionForm.is_valid():
+    # cuForm = forms.coberturaUtilizadaForm(request.POST)
+    formset = formset_factory(forms.CoberturaUtilizadaForm)
+    if request.method == 'POST':
+        cotizacionForm = forms.CotizacionForm(request.POST, instance=Cotizacion())
+        cuForm = forms.CoberturaUtilizadaForm(request.POST)
+        cuFormset = formset(request.POST, request.FILES)
+        if cotizacionForm.is_valid() and cuFormset.is_valid():
+            cotizacion = cotizacionForm.save()
+            for form in cuFormset.forms:
+                cobertura = form.save(commit=False)
+                cobertura.cotizacion = cotizacion
+                cobertura.save()
+            cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)
+            cotizacion.save()
+            return HttpResponseRedirect(reverse('schema:comparativas'))
+        else:
+            return HttpResponse("error")
+
+    """
+    cuForms = [forms.CoberturaUtilizadaForm(request.POST, prefix=str(x), instance=CoberturaUtilizada()) for x in range(0, 3)]
+    if cotizacionForm.is_valid() and any([coberturaForm.is_valid() for coberturaForm in cuForms]):
         cotizacion = cotizacionForm.save()
+        for coberturaForm in cuForms:
+            print(coberturaForm)
+            newCobertura = coberturaForm.save(commit=False)
+            newCobertura.cotizacion = cotizacion
+            newCobertura.save()
         cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)
         cotizacion.save()
         return HttpResponseRedirect(reverse('schema:comparativas'))
     else:
         for err in cotizacionForm.errors:
             print("error:", err)
+        for element in cuForms:
+            for err in element.errors:
+                print("error cobertura:", err)
+    """
+    return HttpResponse("error")
 
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/polizas.html', context)
+
+# not working
+class ComparativaPDFView(PDFTemplateView):
+    template_name = "schema/pdf/comparativapdf.html"
+
+    def get_context_data(self, **kwargs):
+        return super(ComparativaPDFView, self).get_context_data(
+            pagesize="A4",
+            title="Comparativa",
+            **kwargs
+        )
