@@ -110,10 +110,11 @@ def nuevaComparativaView(request, idCliente):
         'coberturasR': Cobertura.objects.filter(seguro__pk='R'),
         'coberturasG': Cobertura.objects.filter(seguro__pk='G'),
         'coberturasV': Cobertura.objects.filter(seguro__pk='V'),
-        'coberturasV': Cobertura.objects.filter(seguro__pk='V'),
-        'coberturasV': Cobertura.objects.filter(seguro__pk='V'),
+        'coberturasH': Cobertura.objects.filter(seguro__pk='H'),
+        'coberturasI': Cobertura.objects.filter(seguro__pk='I'),
         'coberturasE': Cobertura.objects.filter(seguro__pk='E'),
         'coberturasEC': Cobertura.objects.filter(seguro__pk='EC'),
+        'coberturasT': Cobertura.objects.filter(seguro__pk='T'),
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
@@ -129,10 +130,6 @@ def nuevaComparativaAuth(request, idCliente):
                 seguroComparativa.nombre = Seguro.objects.get(pk='AP')
                 seguroComparativa.save()
                 comparativa = Comparativa(tipoSeguro=seguroComparativa)
-                # comparativa.tipoSeguro.nombre = Seguro.objects.get(pk='AP')
-                # seguroNombre = Seguro.objects.get(pk='AP')
-                # comparativa.tipoSeguro = TipoSeguro(nombre=seguroNombre)
-                # comparativa.tipoSeguro.save()
                 comparativa.save()
 
                 checklist = request.POST.getlist('coberturaAP')
