@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from . import forms
 from django.forms import formset_factory
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
 from . import managers
 # Create your views here.
 
@@ -23,13 +24,30 @@ def getUser(username):
     except User.DoesNotExist:
         return None
 
-def isAgente(user):
-    return user.groups.filter(name='agente').exists()
+def whichUser(user):
+    groupID = 0;
+    if user.groups.filter(name="admin").exists():
+        groupID = 2
+    elif user.groups.filter(name='agente').exists():
+        groupID = 1
+    return groupID
 
 # VIEWS
+@csrf_protect
 def loginView(request):
-    return render(request, "schema/login.html", {})
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('schema:home'))
+    else:
+        context = {}
+        return render(request, "schema/login.html", context)    
 
+@csrf_protect
+def logoutView(request):
+    logout(request)
+    context = {'message_logoutsuccess': "¡Has salido exitosamente!"}
+    return render(request, "schema/login.html", context)
+
+@csrf_protect
 def loginAuthentication(request):
     if request.method == "POST":
         login_form = forms.LoginForm(request.POST)
@@ -46,7 +64,7 @@ def loginAuthentication(request):
                     context = {'error_sessionexpired': 'Sesión expirada'}
                     return render(request, 'schema/login.html', context)
             else:
-                context = {'error_wrongpassword': "Contraseña incorrecta"}
+                context = {'error_wrongpassword': "Usuario o contraseña incorrectos"}
                 return render(request, 'schema/login.html', context)
         else:
             context = {'error_missingfields': "Campos sin llenar"}
@@ -55,17 +73,21 @@ def loginAuthentication(request):
 def registerAgente(request):
     return HttpResponse("Work in Progress")
 
+@login_required(redirect_field_name='')
 def home(request):
-    if isAgente(request.user):
+    if whichUser(request.user) == 1:
         context = {'agente': Agente.objects.get(userAgente=request.user)}
         return render(request, 'schema/home.html', context)
-    else:
-        print("NOT AN AGENT")
+    elif whichUser(request.user) == 2:
+        context = {'agente': Administrador.objects.get(userAdmin=request.user)}
+        return render(request, 'schema/homeAdmin.html', context)        
 
+@login_required(redirect_field_name='')
 def nuevoClienteView(request):
     context = {'cliente': request.user.agente.clientes}
     return render(request, "schema/nuevoCliente.html", context)
 
+@login_required(redirect_field_name='')
 def nuevoClienteAuth(request):
     if request.method == "POST":
         datos_form = forms.nuevoClienteForm(request.POST)
@@ -77,18 +99,22 @@ def nuevoClienteAuth(request):
             context = {'error_missingfields': "Campos sin llenar"}
             return render(request, 'schema/nuevoCliente.html', context)
 
+@login_required(redirect_field_name='')
 def clientesView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/clientes.html', context)
 
+@login_required(redirect_field_name='')
 def infoClienteView(request, idCliente):
     context = {'cliente': Cliente.objects.get(pk=idCliente)}
     return render(request, 'schema/infocliente.html', context)
 
+@login_required(redirect_field_name='')
 def preNuevaComparativaView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/preNuevaComparativa.html', context)
 
+@login_required(redirect_field_name='')
 def nuevaComparativaView(request, idCliente):
     context = {
         'cliente': request.user.agente.clientes.get(pk=idCliente),
@@ -106,6 +132,7 @@ def nuevaComparativaView(request, idCliente):
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
+@login_required(redirect_field_name='')
 def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
         """
@@ -211,15 +238,17 @@ def nuevaComparativaAuth(request, idCliente):
     # tmp
     return HttpResponse('Autenticando nueva Comparativa...')
 
-
+@login_required(redirect_field_name='')
 def comparativasView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/comparativas.html', context)
 
+@login_required(redirect_field_name='')
 def comparativaClienteView(request, idComparativa):
     context = {'comparativa': Comparativa.objects.get(pk=idComparativa)}
     return render(request, 'schema/comparativacliente.html', context)
 
+@login_required(redirect_field_name='')
 def nuevaCotizacionView(request, idComparativa):
     context = {
         'comparativa': Comparativa.objects.get(pk=idComparativa),
@@ -231,6 +260,7 @@ def nuevaCotizacionView(request, idComparativa):
     return render(request, 'schema/nuevaCotizacion.html', context)
 
 # VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
+@login_required(redirect_field_name='')
 def nuevaCotizacionAuth(request, idComparativa):
     cotizacionForm = forms.CotizacionForm(request.POST)
     if cotizacionForm.is_valid():
@@ -242,6 +272,7 @@ def nuevaCotizacionAuth(request, idComparativa):
         for err in cotizacionForm.errors:
             print("error:", err)
 
+@login_required(redirect_field_name='')
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/polizas.html', context)
