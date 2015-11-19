@@ -243,10 +243,10 @@ class Seguro(models.Model):
     idSeguro = models.CharField(max_length=3, primary_key=True)
     nombre = models.CharField(max_length=80)
 
-class SeguroAP(TipoSeguro):
-
+class SeguroAP(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroAP', null=True)
     idSeguro = models.AutoField(primary_key=True)
-    marca = models.CharField(max_length=30, null=True, blank=True)
+    marca = models.CharField(max_length=30, null=True)
     modelo = models.CharField(max_length=30, blank=True, null=True)
     tipoPlan = models.CharField(max_length=50, blank=True, default="")
     ano = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -262,11 +262,12 @@ class SeguroAP(TipoSeguro):
 
     def attrs(self):
         print("Implemented")
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
 
-class SeguroC(TipoSeguro):
+class SeguroC(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroC', null=True)
     idSeguro = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=30, null=True, blank=True)
     modelo = models.CharField(max_length=30, blank=True, null=True)
@@ -281,20 +282,24 @@ class SeguroC(TipoSeguro):
     transmision = models.CharField(max_length=1, choices=TRANSMISIONES_OPCIONES)
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroR(TipoSeguro):
+class SeguroR(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroR', null=True)
+
     idSeguro = models.AutoField(primary_key=True)
     capacidad = models.CharField(max_length=15)
     ejes = models.PositiveSmallIntegerField()
     descripcion = models.TextField(blank=True, null=True)
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroG(TipoSeguro):
+class SeguroG(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroG', null=True)
+
     idSeguro = models.AutoField(primary_key=True)
     nombreAsegurado = models.CharField(max_length=80)
     coaseguro = models.DecimalField(max_digits=11, decimal_places=2)
@@ -302,10 +307,12 @@ class SeguroG(TipoSeguro):
     # preferencias = models.ForeignKey(Cobertura)
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroV(TipoSeguro):
+class SeguroV(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroV', null=True)
+
     idSeguro = models.AutoField(primary_key=True)
     nombreAsegurado = models.CharField(max_length=80)
     edad = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -318,10 +325,12 @@ class SeguroV(TipoSeguro):
     link = models.URLField(blank=True)
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroH(TipoSeguro):
+class SeguroH(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroH', null=True)
+
     idSeguro = models.AutoField(primary_key=True)
     codigoPostal = models.CharField(max_length=5)
     TIPO_VIVIENDA_OPCIONES = (
@@ -341,20 +350,23 @@ class SeguroH(TipoSeguro):
     capitalContenido = models.TextField(blank=True, default="")
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroI(TipoSeguro):
+class SeguroI(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroI', null=True)
+
     idSeguro = models.AutoField(primary_key=True)
     sumaAsegurada = models.DecimalField(max_digits=11, decimal_places=2)
     planAhorro = models.CharField(max_length=20)
     identificacion = models.URLField(blank=True)
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroE(TipoSeguro):
+class SeguroE(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroE', null=True)
 
     idSeguro = models.AutoField(primary_key=True)
     nombreEmpresa = models.CharField(max_length=50)
@@ -372,20 +384,22 @@ class SeguroE(TipoSeguro):
     codigoPostal = models.CharField(max_length=5, blank=True)
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroEC(TipoSeguro):
+class SeguroEC(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroEC', null=True)
 
     idSeguro = models.AutoField(primary_key=True)
     tipoEquipo = models.CharField(max_length=30)
     caracteristicas = models.TextField()
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
+        for attr, value in self.__dict__.items():
             yield attr, value
 
-class SeguroT(TipoSeguro):
+class SeguroT(models.Model):
+    tipoSeguro = OneToOneField(TipoSeguro, related_name='seguroT', null=True)
 
     idSeguro = models.AutoField(primary_key=True)
     tipoMedio = models.CharField(max_length=30)
@@ -398,7 +412,8 @@ class SeguroT(TipoSeguro):
     tipoTrabajo = models.CharField(max_length=20)
 
     def attrs(self):
-        for attr, value in self.__dict__.iteritems():
-            yield attr, value
+        for attr, value in self.__dict__.items():
+            if value is not None:
+                yield attr, value
 
 # class SeguroESP(models.Model) # Especializados
