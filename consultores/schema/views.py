@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response
 from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
+from schema import models
 from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -10,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from easy_pdf.views import PDFTemplateView
 from . import managers
+from django.forms.models import model_to_dict
 # Create your views here.
 
 """
@@ -119,24 +121,37 @@ def nuevaComparativaView(request, idCliente):
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
+def nuevaComparativaAPAuth(request, idCliente):
+    if request.method == 'POST':
+        APform = forms.SeguroAPForm(request.POST)
+        if APform.is_valid():
+            return HttpResponse("it's valid yei")
+        else:
+            return HttpResponse("not valid fuck")
+
+
 def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
-        if request.POST['tipo'] == 'NULL':
-            return HttpResponse('Tipo de seguro no seleccionado')
-
         if request.POST['tipo'] == 'AP':
             APform = forms.SeguroAPForm(request.POST)
             if APform.is_valid():
-                seguroComparativa = APform.save()
-                seguroComparativa.nombre = Seguro.objects.get(pk='AP')
+                print("valid as fuck")
+                seguroComparativa = APform.save(commit=False)
+                tipoSeguro = TipoSeguro(nombre=Seguro.objects.get(pk='AP'))
+                tipoSeguro.save()
+                seguroComparativa.tipoSeguro = tipoSeguro
                 seguroComparativa.save()
-                comparativa = Comparativa(tipoSeguro=seguroComparativa)
+                print(seguroComparativa.tipoSeguro.nombre.nombre)
+                # seguroComparativa.tipoSeguro.nombre = Seguro.objects.get(pk='AP')
+                # seguroComparativa.save()
+                comparativa = Comparativa(tipoSeguro=seguroComparativa.tipoSeguro)
                 comparativa.save()
 
                 checklist = request.POST.getlist('coberturaAP')
                 for checked in checklist:
                     print("id cobertura:", checked)
                     comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
+                comparativa.save()
                 ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -313,7 +328,12 @@ def comparativasView(request):
     return render(request, 'schema/comparativas.html', context)
 
 def comparativaClienteView(request, idComparativa):
-    context = {'comparativa': Comparativa.objects.get(pk=idComparativa)}
+    seguroAP = Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroAP
+    print(seguroAP)
+    print(seguroAP.marca)
+    datosAP = forms.SeguroAPForm(data=model_to_dict(seguroAP))
+    #  'datosAP': datosAP
+    context = {'comparativa': Comparativa.objects.get(pk=idComparativa), 'datosAP': datosAP}
     return render(request, 'schema/comparativacliente.html', context)
 
 def cotizacionClienteView(request, idCotizacion):

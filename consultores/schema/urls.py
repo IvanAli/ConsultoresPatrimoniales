@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^nuevaComparativa/(?P<idCliente>[0-9]+)/$', views.nuevaComparativaView, name='nuevaComparativa'),
     url(r'^nuevaCotizacion/(?P<idComparativa>[0-9]+)/$', views.nuevaCotizacionView, name='nuevaCotizacion'),
     url(r'^nuevaComparativaAuth/(?P<idCliente>[0-9]+)/$', views.nuevaComparativaAuth, name='nuevaComparativaAuth'),
+    url(r'^nuevaComparativaAPAuth/(?P<idCliente>[0-9]+)/$', views.nuevaComparativaAPAuth, name='nuevaComparativaAPAuth'),
     url(r'^nuevaCotizacionAuth/(?P<idComparativa>[0-9]+)/$', views.nuevaCotizacionAuth, name='nuevaCotizacionAuth'),
     url(r'^comparativas/$', views.comparativasView, name='comparativas'),
     url(r'^comparativas/(?P<idComparativa>[0-9]+)/$', views.comparativaClienteView, name='comparativaCliente'),

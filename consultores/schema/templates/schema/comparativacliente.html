@@ -29,11 +29,26 @@
                     <legend>
                         Características
                     </legend>
-                    {{ comparativa.tipoSeguro }}
+                    {% for field in datosAP %}
+                        <li><b>{{ field.label }}:</b>
+                            {% if field.data == None or field.data == '' %}
+                                No especificado
+                            {% else %}
+                                {{ field.data }}</li>
+                            {% endif %}
+                    {% endfor %}
+                    <!--
+                    {{ comparativa.tipoSeguro.seguroAP.marca }}
+                    {% if comparativa.tipoSeguro.nombre.pk == 'AP' %}
+                        {% for field, value in comparativa.tipoSeguro.seguroAP.attrs %}
+                            <li><b>{{ field }}:</b> {{ value }}</li>
+                        {% endfor %}
+                    {% endif %}
                     {% for field, value in comparativa.tipoSeguro.attrs %}
                         <li><b>{{ field }}:</b> {{ value }}</li>
                     {% endfor %}
                     {{ comparativa.tipoSeguro.seguroap.modelo }}
+                    -->
                     <legend>
                         Coberturas deseadas
                     </legend>
