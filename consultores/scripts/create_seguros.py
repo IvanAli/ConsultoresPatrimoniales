@@ -19,9 +19,12 @@ def create_seguro():
     seguro.save()
     seguro = Seguro(idSeguro='EC', nombre='Equipo de contratistas')
     seguro.save()
+    seguro = Seguro(idSeguro='T', nombre='Transportes')
+    seguro.save()
 
 def delete_seguro():
     Seguro.objects.all().delete()
 
 def run():
+    delete_seguro()
     create_seguro()
