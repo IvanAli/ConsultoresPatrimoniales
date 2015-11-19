@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from . import forms
 from django.forms import formset_factory
+from django.forms import BaseFormSet
 from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -235,8 +236,20 @@ def cotizacionClienteView(request, idCotizacion):
     return render(request, 'schema/cotizacioncliente.html', context)
 
 def nuevaCotizacionView(request, idComparativa):
+    class RequiredFormSet(BaseFormSet):
+        def __init__(self, *args, **kwargs):
+            super(RequiredFormSet, self).__init__(*args, **kwargs)
+            for form in self.forms:
+                form.empty_permitted = False
+
     comparativa = Comparativa.objects.get(pk=idComparativa)
     tipo = comparativa.tipoSeguro.nombre.idSeguro
+
+    formset = formset_factory(forms.CoberturaUtilizadaForm, max_num=20, formset=RequiredFormSet)
+    cuformset = formset()
+    for form in cuformset.forms:
+        form.fields['idCobertura'].queryset = Cobertura.objects.filter(seguro__pk=tipo)
+
     coberturaUtilizadaForm = forms.CoberturaUtilizadaForm()
     coberturaUtilizadaForm.fields['idCobertura'].queryset = Cobertura.objects.filter(seguro__pk=tipo)
     context = {
@@ -245,12 +258,31 @@ def nuevaCotizacionView(request, idComparativa):
         'cotizacionForm': forms.CotizacionForm(),
         'coberturaUtilizadaForm': coberturaUtilizadaForm,
         'coberturas': Cobertura.objects.filter(seguro__pk=tipo),
+        'formset': cuformset,
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
 # VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
 def nuevaCotizacionAuth(request, idComparativa):
-    cotizacionForm = forms.CotizacionForm(request.POST, instance=Cotizacion())
+    # cuForm = forms.coberturaUtilizadaForm(request.POST)
+    formset = formset_factory(forms.CoberturaUtilizadaForm)
+    if request.method == 'POST':
+        cotizacionForm = forms.CotizacionForm(request.POST, instance=Cotizacion())
+        cuForm = forms.CoberturaUtilizadaForm(request.POST)
+        cuFormset = formset(request.POST, request.FILES)
+        if cotizacionForm.is_valid() and cuFormset.is_valid():
+            cotizacion = cotizacionForm.save()
+            for form in cuFormset.forms:
+                cobertura = form.save(commit=False)
+                cobertura.cotizacion = cotizacion
+                cobertura.save()
+            cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)
+            cotizacion.save()
+            return HttpResponseRedirect(reverse('schema:comparativas'))
+        else:
+            return HttpResponse("error")
+
+    """
     cuForms = [forms.CoberturaUtilizadaForm(request.POST, prefix=str(x), instance=CoberturaUtilizada()) for x in range(0, 3)]
     if cotizacionForm.is_valid() and any([coberturaForm.is_valid() for coberturaForm in cuForms]):
         cotizacion = cotizacionForm.save()
@@ -268,12 +300,14 @@ def nuevaCotizacionAuth(request, idComparativa):
         for element in cuForms:
             for err in element.errors:
                 print("error cobertura:", err)
+    """
     return HttpResponse("error")
 
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/polizas.html', context)
 
+# not working
 class ComparativaPDFView(PDFTemplateView):
     template_name = "schema/pdf/comparativapdf.html"
 

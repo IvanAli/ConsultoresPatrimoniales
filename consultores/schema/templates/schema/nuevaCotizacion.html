@@ -24,13 +24,20 @@
                     <legend>
                         Coberturas <input style="float: right;" type="button" value="Agregar" class="btn btn-warning btn-sm" id="addNew">
                     </legend>
-                    <!-- {{ coberturaUtilizadaForm }} <button name="p_new" id="addNew">Agregar cobertura</button> -->
+                    {{ formset.management_form }}
+                    <div id="addinput">
+                        {% for form in formset.forms %}
+                            {{ form }}
+                        {% endfor %}
+                    </div>
+
+                    <!--
                     <div id="addinput">
                         <p>
                             {{ coberturaUtilizadaForm }}
                         </p>
                     </div>
-
+                    -->
                 </fieldset>
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
@@ -43,7 +50,9 @@
     	  </div>
     </form>
 
-
+    <div id="origin-item" class="item well hide">
+        {{ coberturaUtilizadaForm.as_p }}
+    </div>
     {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
     {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
 
@@ -51,6 +60,8 @@
 {% endblock %}
 
 {% block footer_javascript %}
+<!-- Taken from: https://www.djangosnippets.org/snippets/1389/ -->
+<!-- <script language="javascript" src="/static/js/custom/dynamic-formset.js"></script> -->
 <script type="text/javascript">
     $(function() {
         var addDiv = $('#addinput');
@@ -75,10 +86,5 @@
         });
     });
 
-    function getCoberturaCount() {
-        return i;
-    }
-
 </script>
-
 {% endblock %}
