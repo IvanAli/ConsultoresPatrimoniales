@@ -21,6 +21,8 @@
                     <h3 class="panel-title">Comparativa</h3>
                     <div class="pull-right">
                     <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
+                        <a id="concluida" href="#" class="btn btn-default btn-sm btn-new-pos">Marcar como concluida</a>
+                        <a id="concluida" href="{% url 'schema:enviarComparativa' comparativa.ordenServicio.cliente.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa</a>
                         <a id="nuevoCliente" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>
                     </div>
                     </div>
