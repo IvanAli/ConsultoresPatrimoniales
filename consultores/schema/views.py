@@ -12,7 +12,10 @@ from django.contrib.auth.decorators import login_required
 from easy_pdf.views import PDFTemplateView
 from . import managers
 from django.forms.models import model_to_dict
+from django.core.mail import send_mail, EmailMessage
 # Create your views here.
+
+# from django.conf.settings import PROJECT_ROOT
 
 """
     AGREGAR DECORATORS - PENDIENTE
@@ -423,6 +426,22 @@ def nuevaCotizacionAuth(request, idComparativa):
                 print("error cobertura:", err)
     """
     return HttpResponse("error")
+
+def enviarComparativaView(request, idCliente):
+    # file_ = open('C:/Users/Ivan/Consultores/consultores/django-storages.txt')
+    cliente = Cliente.objects.get(pk=idCliente)
+    if cliente.email is None or cliente.email == "":
+        return HttpResponse('El cliente no tiene email')
+    else:
+        # send_mail("Cotizaciones para su seguro", "test", 'ivanali@outlook.com', ['grimi94@gmail.com'], fail_silently=False)
+        try:
+            mail = EmailMessage("hola grimi", "adios", 'ivanali@outlook.com', [cliente.email])
+            mail.attach(file_.name, file_.read(), 'application/pdf')
+            mail.send()
+            return HttpResponse('Correo enviado exitosamente')
+        except Exception as e:
+            return HttpResponse(e)
+    return HttpResponse(idCliente)
 
 def polizasView(request):
     context = {'clientes': request.user.agente.clientes}

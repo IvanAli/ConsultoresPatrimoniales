@@ -52,6 +52,23 @@ AZURE_ACCOUNT_NAME = 'consultorespatrimoniales'
 AZURE_ACCOUNT_KEY = 'dV2vFne0e0sWg3JKRdOTIrBRC+VnxEKU6510QS9d5Kx1USELHEpUt9pfQsDd3ysfmPGItgjbg+kC6kLmprJLfw=='
 AZURE_CONTAINER = 'cotizaciones'
 
+#For email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'smtp-mail.outlook.com'
+
+EMAIL_HOST_USER = 'ivanali@outlook.com'
+
+#Must generate specific password for your app in [gmail settings][1]
+EMAIL_HOST_PASSWORD = 'waltzforPiano24'
+
+EMAIL_PORT = 25
+
+#This did the trick
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 # AUTH_USER_MODEL = 'schema.Usuario'
 
 MIDDLEWARE_CLASSES = (

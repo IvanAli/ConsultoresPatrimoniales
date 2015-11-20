@@ -221,7 +221,7 @@ class OrdenServicio(models.Model):
     fechaConclusion = models.DateTimeField(blank=True, null=True)
     # agente = models.ForeignKey('Agente')
     cliente = models.ForeignKey('Cliente')
-    comparativa = models.OneToOneField(Comparativa, null=True)
+    comparativa = models.OneToOneField(Comparativa, related_name="ordenServicio", null=True)
     # poliza = models.OneToOneField(Poliza, null=True)
     def __str__ (self):
         return "Orden de Servicio: " + str(self.idServicio)
