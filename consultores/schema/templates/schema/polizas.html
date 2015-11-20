@@ -41,30 +41,33 @@
                         </thead>
                         <tbody class="rowlink" data-link="row">
                             {% for cliente in clientes.all %}
-                            {% for orden in cliente.ordenservicio_set.all %}
-                                <tr id="poliza{{ forloop.counter }}">
-                                    <td>
-                                        {{ orden.poliza.pk }}
-                                    </td>
-                                    <td>
-                                        {{ orden.cliente.nombre }}
-                                        {{ orden.cliente.apellidoPaterno }}
-                                        {{ orden.cliente.apellidoMaterno }}
-                                    </td>
-                                    <td>
-                                        {{ orden.tipoSeguro.get_idTipoSeguro_display }}
-                                    </td>
-                                    <td>
-                                        {{ orden.poliza.cotizacion.idCotizacion }}
-                                    </td>
-                                    <td>
-                                        {{ orden.poliza.pago_set.all.count }}
-                                    </td>
-                                    <td>
-                                        {{ orden.poliza.fechaFin|date }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                                {% for orden in cliente.ordenservicio_set.all %}
+                                    {% if orden.poliza %}
+                            
+                            <tr id="poliza{{ forloop.counter }}">
+                                <td>
+                                    {{ orden.poliza.pk }}
+                                </td>
+                                <td>
+                                    {{ orden.cliente.nombre }}
+                                    {{ orden.cliente.apellidoPaterno }}
+                                    {{ orden.cliente.apellidoMaterno }}
+                                </td>
+                                <td>
+                                    {{ orden.tipoSeguro.get_idTipoSeguro_display }}
+                                </td>
+                                <td>
+                                    {{ orden.poliza.cotizacion.idCotizacion }}
+                                </td>
+                                <td>
+                                    {{ orden.poliza.pago_set.all.count }}
+                                </td>
+                                <td>
+                                    {{ orden.poliza.fechaFin|date }}
+                                </td>
+                            </tr>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
                         </tbody>
                     </table>

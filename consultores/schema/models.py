@@ -97,6 +97,21 @@ class Agente(Persona):
     def __str__(self):
         return "Agente: " + self.userAgente.username
 
+class Administrador(Persona):
+    userAdmin = OneToOneField(User)
+
+    def save(self, *args, **kwargs):
+        try:
+            groupAdmin = Group.objects.get(name='admin')
+            self.userAdmin.groups.add(groupAdmin)
+        except Group.DoesNotExist:
+            groupAdmin = Group.objects.create(name='admin')
+            self.userAdmin.groups.add(groupAdmin)
+        self.userAdmin.groups.add(groupAdmin)
+        super(Administrador, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Administrador: " + self.userAdmin.username
 
 class TipoSeguro(models.Model):
     # tipo = models.CharField(max_length=3, choices=SEGUROS_OPCIONES, null=True)

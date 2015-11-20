@@ -3,13 +3,14 @@ from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
 from schema import models
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Cotizacion, CoberturaUtilizada
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from easy_pdf.views import PDFTemplateView
+from django.views.decorators.csrf import csrf_protect
+# from easy_pdf.views import PDFTemplateView
 from . import managers
 from django.forms.models import model_to_dict
 from django.core.mail import send_mail, EmailMessage
@@ -33,10 +34,30 @@ def getUser(username):
 def isAgente(user):
     return user.groups.filter(name='agente').exists()
 
-# VIEWS
-def loginView(request):
-    return render(request, "schema/login.html", {})
+def whichUser(user):
+    groupID = 0;
+    if user.groups.filter(name="admin").exists():
+        groupID = 2
+    elif user.groups.filter(name='agente').exists():
+        groupID = 1
+    return groupID
 
+# VIEWS
+@csrf_protect
+def loginView(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('schema:home'))
+    else:
+        context = {}
+        return render(request, "schema/login.html", context)
+
+@csrf_protect
+def logoutView(request):
+    logout(request)
+    context = {'message_logoutsuccess': "¡Has salido exitosamente!"}
+    return render(request, "schema/login.html", context)
+
+@csrf_protect
 def loginAuthentication(request):
     if request.method == "POST":
         login_form = forms.LoginForm(request.POST)
@@ -53,7 +74,7 @@ def loginAuthentication(request):
                     context = {'error_sessionexpired': 'Sesión expirada'}
                     return render(request, 'schema/login.html', context)
             else:
-                context = {'error_wrongpassword': "Contraseña incorrecta"}
+                context = {'error_wrongpassword': "Usuario o contraseña incorrectos"}
                 return render(request, 'schema/login.html', context)
         else:
             context = {'error_missingfields': "Campos sin llenar"}
@@ -62,17 +83,21 @@ def loginAuthentication(request):
 def registerAgente(request):
     return HttpResponse("Work in Progress")
 
+@login_required(redirect_field_name='')
 def home(request):
-    if isAgente(request.user):
+    if whichUser(request.user) == 1:
         context = {'agente': Agente.objects.get(userAgente=request.user)}
         return render(request, 'schema/home.html', context)
-    else:
-        print("NOT AN AGENT")
+    elif whichUser(request.user) == 2:
+        context = {'agente': Administrador.objects.get(userAdmin=request.user)}
+        return render(request, 'schema/homeAdmin.html', context)
 
+@login_required(redirect_field_name='')
 def nuevoClienteView(request):
     context = {'cliente': request.user.agente.clientes}
     return render(request, "schema/nuevoCliente.html", context)
 
+@login_required(redirect_field_name='')
 def nuevoClienteAuth(request):
     if request.method == "POST":
         datos_form = forms.nuevoClienteForm(request.POST)
@@ -84,18 +109,27 @@ def nuevoClienteAuth(request):
             context = {'error_missingfields': "Campos sin llenar"}
             return render(request, 'schema/nuevoCliente.html', context)
 
+@login_required(redirect_field_name='')
 def clientesView(request):
-    context = {'clientes': request.user.agente.clientes}
-    return render(request, 'schema/clientes.html', context)
+    if whichUser(request.user) == 1:
+        context = {'clientes': request.user.agente.clientes}
+        return render(request, 'schema/clientes.html', context)
+    elif whichUser(request.user) == 2:
+        context = {'clientes': Cliente.objects.all()}
+        return render(request, 'schema/clientesAdmin.html', context)
 
+
+@login_required(redirect_field_name='')
 def infoClienteView(request, idCliente):
     context = {'cliente': Cliente.objects.get(pk=idCliente)}
     return render(request, 'schema/infocliente.html', context)
 
+@login_required(redirect_field_name='')
 def preNuevaComparativaView(request):
     context = {'clientes': request.user.agente.clientes}
     return render(request, 'schema/preNuevaComparativa.html', context)
 
+@login_required(redirect_field_name='')
 def nuevaComparativaView(request, idCliente):
     context = {
         'cliente': request.user.agente.clientes.get(pk=idCliente),
@@ -133,6 +167,7 @@ def nuevaComparativaAPAuth(request, idCliente):
             return HttpResponse("not valid fuck")
 
 
+@login_required(redirect_field_name='')
 def nuevaComparativaAuth(request, idCliente):
     if request.method == "POST":
         if request.POST['tipo'] == 'AP':
@@ -325,11 +360,16 @@ def nuevaComparativaAuth(request, idCliente):
     # tmp
     return HttpResponse('Autenticando nueva Comparativa...')
 
-
+@login_required(redirect_field_name='')
 def comparativasView(request):
-    context = {'clientes': request.user.agente.clientes}
-    return render(request, 'schema/comparativas.html', context)
+    if whichUser(request.user) == 1:
+        context = {'clientes': request.user.agente.clientes}
+        return render(request, 'schema/comparativas.html', context)
+    elif whichUser(request.user) == 2:
+        context = {'agentes': Agente.objects.all()}
+        return render(request, 'schema/comparativasAdmin.html', context)
 
+@login_required(redirect_field_name='')
 def comparativaClienteView(request, idComparativa):
     seguroAP = Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroAP
     print(seguroAP)
@@ -343,6 +383,7 @@ def cotizacionClienteView(request, idCotizacion):
     context = {'cotizacion': Cotizacion.objects.get(pk=idCotizacion)}
     return render(request, 'schema/cotizacioncliente.html', context)
 
+@login_required(redirect_field_name='')
 def nuevaCotizacionView(request, idComparativa):
     class RequiredFormSet(BaseFormSet):
         def __init__(self, *args, **kwargs):
@@ -377,6 +418,7 @@ def handle_uploaded_file(f):
             destination.write(chunk)
 
 # VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
+@login_required(redirect_field_name='')
 def nuevaCotizacionAuth(request, idComparativa):
     # cuForm = forms.coberturaUtilizadaForm(request.POST)
     formset = formset_factory(forms.CoberturaUtilizadaForm)
@@ -443,17 +485,49 @@ def enviarComparativaView(request, idCliente):
             return HttpResponse(e)
     return HttpResponse(idCliente)
 
+@login_required(redirect_field_name='')
 def polizasView(request):
-    context = {'clientes': request.user.agente.clientes}
-    return render(request, 'schema/polizas.html', context)
+    if whichUser(request.user) == 1:
+        context = {'clientes': request.user.agente.clientes}
+        return render(request, 'schema/polizas.html', context)
+    elif whichUser(request.user) == 2:
+        context = {'agentes': Agente.objects.all()}
+        return render(request, 'schema/polizasAdmin.html', context)
+
+@login_required(redirect_field_name='')
+def agentesView(request):
+    if whichUser(request.user) == 1:
+        return HttpResponse("No autorizado")
+    elif whichUser(request.user) == 2:
+        context = {'agentes': Agente.objects.all()}
+        return render(request, 'schema/agentesAdmin.html', context)
+
+@login_required(redirect_field_name='')
+def aseguradorasView(request):
+    if whichUser(request.user) == 1:
+        return HttpResponse("No autorizado")
+    elif whichUser(request.user) == 2:
+        context = {
+            'aseguradoras': Aseguradora.objects.all(),
+            'contactos': Contacto.objects.all(),
+        }
+        return render(request, 'schema/aseguradorasAdmin.html', context)
+
+@login_required(redirect_field_name='')
+def segurosView(request):
+    if whichUser(request.user) == 1:
+        return HttpResponse("No autorizado")
+    elif whichUser(request.user) == 2:
+        context = {'range': range(50)}
+        return render(request, 'schema/segurosAdmin.html', context)
 
 # not working
-class ComparativaPDFView(PDFTemplateView):
-    template_name = "schema/pdf/comparativapdf.html"
+# class ComparativaPDFView(PDFTemplateView):
+#     template_name = "schema/pdf/comparativapdf.html"
 
-    def get_context_data(self, **kwargs):
-        return super(ComparativaPDFView, self).get_context_data(
-            pagesize="A4",
-            title="Comparativa",
-            **kwargs
-        )
+#     def get_context_data(self, **kwargs):
+#         return super(ComparativaPDFView, self).get_context_data(
+#             pagesize="A4",
+#             title="Comparativa",
+#             **kwargs
+#         )

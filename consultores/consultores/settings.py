@@ -62,7 +62,7 @@ EMAIL_HOST = 'smtp-mail.outlook.com'
 EMAIL_HOST_USER = 'ivanali@outlook.com'
 
 #Must generate specific password for your app in [gmail settings][1]
-EMAIL_HOST_PASSWORD = 'waltzforPiano24'
+EMAIL_HOST_PASSWORD = ''
 
 EMAIL_PORT = 25
 
@@ -70,6 +70,8 @@ EMAIL_PORT = 25
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # AUTH_USER_MODEL = 'schema.Usuario'
+
+LOGIN_URL = '/'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

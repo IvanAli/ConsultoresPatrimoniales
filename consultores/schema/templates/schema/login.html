@@ -24,7 +24,7 @@
 
     <form action="{% url 'schema:loginAuthentication' %}" method="post">
         {% csrf_token %}
-        <input type="text" name="user" class="user" placeholder="Agente">
+        <input type="text" name="user" class="user" placeholder="Usuario">
         <input type="password" name="password" class="password" placeholder="Contraseña">
         <!--<a href="index.html" class="login loginmodal-submit">Entrar</a>-->
         <!--<input type="button" style="width: 100%;" class="login loginmodal-submit" value="Entrar">-->
@@ -37,6 +37,7 @@
     {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
     {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
     {% if error_sessionexpired %}<p class="red-color">{{ error_sessionexpired }}{% endif %}
+    {% if message_logoutsuccess %}<p class="green-color">{{ message_logoutsuccess }}{% endif %}
 </div>
 
 {% endblock %}

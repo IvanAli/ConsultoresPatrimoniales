@@ -1,3 +1,4 @@
+#SI
 from schema.models import Seguro
 
 def create_seguro():

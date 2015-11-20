@@ -1,0 +1,46 @@
+.logo-size {
+    max-height: 45px;
+    /* margin-top: -0.9em; */
+    position: relative;
+    top: -0.4em;
+    left: -0.7em;
+}
+
+.base_footer {
+    border-top: 1px solid LightGray;
+    padding: 3em;
+    text-align: center;
+}
+
+.navbar {
+    min-height:45px !important;
+    background-color: #FFC107;
+}
+
+.navbar-nav > li > a, .navbar-brand {
+    background-color: #FFC107;
+    padding-top:10px !important;
+    padding-bottom:0 !important;
+    height: 45px;
+    left: -20px;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #777;
+}
+
+.navbar-inverse .navbar-nav > .active > a {
+    background-color: #FFA000;
+    color: #FFF;
+}
+
+.navbar-inverse .navbar-nav>.active>a:hover,
+.navbar-inverse .navbar-nav>.active>a:focus {
+    background-color: #FFA000;
+    
+    /* PARA CAMBIAR EL HOVER DEL ELEMENTO ACTIVO
+    color: #777;*/
+}
+
+
+

@@ -1,3 +1,4 @@
+#NECESITA REVISION
 from schema.models import Comparativa, Cotizacion, TipoSeguro, SeguroAP, 
 
 def run():
