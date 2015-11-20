@@ -152,6 +152,7 @@ class Cotizacion(models.Model):
     formaPago = models.IntegerField(choices=FORMA_PAGO_OPCIONES, default=12)
     comparativa = models.ForeignKey('Comparativa', null=True)
     aseguradora = models.ForeignKey('Aseguradora')
+    archivo = models.FileField(null=True)
     def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa
 

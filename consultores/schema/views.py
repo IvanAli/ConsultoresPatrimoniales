@@ -364,18 +364,30 @@ def nuevaCotizacionView(request, idComparativa):
         'coberturaUtilizadaForm': coberturaUtilizadaForm,
         'coberturas': Cobertura.objects.filter(seguro__pk=tipo),
         'formset': cuformset,
+        'uploadFileForm': forms.UploadFileForm(),
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
+
+def handle_uploaded_file(f):
+    with open(f.name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 # VALIDACION DE COBERTURAS INTRODUCIDAS PENDIENTES
 def nuevaCotizacionAuth(request, idComparativa):
     # cuForm = forms.coberturaUtilizadaForm(request.POST)
     formset = formset_factory(forms.CoberturaUtilizadaForm)
     if request.method == 'POST':
-        cotizacionForm = forms.CotizacionForm(request.POST, instance=Cotizacion())
+        cotizacionForm = forms.CotizacionForm(request.POST, request.FILES, instance=Cotizacion())
         cuForm = forms.CoberturaUtilizadaForm(request.POST)
         cuFormset = formset(request.POST, request.FILES)
+        # uploadedFileForm = forms.UploadFileForm(request.POST, request.FILES)
+
         if cotizacionForm.is_valid() and cuFormset.is_valid():
+            """
+            handle_uploaded_file(request.FILES['file'])
+            fileUploaded = uploadedFileForm.save()
+            """
             cotizacion = cotizacionForm.save()
             for form in cuFormset.forms:
                 cobertura = form.save(commit=False)
@@ -385,6 +397,10 @@ def nuevaCotizacionAuth(request, idComparativa):
             cotizacion.save()
             return HttpResponseRedirect(reverse('schema:comparativas'))
         else:
+            for err in cotizacionForm.errors:
+                print(err)
+            for err in uploadedFileForm.errors:
+                print(err)
             return HttpResponse("error")
 
     """

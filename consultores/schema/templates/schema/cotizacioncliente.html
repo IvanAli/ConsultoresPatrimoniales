@@ -20,6 +20,8 @@
             {% for cobertura in cotizacion.coberturautilizada_set.all %}
                 <h3>{{ cobertura.idCobertura.nombre }}</h3>
             {% endfor %}
+            <h3>Link al PDF</h3>
+            <a href="{{ cotizacion.archivo.url }}">Link</a>
         </div>
     </div>
 </div>
