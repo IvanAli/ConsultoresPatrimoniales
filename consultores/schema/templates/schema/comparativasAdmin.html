@@ -1,0 +1,101 @@
+{% extends "baseAdmin.html" %}
+
+{% block head_title %}Comparativas{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+{% endblock %}
+{% block head_javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+{% endblock %}
+
+{% block comparativas_tag %}class="active"{% endblock %}
+
+{% block body_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Todas las comparativas</h4>
+                </div>
+            </div>
+            <table class="table table-hover" id="comparativasTable">
+                <thead>
+                    <tr>
+                        <th>ID Comparativa</th>
+                        <th>Agente</th>
+                        <th>Cliente</th>
+                        <th># de cotizaciones</th>
+                        <th>Tipo de seguro</th>
+                        <th>Concluida</th>
+                        <th>Enviada</th>
+                    </tr>
+                </thead>
+
+                <tbody class="rowlink" data-link="row">
+                    {% for agente in agentes %}
+                        {% for cliente in agente.clientes.all %}
+                            {% for orden in cliente.ordenservicio_set.all %}
+
+                    <tr id="comparativa{{ forloop.counter}}">
+                        <td>
+                            <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
+                        </td>
+                        <td>
+                            {{ agente.userAgente.first_name }}
+                            {{ agente.userAgente.last_name }}
+                        </td>
+                        <td>
+                            {{ cliente.nombre }}
+                            {{ cliente.apellidoPaterno }}
+                            {{ cliente.apellidoMaterno }}
+                        </td>
+                        <td>
+                            {{ orden.comparativa.cotizacion_set.all.count }}
+                        </td>
+                        <td>
+                            {{ orden.comparativa.tipoSeguro.get_tipo_display }}
+                        </td>
+                        <td>
+                            {% if orden.comparativa.fechaConclusion %}
+                                Sí
+                            {% else %}
+                                No
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if orden.comparativa.fechaEnviada %}
+                                Sí
+                            {% else %}
+                                No
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#comparativasTable').DataTable();
+} );
+</script>
+{% endblock %}

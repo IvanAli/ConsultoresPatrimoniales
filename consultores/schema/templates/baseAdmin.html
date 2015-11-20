@@ -25,7 +25,7 @@
         <!-- <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css"> -->
 
         <link rel="stylesheet" href="/static/css/main.css">
-        <link rel="stylesheet" href="/static/css/custom/navbarstyles.css">
+        <link rel="stylesheet" href="/static/css/custom/navbarstyles_admin.css">
 
         <script src="/static/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 
@@ -42,7 +42,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="">
+                    <a class="navbar-brand">
                         <img src="/static/img/logo/logo.png" class="logo-size">
                     </a>
                 </div>
@@ -53,10 +53,13 @@
                         <li id="clientes" {% block clientes_tag %}{% endblock %}><a href="{% url 'schema:clientes' %}">Clientes<span class="sr-only">(current)</span></a></li>
                         <li id="comparativas" {% block comparativas_tag %}{% endblock %}><a href="{% url 'schema:comparativas' %}">Comparativas</a></li>
                         <li id="polizas" {% block polizas_tag %}{% endblock %}><a href="{% url 'schema:polizas' %}">Pólizas</a></li>
+                        <li id="agentes" {% block agentes_tag %}{% endblock %}><a href="{% url 'schema:agentes' %}">Agentes<span class="sr-only">(current)</span></a></li>
+                        <li id="aseguradoras" {% block aseguradoras_tag %}{% endblock %}><a href="{% url 'schema:aseguradoras' %}">Aseguradoras</a></li>
+                        <li id="seguros" {% block seguros_tag %}{% endblock %}><a href="{% url 'schema:seguros' %}">Seguros</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a>Agente {{ request.user.first_name }} {{ request.user.last_name }}</a></li>
+                        <li><a>Administrador {{ request.user.first_name }} {{ request.user.last_name }}</a></li>
                         <li><a href="{% url 'schema:logout' %}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Salir</a></li>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+#NECESITA REVISION
 from schema.models import Agente, Cliente, ClienteFisico, OrdenServicio, TipoSeguro, Aseguradora, Comparativa, Poliza, SeguroAP, CoberturaAP
 from django.contrib.auth.models import User
 from django.utils import timezone

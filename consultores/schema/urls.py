@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.loginView, name='login'),
+    url(r'^logout/$', views.logoutView, name='logout'),
     url(r'^authentication/$', views.loginAuthentication, name='loginAuthentication'),
     url(r'^home/$', views.home, name='home'),
     url(r'^nuevoCliente/$', views.nuevoClienteView, name='nuevoCliente'),
@@ -20,5 +21,8 @@ urlpatterns = [
     url(r'^polizas/$', views.polizasView, name='polizas'),
     url(r'^nuevoClienteAuth/$', views.nuevoClienteAuth, name='nuevoClienteAuthentication'),
     url(r'^cotizaciones/(?P<idCotizacion>[0-9]+)/$', views.cotizacionClienteView, name='cotizacionCliente'),
-    url(r'^comparativa.pdf$', views.ComparativaPDFView.as_view(), name='comparativapdf'),
+    # url(r'^comparativa.pdf$', views.ComparativaPDFView.as_view(), name='comparativapdf'),
+    url(r'^agentes/$', views.agentesView, name='agentes'),
+    url(r'^aseguradoras/$', views.aseguradorasView, name='aseguradoras'),
+    url(r'^seguros/$', views.segurosView, name='seguros'),
 ]

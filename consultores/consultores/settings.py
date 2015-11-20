@@ -38,11 +38,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'easy_pdf',
     'schema',
 )
 
 # AUTH_USER_MODEL = 'schema.Usuario'
+
+LOGIN_URL = '/'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
