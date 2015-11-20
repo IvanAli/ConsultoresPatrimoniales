@@ -15,12 +15,16 @@ class nuevoClienteForm(forms.ModelForm):
 class CotizacionForm(forms.ModelForm):
     class Meta:
         model = Cotizacion
-        fields = ['costo', 'formaPago', 'aseguradora']
+        fields = ['costo', 'formaPago', 'aseguradora', 'archivo']
 
 class CoberturaUtilizadaForm(forms.ModelForm):
     class Meta:
         model = CoberturaUtilizada
         fields = ['idCobertura', 'sumaAsegurada', 'deducible']
+
+class UploadFileForm(forms.Form):
+    # title = forms.CharField(max_length=50)
+    file = forms.FileField()
 
 class SeguroAPForm(forms.ModelForm):
 	class Meta:

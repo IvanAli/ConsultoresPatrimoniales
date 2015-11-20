@@ -37,18 +37,6 @@
                                 {{ field.data }}</li>
                             {% endif %}
                     {% endfor %}
-                    <!--
-                    {{ comparativa.tipoSeguro.seguroAP.marca }}
-                    {% if comparativa.tipoSeguro.nombre.pk == 'AP' %}
-                        {% for field, value in comparativa.tipoSeguro.seguroAP.attrs %}
-                            <li><b>{{ field }}:</b> {{ value }}</li>
-                        {% endfor %}
-                    {% endif %}
-                    {% for field, value in comparativa.tipoSeguro.attrs %}
-                        <li><b>{{ field }}:</b> {{ value }}</li>
-                    {% endfor %}
-                    {{ comparativa.tipoSeguro.seguroap.modelo }}
-                    -->
                     <legend>
                         Coberturas deseadas
                     </legend>
@@ -65,7 +53,7 @@
                                 <th>ID Cotización</th>
                                 <th>Aseguradora</th>
                                 <th>Costo</th>
-                                <th>Coberturas</th>
+                                <th>No. de coberturas</th>
                                 <th>Forma de pago</th>
                                 <th>Fecha de creación</th>
                             </tr>
