@@ -18,5 +18,8 @@ urlpatterns = [
     url(r'^comparativas/$', views.comparativasView, name='comparativas'),
     url(r'^comparativas/(?P<idComparativa>[0-9]+)/$', views.comparativaClienteView, name='comparativaCliente'),
     url(r'^polizas/$', views.polizasView, name='polizas'),
-    url(r'^nuevoClienteAuth/$', views.nuevoClienteAuth, name='nuevoClienteAuthentication')
+    url(r'^nuevoClienteAuth/$', views.nuevoClienteAuth, name='nuevoClienteAuthentication'),
+    url(r'^agentes/$', views.agentesView, name='agentes'),
+    url(r'^aseguradoras/$', views.aseguradorasView, name='aseguradoras'),
+    url(r'^seguros/$', views.segurosView, name='seguros'),
 ]

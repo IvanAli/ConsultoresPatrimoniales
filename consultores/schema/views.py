@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from . import forms
 from django.forms import formset_factory
-from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Cobertura, Contacto
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -101,8 +101,13 @@ def nuevoClienteAuth(request):
 
 @login_required(redirect_field_name='')
 def clientesView(request):
-    context = {'clientes': request.user.agente.clientes}
-    return render(request, 'schema/clientes.html', context)
+    if whichUser(request.user) == 1:
+        context = {'clientes': request.user.agente.clientes}
+        return render(request, 'schema/clientes.html', context)
+    elif whichUser(request.user) == 2:
+        context = {'clientes': Cliente.objects.all()}
+        return render(request, 'schema/clientesAdmin.html', context)
+    
 
 @login_required(redirect_field_name='')
 def infoClienteView(request, idCliente):
@@ -240,8 +245,12 @@ def nuevaComparativaAuth(request, idCliente):
 
 @login_required(redirect_field_name='')
 def comparativasView(request):
-    context = {'clientes': request.user.agente.clientes}
-    return render(request, 'schema/comparativas.html', context)
+    if whichUser(request.user) == 1:
+        context = {'clientes': request.user.agente.clientes}
+        return render(request, 'schema/comparativas.html', context)
+    elif whichUser(request.user) == 2:
+        context = {'agentes': Agente.objects.all()}
+        return render(request, 'schema/comparativasAdmin.html', context)
 
 @login_required(redirect_field_name='')
 def comparativaClienteView(request, idComparativa):
@@ -274,5 +283,36 @@ def nuevaCotizacionAuth(request, idComparativa):
 
 @login_required(redirect_field_name='')
 def polizasView(request):
-    context = {'clientes': request.user.agente.clientes}
-    return render(request, 'schema/polizas.html', context)
+    if whichUser(request.user) == 1:
+        context = {'clientes': request.user.agente.clientes}
+        return render(request, 'schema/polizas.html', context)
+    elif whichUser(request.user) == 2:
+        context = {'agentes': Agente.objects.all()}
+        return render(request, 'schema/polizasAdmin.html', context)
+
+@login_required(redirect_field_name='')
+def agentesView(request):
+    if whichUser(request.user) == 1:
+        return HttpResponse("No autorizado")
+    elif whichUser(request.user) == 2:
+        context = {'agentes': Agente.objects.all()}
+        return render(request, 'schema/agentesAdmin.html', context)
+
+@login_required(redirect_field_name='')
+def aseguradorasView(request):
+    if whichUser(request.user) == 1:
+        return HttpResponse("No autorizado")
+    elif whichUser(request.user) == 2:
+        context = {
+            'aseguradoras': Aseguradora.objects.all(),
+            'contactos': Contacto.objects.all(),
+        }
+        return render(request, 'schema/aseguradorasAdmin.html', context)
+
+@login_required(redirect_field_name='')
+def segurosView(request):
+    if whichUser(request.user) == 1:
+        return HttpResponse("No autorizado")
+    elif whichUser(request.user) == 2:
+        context = {'range': range(50)}
+        return render(request, 'schema/segurosAdmin.html', context)
