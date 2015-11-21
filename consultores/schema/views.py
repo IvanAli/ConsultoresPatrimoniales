@@ -13,8 +13,9 @@ from django.views.decorators.csrf import csrf_protect
 # from easy_pdf.views import PDFTemplateView
 from . import managers
 from django.forms.models import model_to_dict
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail, EmailMessage, EmailMultiAlternatives
 from datetime import datetime
+<<<<<<< HEAD
 from io import BytesIO
 from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
@@ -22,6 +23,9 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, inch
 from reportlab.platypus import Table
 
+=======
+from django.template import loader
+>>>>>>> 7bf75f4b22ac6ada2ebfc7fd607ec2dccf2e4635
 # Create your views here.
 
 # from django.conf.settings import PROJECT_ROOT
@@ -572,7 +576,20 @@ def sendEmail(subject, message, fromEmail, toEmail):
         print(e)
         return False
 
+<<<<<<< HEAD
 @login_required(redirect_field_name='')
+=======
+def sendEmailAlternative(subject, textMessage, htmlMessage, fromEmail, toEmail):
+    try:
+        mail = EmailMultiAlternatives(subject, textMessage, fromEmail, toEmail)
+        mail.attach_alternative(htmlMessage, 'text/html')
+        mail.send()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+>>>>>>> 7bf75f4b22ac6ada2ebfc7fd607ec2dccf2e4635
 def sendEmailWithAttachment(subject, message, fromEmail, toEmail, attachment, contentType):
     try:
         mail = EmailMessage(subject, message, fromEmail, toEmail)
@@ -595,13 +612,21 @@ def enviarComparativaView(request, idComparativa):
         return HttpResponse('El cliente no tiene email')
     else:
         subject = "Lista de cotizaciones para su seguro de " + seguro.nombre
+        htmlMessage = loader.render_to_string(
+            'schema/email/enviocomparativa.html',
+            {
+                'agente': agente,
+                'cliente': cliente,
+                'comparativa': comparativa,
+                'seguroNombre': seguro,
+                'datos': getDatosSeguro(idComparativa),
+                'coberturas': Cobertura.objects.filter(seguro__pk=seguro.pk),
+            }
+        )
         message = "Un saludo"
-        # message = "¡Un saludo " + cliente.nombre + "!<br />Soy su agente " + agente.nombre + " " + agente.apellidoPaterno + " " + agente.apellidoMaterno " y a continuación le anexo la lista de cotizaciones con nuestras diferencias aseguradoras para su seguro de <strong>" + seguro.nombre + "</strong> que usted solicitó. <br /> Estaré esperando su respuesta para proseguir con el trámite en caso de que opte por un seguro. <br />Que tenga un buen día.<br /> " + agente.nombre
-        # if sendEmail(subject, message, agente.email, [cliente.email], file_, "application/pdf"):
-        if sendEmail(subject, message, agente.email, [cliente.email]):
+        if sendEmailAlternative(subject, message, htmlMessage, 'ivanali@outlook.com', [cliente.email]):
             return HttpResponse('Email enviado exitosamente!')
-
-    return HttpResponse(idCliente)
+    return HttpResponse('no exito')
 
 @login_required(redirect_field_name='')
 def polizasView(request):
