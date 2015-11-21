@@ -15,7 +15,8 @@ def create_agente():
     email='squgus@gmail.com', first_name='Gustavo', last_name='Gutierrez')
     user.save()
 
-    agente = Agente.objects.create(userAgente=user, claveAgente=666)
+    agente = Agente.objects.create(userAgente=user, claveAgente=666, email=user.email, sexo='H',
+        telefonoLada=666, telefono=6666666)
     agente.save()
 
 def run():

@@ -61,7 +61,7 @@ class Cliente(Persona):
     linkComprobanteDomicilio = models.FileField(upload_to=get_upload_file_name)
     calleFact = models.CharField(max_length=50, blank=True)
     numeroExtFact = models.PositiveSmallIntegerField(blank=True, null=True)
-    numeroIntFact = models.PositiveSmallIntegerField(blank=True, null=True)
+    numeroIntFact = models.CharField(max_length=6, blank=True, null=True)
     coloniaFact = models.CharField(max_length=40, blank=True)
     ciudadFact = models.CharField(max_length=30, blank=True)
     estadoFact = models.CharField(max_length=19, blank=True)
