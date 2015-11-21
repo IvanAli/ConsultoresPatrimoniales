@@ -164,6 +164,11 @@ class Cotizacion(models.Model):
     def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa
 
+class AreaTramites(models.Model):
+    idAreaTramites = models.AutoField(primary_key=True)
+    encargado = models.CharField(max_length=60, null=True)
+    email = models.EmailField(null=True)
+
 class Poliza(models.Model):
     idPoliza = models.AutoField(primary_key=True)
     primaNeta = models.DecimalField(max_digits=11, decimal_places=2)
@@ -220,7 +225,7 @@ class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
     fechaServicio = models.DateTimeField('fecha de servicio', auto_now_add=True)
     fechaConclusion = models.DateTimeField(blank=True, null=True)
-    # agente = models.ForeignKey('Agente')
+    agente = models.ForeignKey('Agente', null=True)
     cliente = models.ForeignKey('Cliente')
     comparativa = models.OneToOneField(Comparativa, related_name="ordenServicio", null=True)
     # poliza = models.OneToOneField(Poliza, null=True)
