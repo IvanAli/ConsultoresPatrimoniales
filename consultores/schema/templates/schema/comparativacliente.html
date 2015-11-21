@@ -6,6 +6,23 @@
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+
+<style type="text/css">
+.row {
+    position: relative;
+  }
+
+  .hover-btn {
+     position: absolute;
+     right: 15px;
+     display: none;
+  }
+
+  .row:hover .hover-btn {
+     display: block;
+  }
+</style>
+
 {% endblock %}
 {% block head_javascript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
@@ -23,12 +40,16 @@
                     <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
                         <a id="concluida" href="{% url 'schema:marcarConcluida' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">
                             {% if comparativa.fechaConclusion == None %}
-                                Marcar como concluida
+                                Marcar como concluida<!-- TODO: disable when no of cotizaciones is zero -->
+                                <a id="envio" disabled href="#" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
                             {% else %}
                                 Marcar como no concluida
+                                <a id="envio" href="{% url 'schema:enviarComparativa' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
                             {% endif %}
+                            <!-- {% if comparativa.fechaEnvio == None %} -->
+                                <a id="envio" href="{% url 'schema:enviarCotizacionTramites' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
+                            <!-- {% endif %} -->
                         </a>
-                        <a id="envio" href="{% url 'schema:enviarComparativa' comparativa.ordenServicio.cliente.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa</a>
                         <a id="nuevoCliente" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>
                     </div>
                     </div>
@@ -87,6 +108,7 @@
                                     <td>
                                         {{ cotizacion.fechaCreacion }}
                                     </td>
+                                  </div>
                                 </tr>
                             {% endfor %}
                         </tbody>

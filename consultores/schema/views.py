@@ -3,7 +3,7 @@ from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
 from schema import models
-from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Seguro, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -131,6 +131,48 @@ def preNuevaComparativaView(request):
     return render(request, 'schema/preNuevaComparativa.html', context)
 
 @login_required(redirect_field_name='')
+def seleccionClienteView(request, context_type):
+    context = {
+        'clientes': request.user.agente.clientes,
+        'context_type': context_type,
+    }
+    return render(request, 'schema/seleccionCliente.html', context)
+
+@login_required(redirect_field_name='')
+def enviarCotizacionTramitesView(request, idComparativa):
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    cliente = comparativa.ordenServicio.cliente
+    agente = comparativa.ordenServicio.agente
+    elegidaExists = False
+    for cot in comparativa.cotizacion_set.all():
+        if cot.elegida == True:
+            elegidaExists = True
+            break
+    print(elegidaExists)
+    if elegidaExists:
+        if AreaTramites.objects.count() > 0:
+            emailList = []
+            for tramites in AreaTramites.objects.all():
+                emailList.append(tramites.email)
+            subject = 'Datos de póliza a tramitar'
+            message = 'Envío datos de póliza a tramitar para cliente ' + cliente.nombre + " " + cliente.apellidoPaterno + " " + cliente.apellidoMaterno
+            if sendEmail(subject, message, agente.email, emailList):
+                return HttpResponse('Email enviado a trámites exitosamente')
+        else:
+            return HttpResponse('No hay emails de area de tramites registrados')
+    else:
+        return HttpResponse('Favor de seleccionar una cotizacion preferida')
+
+def nuevaPolizaView(request, idCliente):
+    cliente = Cliente.objects.get(pk=idCliente)
+    context = {'cliente': cliente}
+    if cliente.email is None or cliente.email == "":
+        return render(request, 'schema/ingresarCorreoView.html', context)
+    else:
+        return HttpResponse('Enviar correo...')
+    return HttpResponse('WIP')
+
+@login_required(redirect_field_name='')
 def nuevaComparativaView(request, idCliente):
     context = {
         'cliente': request.user.agente.clientes.get(pk=idCliente),
@@ -191,7 +233,7 @@ def nuevaComparativaAuth(request, idCliente):
                     print("id cobertura:", checked)
                     comparativa.coberturas.add(Cobertura.objects.get(pk=checked))
                 comparativa.save()
-                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa)
+                ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa, agente=request.user.agente)
                 ordenServicio.save()
                 return HttpResponseRedirect(reverse('schema:comparativas'))
             else:
@@ -441,7 +483,7 @@ def nuevaCotizacionAuth(request, idComparativa):
                 cobertura.save()
             cotizacion.comparativa = Comparativa.objects.get(pk=idComparativa)
             cotizacion.save()
-            return HttpResponseRedirect(reverse('schema:comparativas'))
+            return HttpResponseRedirect(reverse('schema:comparativaCliente', args=[idComparativa]))
         else:
             for err in cotizacionForm.errors:
                 print(err)
@@ -491,20 +533,42 @@ def marcarCotizacionPreferidaView(request, idCotizacion):
     cotizacion.save()
     return HttpResponseRedirect(reverse('schema:cotizacionCliente', args=[idCotizacion]))
 
-def enviarComparativaView(request, idCliente):
+def sendEmail(subject, message, fromEmail, toEmail):
+    try:
+        mail = EmailMessage(subject, message, fromEmail, toEmail)
+        mail.send()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def sendEmailWithAttachment(subject, message, fromEmail, toEmail, attachment, contentType):
+    try:
+        mail = EmailMessage(subject, message, fromEmail, toEmail)
+        mail.attach(attachment.name, attachment.read(), contentType)
+        mail.send()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def enviarComparativaView(request, idComparativa):
     # file_ = open('C:/Users/Ivan/Consultores/consultores/django-storages.txt')
-    cliente = Cliente.objects.get(pk=idCliente)
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    cliente = comparativa.ordenServicio.cliente
+    seguro = comparativa.tipoSeguro.nombre
+    agente = comparativa.ordenServicio.agente
+
     if cliente.email is None or cliente.email == "":
         return HttpResponse('El cliente no tiene email')
     else:
-        # send_mail("Cotizaciones para su seguro", "test", 'ivanali@outlook.com', ['grimi94@gmail.com'], fail_silently=False)
-        try:
-            mail = EmailMessage("hola grimi", "adios", 'ivanali@outlook.com', [cliente.email])
-            mail.attach(file_.name, file_.read(), 'application/pdf')
-            mail.send()
-            return HttpResponse('Correo enviado exitosamente')
-        except Exception as e:
-            return HttpResponse(e)
+        subject = "Lista de cotizaciones para su seguro de " + seguro.nombre
+        message = "Un saludo"
+        # message = "¡Un saludo " + cliente.nombre + "!<br />Soy su agente " + agente.nombre + " " + agente.apellidoPaterno + " " + agente.apellidoMaterno " y a continuación le anexo la lista de cotizaciones con nuestras diferencias aseguradoras para su seguro de <strong>" + seguro.nombre + "</strong> que usted solicitó. <br /> Estaré esperando su respuesta para proseguir con el trámite en caso de que opte por un seguro. <br />Que tenga un buen día.<br /> " + agente.nombre
+        # if sendEmail(subject, message, agente.email, [cliente.email], file_, "application/pdf"):
+        if sendEmail(subject, message, agente.email, [cliente.email]):
+            return HttpResponse('Email enviado exitosamente!')
+
     return HttpResponse(idCliente)
 
 @login_required(redirect_field_name='')

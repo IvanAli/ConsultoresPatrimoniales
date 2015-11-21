@@ -39,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'storages',
-    'easy_pdf',
     'schema',
 )
 
