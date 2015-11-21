@@ -58,21 +58,13 @@
                     <legend>
                         Características
                     </legend>
-                    {% for field in datosAP %}
+                    {% for field in datos %}
                         <li><b>{{ field.label }}:</b>
                             {% if field.data == None or field.data == '' %}
                                 No especificado
                             {% else %}
                                 {{ field.data }}</li>
                             {% endif %}
-                    {% endfor %}
-                    <legend>
-                        Coberturas deseadas
-                    </legend>
-                    {% for cobertura in comparativa.coberturas.all %}
-                        <li>
-                            {{ cobertura.nombre }}
-                        </li>
                     {% endfor %}
                     <br />
                     <!-- start panel body -->
