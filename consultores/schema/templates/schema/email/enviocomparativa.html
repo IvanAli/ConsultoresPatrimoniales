@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <p>
+            ¡Un saludo {{ cliente.nombre }}!
+        </p>
+        <p>
+            Soy su agente {{ agente.nombre }} {{ agente.apellidoPaterno }} {{ agente.apellidoMaterno }} y a continuación le anexo la lista de cotizaciones con nuestras diferencias aseguradoras para su seguro de <strong>{{ seguroNombre.nombre }}</strong> que usted solicitó.
+        </p>
+
+        {% for field in datos %}
+            <li><b>{{ field.label }}:</b>
+                {% if field.data == None or field.data == '' %}
+                    No especificado
+                {% else %}
+                    {{ field.data }}</li>
+                {% endif %}
+        {% endfor %}
+
+        <br />
+        <!-- start panel body -->
+        <table border=1>
+            <thead>
+                <tr>
+                    <th>Aseguradora</th>
+                    <th>Costo</th>
+                    <th>No. de coberturas</th>
+                    <th>Forma de pago</th>
+                    {% for cobertura in coberturas.all %}
+                        <th>{{ cobertura.nombre }}</th>
+                    {% endfor %}
+                    <!--
+                    {% for cotizacion in comparativa.cotizacion_set.all %}
+                        {% for cobertura in cotizacion.coberturautilizada_set.all %}
+                        <th>{{ cobertura.idCobertura.nombre }}</th>
+                        {% endfor %}
+                    {% endfor %}
+                    -->
+                </tr>
+            </thead>
+            <tbody padding=1em>
+                {% for cotizacion in comparativa.cotizacion_set.all %}
+                    <tr id="comparativa{{ forloop.counter }}">
+                        <td>
+                            {{ cotizacion.aseguradora.nombre }}
+                        </td>
+                        <td>
+                            {{ cotizacion.costo }}
+                        </td>
+                        <td>
+                            {{ cotizacion.coberturautilizada_set.all.count }}
+                        </td>
+                        <td>
+                            {{ cotizacion.get_formaPago_display }}
+                        </td>
+                        <td>
+                            {{ cotizacion.coberturautiliza_set.all }}
+                        </td>
+                      </div>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>
+            Estaré esperando su respuesta para proseguir con el trámite en caso de que opte por un seguro.
+        </p>
+        <p>
+            Que tenga un buen día.
+        </p>
+        <p>
+            {{ agente.nombre }}
+        </p>
+    </body>
+</html>
