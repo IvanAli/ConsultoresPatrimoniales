@@ -15,17 +15,13 @@ from . import managers
 from django.forms.models import model_to_dict
 from django.core.mail import send_mail, EmailMessage, EmailMultiAlternatives
 from datetime import datetime
-<<<<<<< HEAD
 from io import BytesIO
 from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, inch
 from reportlab.platypus import Table
-
-=======
 from django.template import loader
->>>>>>> 7bf75f4b22ac6ada2ebfc7fd607ec2dccf2e4635
 # Create your views here.
 
 # from django.conf.settings import PROJECT_ROOT
@@ -576,9 +572,8 @@ def sendEmail(subject, message, fromEmail, toEmail):
         print(e)
         return False
 
-<<<<<<< HEAD
+
 @login_required(redirect_field_name='')
-=======
 def sendEmailAlternative(subject, textMessage, htmlMessage, fromEmail, toEmail):
     try:
         mail = EmailMultiAlternatives(subject, textMessage, fromEmail, toEmail)
@@ -589,7 +584,6 @@ def sendEmailAlternative(subject, textMessage, htmlMessage, fromEmail, toEmail):
         print(e)
         return False
 
->>>>>>> 7bf75f4b22ac6ada2ebfc7fd607ec2dccf2e4635
 def sendEmailWithAttachment(subject, message, fromEmail, toEmail, attachment, contentType):
     try:
         mail = EmailMessage(subject, message, fromEmail, toEmail)
