@@ -139,31 +139,6 @@ def seleccionClienteView(request, context_type):
     }
     return render(request, 'schema/seleccionCliente.html', context)
 
-@login_required(redirect_field_name='')
-def enviarCotizacionTramitesView(request, idComparativa):
-    comparativa = Comparativa.objects.get(pk=idComparativa)
-    cliente = comparativa.ordenServicio.cliente
-    agente = comparativa.ordenServicio.agente
-    elegidaExists = False
-    for cot in comparativa.cotizacion_set.all():
-        if cot.elegida == True:
-            elegidaExists = True
-            break
-    print(elegidaExists)
-    if elegidaExists:
-        if AreaTramites.objects.count() > 0:
-            emailList = []
-            for tramites in AreaTramites.objects.all():
-                emailList.append(tramites.email)
-            subject = 'Datos de póliza a tramitar'
-            message = 'Envío datos de póliza a tramitar para cliente ' + cliente.nombre + " " + cliente.apellidoPaterno + " " + cliente.apellidoMaterno
-            if sendEmail(subject, message, agente.email, emailList):
-                return HttpResponse('Email enviado a trámites exitosamente')
-        else:
-            return HttpResponse('No hay emails de area de tramites registrados')
-    else:
-        return HttpResponse('Favor de seleccionar una cotizacion preferida')
-
 def nuevaPolizaView(request, idCliente):
     cliente = Cliente.objects.get(pk=idCliente)
     context = {'cliente': cliente}
@@ -322,48 +297,6 @@ def getDatosSeguro(idComparativa):
     if tipo == 'T':
         return forms.SeguroTForm(data=model_to_dict(comparativa.tipoSeguro.seguroT))
 
-# not used after all
-def getDatosSegurosDictionary(idComparativa):
-    getDatosSeguro(idComparativa)
-    print(modelFieldExists(TipoSeguro, 'seguroG'))
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroAP)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroC)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroR)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroG)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroV)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroH)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroI)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroE)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroEC)
-    print(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroT)
-    dictionary = {}
-    dictionary['datosAP'] = forms.SeguroAPForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroAP))
-    dictionary['datosC'] = forms.SeguroCForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroC))
-    dictionary['datosR'] = forms.SeguroRForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroR))
-    dictionary['datosG'] = forms.SeguroGForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroG))
-    dictionary['datosV'] = forms.SeguroVForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroV))
-    dictionary['datosH'] = forms.SeguroHForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroH))
-    dictionary['datosI'] = forms.SeguroIForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroI))
-    dictionary['datosE'] = forms.SeguroEForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroE))
-    dictionary['datosEC'] = forms.SeguroECForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroEC))
-    dictionary['datosT'] = forms.SeguroTForm(data=model_to_dict(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroT))
-    return dictionary
-
-# not used
-def getSegurosList(idComparativa):
-    lst = []
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroAP)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroC)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroR)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroG)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroV)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroH)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroI)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroE)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroEC)
-    lst.append(Comparativa.objects.get(pk=idComparativa).tipoSeguro.seguroT)
-    return lst
-
 @login_required(redirect_field_name='')
 def comparativaClienteView(request, idComparativa):
     context = {'comparativa': Comparativa.objects.get(pk=idComparativa), 'datos': getDatosSeguro(idComparativa)}
@@ -499,6 +432,17 @@ def sendEmailAlternative(subject, textMessage, htmlMessage, fromEmail, toEmail):
         print(e)
         return False
 
+def sendEmailAlternativeWithAttachment(subject, textMessage, htmlMessage, fromEmail, toEmail, attachment, contentType):
+    try:
+        mail = EmailMultiAlternatives(subject, textMessage, fromEmail, toEmail)
+        mail.attach_alternative(htmlMessage, 'text/html')
+        mail.attach(attachment.name, attachment.read(), contentType)
+        mail.send()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
 def sendEmailWithAttachment(subject, message, fromEmail, toEmail, attachment, contentType):
     try:
         mail = EmailMessage(subject, message, fromEmail, toEmail)
@@ -535,6 +479,48 @@ def enviarComparativaView(request, idComparativa):
         if sendEmailAlternative(subject, message, htmlMessage, 'ivanali@outlook.com', [cliente.email]):
             return HttpResponse('Email enviado exitosamente!')
     return HttpResponse('no exito')
+
+@login_required(redirect_field_name='')
+def enviarCotizacionTramitesView(request, idComparativa):
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    cliente = comparativa.ordenServicio.cliente
+    agente = comparativa.ordenServicio.agente
+    seguro = comparativa.tipoSeguro.nombre
+    elegidaExists = False
+    cotizacionElegida = None
+    for cot in comparativa.cotizacion_set.all():
+        if cot.elegida == True:
+            elegidaExists = True
+            cotizacionElegida = cot
+            break
+
+    if elegidaExists:
+        archivo = cotizacionElegida.archivo
+        if AreaTramites.objects.count() > 0:
+            encargadosList = []
+            emailList = []
+            for tramites in AreaTramites.objects.all():
+                emailList.append(tramites.email)
+            subject = 'Datos de póliza a tramitar'
+            message = 'Envío datos de póliza a tramitar para cliente ' + cliente.nombre + " " + cliente.apellidoPaterno + " " + cliente.apellidoMaterno
+            htmlMessage = loader.render_to_string(
+                'schema/email/enviodatospoliza.html',
+                {
+                    'agente': agente,
+                    'cliente': cliente,
+                    'comparativa': comparativa,
+                    'seguroNombre': seguro,
+                    'datos': getDatosSeguro(idComparativa),
+                    'cotizacionElegida': cotizacionElegida,
+                    'coberturas': Cobertura.objects.filter(seguro__pk=seguro.pk),
+                }
+            )
+            if sendEmailAlternativeWithAttachment(subject, message, htmlMessage, 'ivanali@outlook.com', emailList, archivo, 'application/pdf'):
+                return HttpResponse('Email enviado exitosamente!')
+        else:
+            return HttpResponse('No hay emails de area de tramites registrados')
+    else:
+        return HttpResponse('Favor de seleccionar una cotizacion preferida')
 
 @login_required(redirect_field_name='')
 def polizasView(request):
