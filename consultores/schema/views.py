@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_protect
 from . import managers
 from django.forms.models import model_to_dict
 from django.core.mail import send_mail, EmailMessage
+from datetime import datetime
 # Create your views here.
 
 # from django.conf.settings import PROJECT_ROOT
@@ -468,6 +469,27 @@ def nuevaCotizacionAuth(request, idComparativa):
                 print("error cobertura:", err)
     """
     return HttpResponse("error")
+
+def marcarComparativaConcluidaView(request, idComparativa):
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    if comparativa.fechaConclusion == None:
+        comparativa.fechaConclusion = datetime.now()
+    else:
+        comparativa.fechaConclusion = None
+    comparativa.save()
+    return HttpResponseRedirect(reverse('schema:comparativaCliente', args=[idComparativa]))
+
+def marcarCotizacionPreferidaView(request, idCotizacion):
+    cotizacion = Cotizacion.objects.get(pk=idCotizacion)
+    idComparativa = cotizacion.comparativa.pk
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    for cot in comparativa.cotizacion_set.all():
+        if cot.pk is not cotizacion.pk:
+            cot.elegida = False
+            cot.save()
+    cotizacion.elegida = not cotizacion.elegida
+    cotizacion.save()
+    return HttpResponseRedirect(reverse('schema:cotizacionCliente', args=[idCotizacion]))
 
 def enviarComparativaView(request, idCliente):
     # file_ = open('C:/Users/Ivan/Consultores/consultores/django-storages.txt')

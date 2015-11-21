@@ -137,14 +137,6 @@ class Aseguradora(models.Model):
 
     def __str__(self):
         return self.nombre
-"""
-class SegurosOfertados(models.Model):
-    aseguradora = models.ForeignKey('Aseguradora')
-    tipoSeguro = models.ForeignKey('TipoSeguro')
-
-    class Meta:
-        unique_together = ("aseguradora", "tipoSeguro")
-"""
 
 class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
@@ -168,6 +160,7 @@ class Cotizacion(models.Model):
     comparativa = models.ForeignKey('Comparativa', null=True)
     aseguradora = models.ForeignKey('Aseguradora')
     archivo = models.FileField(null=True)
+    elegida = models.BooleanField(default=False)
     def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa
 
@@ -222,13 +215,6 @@ class Contacto(models.Model):
     def __str__(self):
         return "Contacto: " + self.idContacto + " Aseguradora: " + self.aseguradora
 
-"""
-class CoberturasUtilizadas(models.Model):
-    poliza = models.ForeignKey(Poliza, null=True)
-    cobertura = models.ForeignKey(Cobertura, null=True)
-    def __str__(self):
-        return "Cobertura " + self.cobertura + " utilizada en Poliza " + self.poliza
-"""
 
 class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
@@ -320,7 +306,6 @@ class SeguroG(models.Model):
     nombreAsegurado = models.CharField(max_length=80)
     coaseguro = models.DecimalField(max_digits=11, decimal_places=2)
     topeCoaseguro = models.DecimalField(max_digits=11, decimal_places=2)
-    # preferencias = models.ForeignKey(Cobertura)
 
     def attrs(self):
         for attr, value in self.__dict__.items():
