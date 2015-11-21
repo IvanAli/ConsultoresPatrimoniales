@@ -97,7 +97,7 @@
                     {% if cliente.calleFact %}{{ cliente.calleFact }} {% endif %} 
                     {% if cliente.numeroExtFact %} # {{ cliente.numeroExtFact }}{% endif %}
                     {% if cliente.numeroIntFact %} Int. {{ cliente.numeroIntFact }}{% endif %}</p>
-                    <a href="{% url 'schema:datosFacturacion' %}" class="btn btn-primary " >Crear</a>
+                    <a href="{% url 'schema:datosFacturacion' cliente.pk %}" class="btn btn-primary " >Crear</a>
                 </div>
             </div>
         </div>

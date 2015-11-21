@@ -68,11 +68,13 @@ class Cliente(Persona):
     codigoPostalFact = models.PositiveIntegerField(blank=True, null=True)
     def __str__(self):
         return "Cliente fisico: " + self.nombre + " " +self.apellidoPaterno + " " + self.apellidoMaterno
-
+        
+#Creo que seria mejor agregar como campos dentro de Cliente
 class ClienteFisico(Cliente):
     def __str__(self):
         return "Cliente fisico"
 
+#Creo que seria mejor agregar como campos dentro de Cliente
 class ClienteMoral(Cliente):
     razonSocial = models.CharField(max_length=100, null=True)
     linkActaConstitutiva = models.URLField(null=True)

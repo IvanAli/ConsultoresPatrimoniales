@@ -14,7 +14,7 @@
 
 
 
-    <form action="{% url 'schema:nuevoClienteAuthentication' %}" method="post">
+    <form action="{% url 'schema:datosFacturacionAuth' cliente.pk %}" method="post">
         {% csrf_token %}
      <div class="container">
         <div class="col-md-12" >

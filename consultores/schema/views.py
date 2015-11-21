@@ -32,44 +32,6 @@ from reportlab.platypus import Table
 """
 
 # HELPER FUNCTIONS
-@login_required(redirect_field_name='')
-def generar_pdf(request, idComparativa):
-    response = HttpResponse(content_type='application/pdf')
-    pdf_name = "clientes.pdf"  # llamado clientes
-   
-    #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
-    buff = BytesIO()
-    doc = SimpleDocTemplate(buff,
-                            pagesize=letter,
-                            rightMargin=40,
-                            leftMargin=40,
-                            topMargin=60,
-                            bottomMargin=18,
-                            )
-   
-    cotizaciones =[]
-    styles = getSampleStyleSheet()
-    header = Paragraph("Cotizaciones", styles['Heading1'])
-    headings= ( 'Aseguradora','Costo', 'Forma de Pago')
-    cotizaciones.append(header)
-    comparativa = Comparativa.objects.get(pk=idComparativa)
-    allcotizaciones =[( a.aseguradora,a.costo, a.formaPago,) for a in comparativa.cotizacion_set.all()]
-    
-
-    t = Table([headings]+allcotizaciones)
-    t.setStyle(TableStyle(
-        [
-            ('GRID', (0, 0), (3, -1), 1, colors.dodgerblue),
-            ('LINEBELOW', (0, 0), (-1, 0), 2, colors.darkblue),
-            ('BACKGROUND', (0, 0), (-1, 0), colors.dodgerblue),
-            ('ALIGN',(0,0),(-1,0),'CENTER'),
-        ]
-    ))
-    cotizaciones.append(t)
-    doc.build(cotizaciones)
-    response.write(buff.getvalue())
-    buff.close()
-    return response
 
 
 def getUser(username):
@@ -141,6 +103,46 @@ def home(request):
         return render(request, 'schema/homeAdmin.html', context)
 
 @login_required(redirect_field_name='')
+def generar_pdf(request, idComparativa):
+    response = HttpResponse(content_type='application/pdf')
+    pdf_name = "clientes.pdf"  # llamado clientes
+   
+    #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
+    buff = BytesIO()
+    doc = SimpleDocTemplate(buff,
+                            pagesize=letter,
+                            rightMargin=40,
+                            leftMargin=40,
+                            topMargin=60,
+                            bottomMargin=18,
+                            )
+   
+    cotizaciones =[]
+    styles = getSampleStyleSheet()
+    header = Paragraph("Cotizaciones", styles['Heading1'])
+    headings= ( 'Aseguradora','Costo', 'Forma de Pago')
+    cotizaciones.append(header)
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    allcotizaciones =[( a.aseguradora,a.costo, a.formaPago,) for a in comparativa.cotizacion_set.all()]
+    
+
+    t = Table([headings]+allcotizaciones)
+    t.setStyle(TableStyle(
+        [
+            ('GRID', (0, 0), (3, -1), 1, colors.dodgerblue),
+            ('LINEBELOW', (0, 0), (-1, 0), 2, colors.darkblue),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.dodgerblue),
+            ('ALIGN',(0,0),(-1,0),'CENTER'),
+        ]
+    ))
+    cotizaciones.append(t)
+    doc.build(cotizaciones)
+    response.write(buff.getvalue())
+    buff.close()
+    return response
+
+
+@login_required(redirect_field_name='')
 def nuevoClienteView(request):
     datos_form = forms.nuevoClienteForm()
     context = {
@@ -168,21 +170,23 @@ def nuevoClienteAuth(request):
             return render(request, 'schema/nuevoCliente.html', context)
 
 @login_required(redirect_field_name='')
-def datosFacturacionView(request):
-    #context = {'clientes': request.user.agente.clientes}
-    return render(request, 'schema/datosFacturacion.html', {})
+def datosFacturacionView(request, idCliente):
+    context = {'cliente': Cliente.objects.get(pk=idCliente)}
+    return render(request, 'schema/datosFacturacion.html', context)
 
-# @login_required(redirect_field_name='')
-# def datosFacturacionAuth(request, idCliente):
-#      if request.method == "POST":
-#          datos_form = forms.nuevoClienteForm(request.POST)
-#          if datos_form.is_valid():
+@login_required(redirect_field_name='')
+def datosFacturacionAuth(request, idCliente):
+    if request.method == "POST":
+        datos_form = forms.nuevoClienteForm(request.POST)
+        if datos_form.is_valid():
 #             context = {'cliente': request.user.agente.clientes.get(pk=idCliente),}
-#              cliente = datos_form.save()
-#              return HttpResponseRedirect(reverse('schema:infocliente.html'))
-#          else:
-#              context = {'error_missingfields': "Campos sin llenar"}
-#              return render(request, 'schema/datosFacturacion.html', context)
+            cliente = Cliente.objects.get(pk=idCliente)
+            datos_form=forms.nuevoClienteForm(request.POST, instance = cliente)
+            datos_form.save()
+            return HttpResponseRedirect(reverse('schema:infocliente.html'))
+        else:
+            context = {'error_missingfields': "Campos sin llenar"}
+            return render(request, 'schema/datosFacturacion.html', context)
 
 @login_required(redirect_field_name='')
 def clientesView(request):
