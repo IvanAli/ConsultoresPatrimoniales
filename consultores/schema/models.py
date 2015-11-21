@@ -49,13 +49,16 @@ class Persona(models.Model):
     def __str__(self):
         return "Persona"
 
+def get_upload_file_name(instance, filename):
+    return "uploaded_files/%s_%s" % (str(time()).replace('.','_'),filename)
+
 class Cliente(Persona):
     idCliente = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=40)
     apellidoPaterno = models.CharField(max_length=30)
     apellidoMaterno = models.CharField(max_length=30)
     linkRegistroRFC = models.URLField(blank=True, null=True)
-    linkComprobanteDomicilio = models.URLField(blank=True, null=True)
+    linkComprobanteDomicilio = models.FileField(upload_to=get_upload_file_name)
     calleFact = models.CharField(max_length=50, blank=True)
     numeroExtFact = models.PositiveSmallIntegerField(blank=True, null=True)
     numeroIntFact = models.PositiveSmallIntegerField(blank=True, null=True)

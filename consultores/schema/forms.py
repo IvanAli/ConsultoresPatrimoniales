@@ -11,7 +11,17 @@ class nuevoClienteForm(forms.ModelForm):
  		model = Cliente
  		fields= ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
  		'numeroInt','colonia','ciudad','estado','codigoPostal','calleFact','numeroExtFact','numeroIntFact','coloniaFact','ciudadFact'
- 		,'estadoFact','codigoPostalFact',]
+ 		,'estadoFact','codigoPostalFact']
+### PENDIENTE, PUES NO SE COMO DISTINGUIR ENTRE CLIENTE FISICO Y MORAL
+# class nuevoClienteFisicoForm(forms.ModelForm):
+# 	class Meta:
+# 		model = ClienteFisico
+
+class nuevoClienteMoralForm(forms.ModelForm):
+	class Meta :
+		model =ClienteMoral
+		fields =['razonSocial','linkActaConstitutiva','linkIdRepresentante']
+
 
 class CotizacionForm(forms.ModelForm):
     class Meta:
@@ -27,16 +37,6 @@ class SeguroAPForm(forms.ModelForm):
 	class Meta:
 		model = SeguroAP
 		fields = ['marca', 'modelo', 'tipoPlan', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion', 'version', 'transmision']
-
-### PENDIENTE, PUES NO SE COMO DISTINGUIR ENTRE CLIENTE FISICO Y MORAL
-# class nuevoClienteFisicoForm(forms.ModelForm):
-# 	class Meta:
-# 		model = ClienteFisico
-
-class nuevoClienteMoralForm(forms.ModelForm):
-	class Meta :
-		model =ClienteMoral
-		fields =['razonSocial','linkActaConstitutiva','linkIdRepresentante']
 
 class SeguroCForm(forms.ModelForm):
 	class Meta:
