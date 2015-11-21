@@ -8,3 +8,15 @@ function mostrar(){
     clic = 1;
    }   
 }
+
+function errorEmail(){ 
+	var email =document.getElementById("email")
+	if (email==""){
+	document.getElementById("errorEmail1").style.display = 'block';
+	document.getElementById("errorEmail2").style.display = 'none'; 
+	 
+	}else {
+	document.getElementById("errorEmail1").style.display = 'none';
+	document.getElementById("errorEmail2").style.display = 'block';  
+	}
+}

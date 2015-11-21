@@ -15,6 +15,13 @@ from . import managers
 from django.forms.models import model_to_dict
 from django.core.mail import send_mail, EmailMessage
 from datetime import datetime
+from io import BytesIO
+from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, inch
+from reportlab.platypus import Table
+
 # Create your views here.
 
 # from django.conf.settings import PROJECT_ROOT
@@ -25,6 +32,46 @@ from datetime import datetime
 """
 
 # HELPER FUNCTIONS
+@login_required(redirect_field_name='')
+def generar_pdf(request, idComparativa):
+    response = HttpResponse(content_type='application/pdf')
+    pdf_name = "clientes.pdf"  # llamado clientes
+   
+    #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
+    buff = BytesIO()
+    doc = SimpleDocTemplate(buff,
+                            pagesize=letter,
+                            rightMargin=40,
+                            leftMargin=40,
+                            topMargin=60,
+                            bottomMargin=18,
+                            )
+   
+    cotizaciones =[]
+    styles = getSampleStyleSheet()
+    header = Paragraph("Cotizaciones", styles['Heading1'])
+    headings= ( 'Aseguradora','Costo', 'Forma de Pago')
+    cotizaciones.append(header)
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    allcotizaciones =[( a.aseguradora,a.costo, a.formaPago,) for a in comparativa.cotizacion_set.all()]
+    
+
+    t = Table([headings]+allcotizaciones)
+    t.setStyle(TableStyle(
+        [
+            ('GRID', (0, 0), (3, -1), 1, colors.dodgerblue),
+            ('LINEBELOW', (0, 0), (-1, 0), 2, colors.darkblue),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.dodgerblue),
+            ('ALIGN',(0,0),(-1,0),'CENTER'),
+        ]
+    ))
+    cotizaciones.append(t)
+    doc.build(cotizaciones)
+    response.write(buff.getvalue())
+    buff.close()
+    return response
+
+
 def getUser(username):
     try:
         user = User.objects.get(username=username)
@@ -95,7 +142,10 @@ def home(request):
 
 @login_required(redirect_field_name='')
 def nuevoClienteView(request):
-    context = {'cliente': request.user.agente.clientes}
+    datos_form = forms.nuevoClienteForm()
+    context = {
+        "datos_form": datos_form, 
+        'cliente': request.user.agente.clientes}
     return render(request, "schema/nuevoCliente.html", context)
 
 @login_required(redirect_field_name='')
@@ -107,8 +157,32 @@ def nuevoClienteAuth(request):
             request.user.agente.clientes.add(cliente)
             return HttpResponseRedirect(reverse('schema:clientes'))
         else:
-            context = {'error_missingfields': "Campos sin llenar"}
+            context = {
+                    'datos_form': datos_form,        
+                    'error_missingfields': "Campo obligatorio sin llenar",
+                    'error_lada': "Campo obligatorio, ingresa unicamente numeros",
+                    'error_telefono': "Campo obligatorio, ingresa unicamente numeros",
+                    'error_email':"Campo obligatorio, ingresa un email valido",
+                    'error_NE':"Ingresa unicamente numeros",
+                    'error_CP':"Ingresa unicamente numeros"}
             return render(request, 'schema/nuevoCliente.html', context)
+
+@login_required(redirect_field_name='')
+def datosFacturacionView(request):
+    #context = {'clientes': request.user.agente.clientes}
+    return render(request, 'schema/datosFacturacion.html', {})
+
+# @login_required(redirect_field_name='')
+# def datosFacturacionAuth(request, idCliente):
+#      if request.method == "POST":
+#          datos_form = forms.nuevoClienteForm(request.POST)
+#          if datos_form.is_valid():
+#             context = {'cliente': request.user.agente.clientes.get(pk=idCliente),}
+#              cliente = datos_form.save()
+#              return HttpResponseRedirect(reverse('schema:infocliente.html'))
+#          else:
+#              context = {'error_missingfields': "Campos sin llenar"}
+#              return render(request, 'schema/datosFacturacion.html', context)
 
 @login_required(redirect_field_name='')
 def clientesView(request):
@@ -118,7 +192,6 @@ def clientesView(request):
     elif whichUser(request.user) == 2:
         context = {'clientes': Cliente.objects.all()}
         return render(request, 'schema/clientesAdmin.html', context)
-
 
 @login_required(redirect_field_name='')
 def infoClienteView(request, idCliente):
@@ -163,6 +236,7 @@ def enviarCotizacionTramitesView(request, idComparativa):
     else:
         return HttpResponse('Favor de seleccionar una cotizacion preferida')
 
+@login_required(redirect_field_name='')
 def nuevaPolizaView(request, idCliente):
     cliente = Cliente.objects.get(pk=idCliente)
     context = {'cliente': cliente}
@@ -201,6 +275,7 @@ def nuevaComparativaView(request, idCliente):
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
+@login_required(redirect_field_name='')
 def nuevaComparativaAPAuth(request, idCliente):
     if request.method == 'POST':
         APform = forms.SeguroAPForm(request.POST)
@@ -422,6 +497,7 @@ def comparativaClienteView(request, idComparativa):
     context = {'comparativa': Comparativa.objects.get(pk=idComparativa), 'datosAP': datosAP}
     return render(request, 'schema/comparativacliente.html', context)
 
+@login_required(redirect_field_name='')
 def cotizacionClienteView(request, idCotizacion):
     context = {'cotizacion': Cotizacion.objects.get(pk=idCotizacion)}
     return render(request, 'schema/cotizacioncliente.html', context)
@@ -455,6 +531,7 @@ def nuevaCotizacionView(request, idComparativa):
     }
     return render(request, 'schema/nuevaCotizacion.html', context)
 
+@login_required(redirect_field_name='')
 def handle_uploaded_file(f):
     with open(f.name, 'wb+') as destination:
         for chunk in f.chunks():
@@ -512,6 +589,7 @@ def nuevaCotizacionAuth(request, idComparativa):
     """
     return HttpResponse("error")
 
+@login_required(redirect_field_name='')
 def marcarComparativaConcluidaView(request, idComparativa):
     comparativa = Comparativa.objects.get(pk=idComparativa)
     if comparativa.fechaConclusion == None:
@@ -521,6 +599,7 @@ def marcarComparativaConcluidaView(request, idComparativa):
     comparativa.save()
     return HttpResponseRedirect(reverse('schema:comparativaCliente', args=[idComparativa]))
 
+@login_required(redirect_field_name='')
 def marcarCotizacionPreferidaView(request, idCotizacion):
     cotizacion = Cotizacion.objects.get(pk=idCotizacion)
     idComparativa = cotizacion.comparativa.pk
@@ -533,6 +612,7 @@ def marcarCotizacionPreferidaView(request, idCotizacion):
     cotizacion.save()
     return HttpResponseRedirect(reverse('schema:cotizacionCliente', args=[idCotizacion]))
 
+@login_required(redirect_field_name='')
 def sendEmail(subject, message, fromEmail, toEmail):
     try:
         mail = EmailMessage(subject, message, fromEmail, toEmail)
@@ -542,6 +622,7 @@ def sendEmail(subject, message, fromEmail, toEmail):
         print(e)
         return False
 
+@login_required(redirect_field_name='')
 def sendEmailWithAttachment(subject, message, fromEmail, toEmail, attachment, contentType):
     try:
         mail = EmailMessage(subject, message, fromEmail, toEmail)
@@ -552,6 +633,7 @@ def sendEmailWithAttachment(subject, message, fromEmail, toEmail, attachment, co
         print(e)
         return False
 
+@login_required(redirect_field_name='')
 def enviarComparativaView(request, idComparativa):
     # file_ = open('C:/Users/Ivan/Consultores/consultores/django-storages.txt')
     comparativa = Comparativa.objects.get(pk=idComparativa)
