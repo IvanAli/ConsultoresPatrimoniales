@@ -3,7 +3,7 @@ from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
 from schema import models
-from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Seguro, AreaTramites, Poliza, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_protect
 from . import managers
 from django.forms.models import model_to_dict
 from django.core.mail import send_mail, EmailMessage, EmailMultiAlternatives
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.template import loader
 # Create your views here.
 
@@ -84,7 +84,28 @@ def registerAgente(request):
 @login_required(redirect_field_name='')
 def home(request):
     if whichUser(request.user) == 1:
-        context = {'agente': Agente.objects.get(userAgente=request.user)}
+        agente = Agente.objects.get(userAgente=request.user)
+        ordenes = agente.ordenservicio_set.all()
+        lastTwoMonths = datetime.today() - timedelta(days=60)
+        clienteReciente = agente.clientes.all().order_by('-pk')[0]
+        # filter polizas vencidas and activas
+        polizasVencidas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__lt=datetime.now())
+        polizasActivas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=datetime.now())
+        # filter polizas from the last two months
+        polizas = Poliza.objects.filter(ordenServicio__agente=agente)
+        # polizas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=lastTwoMonths)
+        comparativasPendientes = Comparativa.objects.filter(ordenServicio__agente=agente, fechaConclusion=None)
+        for poliza in polizas:
+            print(poliza)
+        context = {
+            'agente': agente,
+            'ordenes': ordenes,
+            'polizas': polizas,
+            'polizasVencidas': polizasVencidas,
+            'polizasActivas': polizasActivas,
+            'clienteReciente': clienteReciente,
+            'comparativasPendientes': comparativasPendientes,
+        }
         return render(request, 'schema/home.html', context)
     elif whichUser(request.user) == 2:
         context = {'agente': Administrador.objects.get(userAdmin=request.user)}
@@ -557,6 +578,12 @@ def polizasView(request):
     elif whichUser(request.user) == 2:
         context = {'agentes': Agente.objects.all()}
         return render(request, 'schema/polizasAdmin.html', context)
+
+@login_required(redirect_field_name='')
+def polizaClienteView(request, idPoliza):
+    poliza = Poliza.objects.get(pk=idPoliza)
+    context = {'poliza': poliza}
+    return render(request, 'schema/infopoliza.html', context)
 
 @login_required(redirect_field_name='')
 def agentesView(request):

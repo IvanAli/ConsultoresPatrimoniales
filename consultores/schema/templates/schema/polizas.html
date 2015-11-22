@@ -46,7 +46,7 @@
 
                             <tr id="poliza{{ forloop.counter }}">
                                 <td>
-                                    {{ orden.poliza.pk }}
+                                    <a href="{% url 'schema:polizaCliente' orden.poliza.pk %}"{{ orden.poliza.pk }}
                                 </td>
                                 <td>
                                     {{ orden.cliente.nombre }}
