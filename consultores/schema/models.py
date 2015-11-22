@@ -200,7 +200,7 @@ class Comision(models.Model):
     asignacionComision = models.ForeignKey('AsignacionComision', null=True)
     agente = models.ForeignKey('Agente')
     def __str__(self):
-        return "Comisión " + self.idComision + " de Agente " + self.agente
+        return "Comisión " + str(self.idComision) + " de " + self.agente
 
 class AsignacionComision(models.Model):
     idAsignacion = models.AutoField(primary_key=True)

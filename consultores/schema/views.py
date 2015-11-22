@@ -92,8 +92,9 @@ def home(request):
         polizasVencidas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__lt=datetime.now())
         polizasActivas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=datetime.now())
         # filter polizas from the last two months
-        polizas = Poliza.objects.filter(ordenServicio__agente=agente)
-        # polizas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=lastTwoMonths)
+        # polizas = Poliza.objects.filter(ordenServicio__agente=agente)
+        polizas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=lastTwoMonths)
+        cotizacionesSinPoliza = Cotizacion.objects.filter(comparativa__ordenServicio__agente=agente, elegida=True, poliza=None)
         comparativasPendientes = Comparativa.objects.filter(ordenServicio__agente=agente, fechaConclusion=None)
         for poliza in polizas:
             print(poliza)
@@ -105,6 +106,7 @@ def home(request):
             'polizasActivas': polizasActivas,
             'clienteReciente': clienteReciente,
             'comparativasPendientes': comparativasPendientes,
+            'cotizacionesSinPoliza': cotizacionesSinPoliza,
         }
         return render(request, 'schema/home.html', context)
     elif whichUser(request.user) == 2:
