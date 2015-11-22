@@ -25,13 +25,13 @@
                         <a id="concluida" href="{% url 'schema:marcarConcluida' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">
                             {% if comparativa.fechaConclusion == None %}
                                 Marcar como concluida<!-- TODO: disable when no of cotizaciones is zero -->
-                                <a id="envio" disabled href="#" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
+                                <a id="envioCliente" disabled href="#" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
                             {% else %}
                                 Marcar como no concluida
-                                <a id="envio" href="{% url 'schema:enviarComparativa' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
+                                <a id="envioCliente" href="{% url 'schema:enviarComparativa' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
                             {% endif %}
-                            <!-- {% if comparativa.fechaEnvio == None %} -->
-                                <a id="envio" href="{% url 'schema:enviarCotizacionTramites' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
+                            <!-- {% if comparativa.fechaEnvioCliente == None %} -->
+                                <a id="envioTramite" href="{% url 'schema:enviarCotizacionTramites' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
                             <!-- {% endif %} -->
                         </a>
                         <a id="nuevoCliente" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>

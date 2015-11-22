@@ -20,10 +20,6 @@ from django.template import loader
 
 # from django.conf.settings import PROJECT_ROOT
 
-"""
-    AGREGAR DECORATORS - PENDIENTE
-    PS: Me gusta codear en ingles
-"""
 
 # HELPER FUNCTIONS
 def getUser(username):
@@ -139,14 +135,42 @@ def seleccionClienteView(request, context_type):
     }
     return render(request, 'schema/seleccionCliente.html', context)
 
-def nuevaPolizaView(request, idCliente):
-    cliente = Cliente.objects.get(pk=idCliente)
-    context = {'cliente': cliente}
-    if cliente.email is None or cliente.email == "":
-        return render(request, 'schema/ingresarCorreoView.html', context)
+@login_required(redirect_field_name='')
+def seleccionOrdenServicioView(request):
+    context = {
+        'ordenes': OrdenServicio.objects.filter(agente=request.user.agente).exclude(comparativa__fechaEnvioTramite=None),
+    }
+    return render(request, 'schema/seleccionOrdenServicio.html', context)
+
+def nuevaPolizaView(request, idOrdenServicio):
+    # check if direccion fields have been filled in
+    ordenServicio = OrdenServicio.objects.get(pk=idOrdenServicio)
+    cliente = ordenServicio.cliente
+    allFilledIn = cliente.rfc and cliente.calle and cliente.numeroExt and cliente.colonia and cliente.ciudad and cliente.estado and cliente.codigoPostal
+    # the rest of the fields to check
+    allFilledIn = allFilledIn and True
+    # allFilledIn = cliente.rfc != "" and cliente.calle != "" and cliente.numeroExt is not None and cliente.colonia != "" and cliente.ciudad != "" and cliente.estado != "" and cliente.codigoPostal != ""
+    if allFilledIn:
+        context = {'orden': ordenServicio, 'polizaForm': forms.PolizaForm()}
+        return render(request, 'schema/nuevaPoliza.html', context)
+    return HttpResponse('Falta llenar direccion del cliente')
+
+
+
+def nuevaPolizaAuthView(request, idOrdenServicio):
+    form = forms.PolizaForm(request.POST, request.FILES)
+    if form.is_valid():
+        poliza = form.save(commit=False)
+        # adding other attributes probably missing
+        ordenServicio = OrdenServicio.objects.get(pk=idOrdenServicio)
+        poliza.ordenServicio = ordenServicio
+        poliza.cotizacion = getCotizacionPreferida(ordenServicio.comparativa.pk)
+        poliza.save()
+        return HttpResponseRedirect(reverse('schema:polizas'))
     else:
-        return HttpResponse('Enviar correo...')
-    return HttpResponse('WIP')
+        for err in form.errors:
+            print(err)
+    return HttpResponse('No success')
 
 @login_required(redirect_field_name='')
 def nuevaComparativaView(request, idCliente):
@@ -477,8 +501,16 @@ def enviarComparativaView(request, idComparativa):
         )
         message = "Un saludo"
         if sendEmailAlternative(subject, message, htmlMessage, 'ivanali@outlook.com', [cliente.email]):
+            comparativa.fechaEnvioCliente = datetime.now()
+            comparativa.save()
             return HttpResponse('Email enviado exitosamente!')
     return HttpResponse('no exito')
+
+def getCotizacionPreferida(idComparativa):
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    for cotizacion in comparativa.cotizacion_set.all():
+        if cotizacion.elegida:
+            return cotizacion
 
 @login_required(redirect_field_name='')
 def enviarCotizacionTramitesView(request, idComparativa):
@@ -486,15 +518,8 @@ def enviarCotizacionTramitesView(request, idComparativa):
     cliente = comparativa.ordenServicio.cliente
     agente = comparativa.ordenServicio.agente
     seguro = comparativa.tipoSeguro.nombre
-    elegidaExists = False
-    cotizacionElegida = None
-    for cot in comparativa.cotizacion_set.all():
-        if cot.elegida == True:
-            elegidaExists = True
-            cotizacionElegida = cot
-            break
 
-    if elegidaExists:
+    if getCotizacionPreferida(idComparativa) is not None:
         archivo = cotizacionElegida.archivo
         if AreaTramites.objects.count() > 0:
             encargadosList = []
@@ -516,6 +541,8 @@ def enviarCotizacionTramitesView(request, idComparativa):
                 }
             )
             if sendEmailAlternativeWithAttachment(subject, message, htmlMessage, 'ivanali@outlook.com', emailList, archivo, 'application/pdf'):
+                comparativa.fechaEnvioTramite = datetime.now()
+                comparativa.save()
                 return HttpResponse('Email enviado exitosamente!')
         else:
             return HttpResponse('No hay emails de area de tramites registrados')

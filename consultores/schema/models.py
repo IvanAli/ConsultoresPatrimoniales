@@ -142,11 +142,12 @@ class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
-    fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
+    fechaEnvioCliente = models.DateTimeField('fecha de envio a cliente', blank=True, null=True)
+    fechaEnvioTramite = models.DateTimeField('fecha de envio a tramites', blank=True, null=True)
     tipoSeguro = models.ForeignKey('TipoSeguro')
     coberturas = models.ManyToManyField('Cobertura')
+    # cotizacionElegida = models.OneToOneField('Cotizacion')
 
-### HACE FALTA RESOLVER LO DE COBERTURAS
 class Cotizacion(models.Model):
     idCotizacion = models.AutoField(primary_key=True)
     costo = models.DecimalField(max_digits=11, decimal_places=2)
@@ -174,12 +175,12 @@ class Poliza(models.Model):
     primaNeta = models.DecimalField(max_digits=11, decimal_places=2)
     fechaEmision = models.DateTimeField('fecha emitida')
     fechaInicio = models.DateTimeField('fecha de inicio')
-    fechaFin = models.DateTimeField('fecha de fin')
+    fechaFin = models.DateTimeField('fecha de fin', null=True)
     endosoBeneficiario = models.CharField(max_length=100, blank=True)
-    linkCaratulaPDF = models.URLField(max_length=200)
-    comision = models.OneToOneField('Comision')
-    cotizacion = models.OneToOneField('Cotizacion')
-    ordenServicio = models.OneToOneField('OrdenServicio')
+    caratulaPDF = models.FileField(null=True)
+    comision = models.OneToOneField('Comision', null=True)
+    cotizacion = models.OneToOneField('Cotizacion', null=True)
+    ordenServicio = models.OneToOneField('OrdenServicio', null=True)
 
 class Pago(models.Model):
     idPago = models.AutoField(primary_key=True)

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block head_title %}Nuevo Cliente{% endblock %}
+{% block head_css %}
+
+    <link rel="stylesheet" href="../../static/css/custom/styles_nuevocliente.css">
+    <script type = "text/javascript" src = "../../static/js/custom/datosClientes.js"></script>
+
+    <!-- <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css"> -->
+{% endblock %}
+
+
+{% block body_content %}
+<!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Nueva póliza</h3>
+            <form enctype="multipart/form-data" action="{% url 'schema:nuevaPolizaAuth' orden.pk %}" method="post">
+                {% csrf_token %}
+                {{ polizaForm.as_p }}
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <input type="reset" name ="cancelar" class="nuevoClientemodal-submit" value="Cancelar">
+                        <input type="submit" name="crear" class=" nuevoClientemodal-submit" value="Crear">
+                    </div>
+                </div>
+            </form>
+
+            {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
+            {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
