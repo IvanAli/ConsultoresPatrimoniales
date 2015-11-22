@@ -3,7 +3,7 @@ from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
 from schema import models
-from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Seguro, AreaTramites, Poliza, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Poliza, Pago, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -176,8 +176,7 @@ def nuevaPolizaView(request, idOrdenServicio):
         return render(request, 'schema/nuevaPoliza.html', context)
     return HttpResponse('Falta llenar direccion del cliente')
 
-
-
+@login_required(redirect_field_name='')
 def nuevaPolizaAuthView(request, idOrdenServicio):
     form = forms.PolizaForm(request.POST, request.FILES)
     if form.is_valid():
@@ -192,6 +191,34 @@ def nuevaPolizaAuthView(request, idOrdenServicio):
         for err in form.errors:
             print(err)
     return HttpResponse('No success')
+
+@login_required(redirect_field_name='')
+def polizaClienteView(request, idPoliza):
+    poliza = Poliza.objects.get(pk=idPoliza)
+    context = {'poliza': poliza}
+    return render(request, 'schema/infoPoliza.html', context)
+
+@login_required(redirect_field_name='')
+def nuevoPagoView(request, idPoliza):
+    poliza = Poliza.objects.get(pk=idPoliza)
+    context = {'poliza': poliza, 'pagoForm': forms.PagoForm()}
+    return render(request, 'schema/nuevoPago.html', context)
+
+@login_required(redirect_field_name='')
+def nuevoPagoAuthView(request, idPoliza):
+    form = forms.PagoForm(request.POST, request.FILES)
+    if form.is_valid():
+        pago = form.save(commit=False)
+        poliza = Poliza.objects.get(pk=idPoliza)
+        if Pago.objects.filter(poliza=poliza).count() == 0:
+            pago.numeroPago = 1
+        else:
+            lastPago = Pago.objects.filter(poliza=poliza).orden_by('-numeroPago')[0]
+            pago.numeroPago = lastPago + 1
+        pago.poliza = poliza
+        pago.save()
+        return HttpResponseRedirect(reverse('schema:polizaCliente', args=[idPoliza]))
+    return HttpResponse('Forma invalida')
 
 @login_required(redirect_field_name='')
 def nuevaComparativaView(request, idCliente):
@@ -580,12 +607,6 @@ def polizasView(request):
         return render(request, 'schema/polizasAdmin.html', context)
 
 @login_required(redirect_field_name='')
-def polizaClienteView(request, idPoliza):
-    poliza = Poliza.objects.get(pk=idPoliza)
-    context = {'poliza': poliza}
-    return render(request, 'schema/infopoliza.html', context)
-
-@login_required(redirect_field_name='')
 def agentesView(request):
     if whichUser(request.user) == 1:
         return HttpResponse("No autorizado")
@@ -611,6 +632,7 @@ def segurosView(request):
     elif whichUser(request.user) == 2:
         context = {'range': range(50)}
         return render(request, 'schema/segurosAdmin.html', context)
+
 
 # not working
 # class ComparativaPDFView(PDFTemplateView):
