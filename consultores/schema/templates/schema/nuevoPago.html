@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block head_title %}Nuevo Póliza{% endblock %}
+{% block head_title %}Nuevo Pago{% endblock %}
 {% block head_css %}
 
     <link rel="stylesheet" href="../../static/css/custom/styles_nuevocliente.css">
@@ -16,10 +16,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h3>Nueva póliza</h3>
-            <form enctype="multipart/form-data" action="{% url 'schema:nuevaPolizaAuth' orden.pk %}" method="post">
+            <h3>Registro de pago</h3>
+            <form enctype="multipart/form-data" action="{% url 'schema:nuevoPagoAuth' poliza.pk %}" method="post">
                 {% csrf_token %}
-                {{ polizaForm.as_p }}
+                {{ pagoForm.as_p }}
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
                         <input type="reset" name ="cancelar" class="nuevoClientemodal-submit" value="Cancelar">

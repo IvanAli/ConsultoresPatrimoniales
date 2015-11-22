@@ -82,100 +82,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Clientes asegurados</h3>
-                        </div>
-                        <div class="panel-body">
-                            <p>
-                                -----
-                            </p>
-                            <p>
-                                -----
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Cotizaciones por confirmar</h3>
-                        </div>
-                        <div class="panel-body">
-                            <a href="#"><p>
-                                ID -1
-                            </p></a>
-                            <a href="#"><p>
-                                ID -1
-                            </p></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Comparativas sin terminar</h3>
-                        </div>
 
-                        {% if comparativasPendientes.all.count == 0 %}
-                            <p class="panel_padding_center"><strong>No hay comparativas pendientes</strong></p>
-                        {% else %}
-                        <table class="table table-hover" id="comparativasTable">
-                            <thead>
-                                <tr>
-                                    <th># Comparativa</th>
-                                    <th>Tipo de seguro</th>
-                                    <!--
-                                    <th>Cliente</th>
-                                    <th>Número de cotizaciones</th>
-                                    -->
-                                </tr>
-                            </thead>
-                            <tbody class="rowlink" data-link="row">
-                            {% for comparativa in comparativasPendientes.all %}
-                                    <tr id="comparativa{{ forloop.counter }}">
-                                        <td>
-                                            <a href="{% url 'schema:comparativaCliente' comparativa.pk %}">{{ comparativa.pk }}</a>
-                                        </td>
-                                        <td>
-                                            {{ comparativa.tipoSeguro.nombre.nombre }}
-                                        </td>
-                                        <!--
-                                        <td>
-                                            {{ orden.cliente.nombre }}
-                                            {{ orden.cliente.apellidoPaterno }}
-                                            {{ orden.cliente.apellidoMaterno }}
-                                        </td>
-                                        <td>
-                                            {{ orden.comparativa.cotizacion_set.all.count }}
-                                        </td>
-                                    -->
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        {% endif %}
 
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Comisiones por cobrar</h3>
-                        </div>
-                        <div class="panel-body">
-                            <a href="#"><p>
-                                Póliza #-1
-                            </p></a>
-                            <a href="#"><p>
-                                Póliza #-1
-                            </p></a>
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -198,7 +106,80 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Comparativas sin terminar</h3>
+                </div>
 
+                {% if comparativasPendientes.all.count == 0 %}
+                    <p class="panel_padding_center"><strong>No hay comparativas pendientes</strong></p>
+                {% else %}
+                <table class="table table-hover" id="comparativasTable">
+                    <thead>
+                        <tr>
+                            <th># Comparativa</th>
+                            <th>Tipo de seguro</th>
+                            <!--
+                            <th>Cliente</th>
+                            <th>Número de cotizaciones</th>
+                            -->
+                        </tr>
+                    </thead>
+                    <tbody class="rowlink" data-link="row">
+                    {% for comparativa in comparativasPendientes.all %}
+                            <tr id="comparativa{{ forloop.counter }}">
+                                <td>
+                                    <a href="{% url 'schema:comparativaCliente' comparativa.pk %}">{{ comparativa.pk }}</a>
+                                </td>
+                                <td>
+                                    {{ comparativa.tipoSeguro.nombre.nombre }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Cotizaciones enviadas sin póliza registrada</h3>
+                </div>
+                <div class="panel-body">
+                    {% if cotizacionesSinPoliza.all.count == 0 %}
+                        <p class="panel_padding_center"><strong>No hay cotizaciones sin póliza registrada</strong></p>
+                    {% else %}
+                    <table class="table table-hover" id="cotizacionesSinPolizaTable">
+                        <thead>
+                            <tr>
+                                <th># Cotización</th>
+                                <th>Aseguradora</th>
+                                <!--
+                                <th>Cliente</th>
+                                <th>Número de cotizaciones</th>
+                                -->
+                            </tr>
+                        </thead>
+                        <tbody class="rowlink" data-link="row">
+                        {% for cotizacion in cotizacionesSinPoliza.all %}
+                                <tr id="cotizacion{{ forloop.counter }}">
+                                    <td>
+                                        <a href="{% url 'schema:cotizacionCliente' cotizacion.pk %}">{{ cotizacion.pk }}</a>
+                                    </td>
+                                    <td>
+                                        {{ cotizacion.aseguradora }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -221,6 +202,13 @@ $(document).ready( function () {
         "scrollY": true
     });
     $('#comparativasTable').DataTable({
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "searching": false,
+        "scrollY": true
+    });
+    $('#cotizacionesSinPolizaTable').DataTable({
         "paging":   false,
         "ordering": false,
         "info":     false,

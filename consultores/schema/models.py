@@ -172,6 +172,7 @@ class AreaTramites(models.Model):
 
 class Poliza(models.Model):
     idPoliza = models.AutoField(primary_key=True)
+    noPoliza = models.CharField(max_length=20, null=True)
     primaNeta = models.DecimalField(max_digits=11, decimal_places=2)
     fechaEmision = models.DateTimeField('fecha emitida')
     fechaInicio = models.DateTimeField('fecha de inicio')
@@ -185,11 +186,12 @@ class Poliza(models.Model):
 class Pago(models.Model):
     idPago = models.AutoField(primary_key=True)
     cantidad = models.DecimalField(max_digits=11, decimal_places=2)
-    fechaPago = models.DateTimeField('fecha de pago', auto_now_add=True)
+    fechaPago = models.DateTimeField('fecha de pago')
     numeroPago = models.PositiveSmallIntegerField()
+    comprobante = models.FileField(null=True)
     poliza = models.ForeignKey('Poliza')
     def __str__(self):
-        return "Pago " + self.numeroPago + " de Poliza " + self.poliza
+        return "Pago " + str(self.numeroPago)
 
 class Comision(models.Model):
     idComision = models.AutoField(primary_key=True)
@@ -198,7 +200,7 @@ class Comision(models.Model):
     asignacionComision = models.ForeignKey('AsignacionComision', null=True)
     agente = models.ForeignKey('Agente')
     def __str__(self):
-        return "Comisión " + self.idComision + " de Agente " + self.agente
+        return "Comisión " + str(self.idComision) + " de " + self.agente
 
 class AsignacionComision(models.Model):
     idAsignacion = models.AutoField(primary_key=True)
