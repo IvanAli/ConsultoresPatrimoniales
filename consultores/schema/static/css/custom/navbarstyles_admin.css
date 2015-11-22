@@ -12,35 +12,40 @@
     text-align: center;
 }
 
+/*fondo de barra de navegacion*/
 .navbar {
     min-height:45px !important;
     background-color: #FFC107;
 }
 
+/*contenedor de botones de navegacion*/
 .navbar-nav > li > a, .navbar-brand {
-    background-color: #FFC107;
     padding-top:10px !important;
     padding-bottom:0 !important;
     height: 45px;
-    left: -20px;
+    left: -32px;
 }
 
+/*botones de navegacion*/
 .navbar-inverse .navbar-nav > li > a {
-    color: #777;
+    background-color: #FFC107;
+    color: #000;
 }
 
+/*hover en botones de navegacion*/
+.navbar-inverse .navbar-nav > li > a:hover {
+    background-color: #FFA000;
+    color: #000;
+}
+
+/*boton de navegacion activo*/
 .navbar-inverse .navbar-nav > .active > a {
     background-color: #FFA000;
-    color: #FFF;
+    color: #000;
 }
 
-.navbar-inverse .navbar-nav>.active>a:hover,
-.navbar-inverse .navbar-nav>.active>a:focus {
+/*hover en boton de navegacion*/
+.navbar-inverse .navbar-nav > .active > a:hover {
     background-color: #FFA000;
-    
-    /* PARA CAMBIAR EL HOVER DEL ELEMENTO ACTIVO
-    color: #777;*/
+    color: #000;
 }
-
-
-

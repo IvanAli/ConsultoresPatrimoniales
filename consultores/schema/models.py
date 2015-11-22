@@ -82,7 +82,7 @@ class Agente(Persona):
     claveAgente = models.IntegerField(blank=True, null=True)
     cuentaBancaria = models.CharField(max_length=34, blank=True)
     banco = models.CharField(max_length=30, blank=True)
-    clientes = models.ManyToManyField(Cliente)
+    clientes = models.ManyToManyField(Cliente, through='ClienteAgente')
 
     def save(self, *args, **kwargs):
         try:
@@ -96,6 +96,11 @@ class Agente(Persona):
 
     def __str__(self):
         return "Agente: " + self.userAgente.username
+
+class ClienteAgente(models.Model):
+    cliente = models.ForeignKey(Cliente)
+    agente = models.ForeignKey(Agente)
+    fecha = models.DateField(auto_now_add=True)
 
 class Administrador(Persona):
     userAdmin = OneToOneField(User)
