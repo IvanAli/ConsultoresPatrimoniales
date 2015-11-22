@@ -142,24 +142,17 @@ class Aseguradora(models.Model):
 
     def __str__(self):
         return self.nombre
-"""
-class SegurosOfertados(models.Model):
-    aseguradora = models.ForeignKey('Aseguradora')
-    tipoSeguro = models.ForeignKey('TipoSeguro')
-
-    class Meta:
-        unique_together = ("aseguradora", "tipoSeguro")
-"""
 
 class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
-    fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
+    fechaEnvioCliente = models.DateTimeField('fecha de envio a cliente', blank=True, null=True)
+    fechaEnvioTramite = models.DateTimeField('fecha de envio a tramites', blank=True, null=True)
     tipoSeguro = models.ForeignKey('TipoSeguro')
     coberturas = models.ManyToManyField('Cobertura')
+    # cotizacionElegida = models.OneToOneField('Cotizacion')
 
-### HACE FALTA RESOLVER LO DE COBERTURAS
 class Cotizacion(models.Model):
     idCotizacion = models.AutoField(primary_key=True)
     costo = models.DecimalField(max_digits=11, decimal_places=2)
@@ -172,20 +165,27 @@ class Cotizacion(models.Model):
     formaPago = models.IntegerField(choices=FORMA_PAGO_OPCIONES, default=12)
     comparativa = models.ForeignKey('Comparativa', null=True)
     aseguradora = models.ForeignKey('Aseguradora')
+    archivo = models.FileField(null=True)
+    elegida = models.BooleanField(default=False)
     def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa
+
+class AreaTramites(models.Model):
+    idAreaTramites = models.AutoField(primary_key=True)
+    encargado = models.CharField(max_length=60, null=True)
+    email = models.EmailField(null=True)
 
 class Poliza(models.Model):
     idPoliza = models.AutoField(primary_key=True)
     primaNeta = models.DecimalField(max_digits=11, decimal_places=2)
     fechaEmision = models.DateTimeField('fecha emitida')
     fechaInicio = models.DateTimeField('fecha de inicio')
-    fechaFin = models.DateTimeField('fecha de fin')
+    fechaFin = models.DateTimeField('fecha de fin', null=True)
     endosoBeneficiario = models.CharField(max_length=100, blank=True)
-    linkCaratulaPDF = models.URLField(max_length=200)
-    comision = models.OneToOneField('Comision')
-    cotizacion = models.OneToOneField('Cotizacion')
-    ordenServicio = models.OneToOneField('OrdenServicio')
+    caratulaPDF = models.FileField(null=True)
+    comision = models.OneToOneField('Comision', null=True)
+    cotizacion = models.OneToOneField('Cotizacion', null=True)
+    ordenServicio = models.OneToOneField('OrdenServicio', null=True)
 
 class Pago(models.Model):
     idPago = models.AutoField(primary_key=True)
@@ -226,21 +226,14 @@ class Contacto(models.Model):
     def __str__(self):
         return "Contacto: " + self.idContacto + " Aseguradora: " + self.aseguradora
 
-"""
-class CoberturasUtilizadas(models.Model):
-    poliza = models.ForeignKey(Poliza, null=True)
-    cobertura = models.ForeignKey(Cobertura, null=True)
-    def __str__(self):
-        return "Cobertura " + self.cobertura + " utilizada en Poliza " + self.poliza
-"""
 
 class OrdenServicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
     fechaServicio = models.DateTimeField('fecha de servicio', auto_now_add=True)
     fechaConclusion = models.DateTimeField(blank=True, null=True)
-    # agente = models.ForeignKey('Agente')
+    agente = models.ForeignKey('Agente', null=True)
     cliente = models.ForeignKey('Cliente')
-    comparativa = models.OneToOneField(Comparativa, null=True)
+    comparativa = models.OneToOneField(Comparativa, related_name="ordenServicio", null=True)
     # poliza = models.OneToOneField(Poliza, null=True)
     def __str__ (self):
         return "Orden de Servicio: " + str(self.idServicio)
@@ -324,7 +317,6 @@ class SeguroG(models.Model):
     nombreAsegurado = models.CharField(max_length=80)
     coaseguro = models.DecimalField(max_digits=11, decimal_places=2)
     topeCoaseguro = models.DecimalField(max_digits=11, decimal_places=2)
-    # preferencias = models.ForeignKey(Cobertura)
 
     def attrs(self):
         for attr, value in self.__dict__.items():

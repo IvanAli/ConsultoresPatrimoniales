@@ -1,0 +1,9 @@
+RUN IN THIS ORDER!
+
+create_admin.py
+create_agente.py
+create_seguros.py
+create_coberturas.py
+create_aseguradoras.py
+create_areatramites.py
+create_contacto.py

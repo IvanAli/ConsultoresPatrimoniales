@@ -11,7 +11,7 @@
 {% block body_content %}
 <!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
 
-    <form action="{% url 'schema:nuevaCotizacionAuth' comparativa.pk %}" method="post">
+    <form enctype="multipart/form-data" action="{% url 'schema:nuevaCotizacionAuth' comparativa.pk %}" method="post">
         {% csrf_token %}
          <div class="container">
             <h3>Nueva cotización</h3>
@@ -19,6 +19,7 @@
             <div class="col-md-12" >
             	<div class="row">
                     {{ cotizacionForm.as_p }}
+                    <!--{{ uploadFileForm }}-->
     			</div>
                 <fieldset>
                     <legend>
@@ -77,7 +78,7 @@
 
         $('#addinput').on('click', 'input#remNew', function() {
             console.log("ivan esta chavo");
-            if( i > 2 ) {
+            if( i > 1 ) {
                 $(this).parents('p').remove();
                 i--;
                 console.log(i);

@@ -6,12 +6,13 @@
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+
 {% endblock %}
 {% block head_javascript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
 {% endblock %}
 
-{% block clientes_tag %}class="active"{% endblock %}
+{% block comparativas_tag %}class="active"{% endblock %}
 {% block body_content %}
 <div class="container">
     <div class="row">
@@ -21,6 +22,18 @@
                     <h3 class="panel-title">Comparativa</h3>
                     <div class="pull-right">
                     <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
+                        <a id="concluida" href="{% url 'schema:marcarConcluida' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">
+                            {% if comparativa.fechaConclusion == None %}
+                                Marcar como concluida<!-- TODO: disable when no of cotizaciones is zero -->
+                                <a id="envioCliente" disabled href="#" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
+                            {% else %}
+                                Marcar como no concluida
+                                <a id="envioCliente" href="{% url 'schema:enviarComparativa' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
+                            {% endif %}
+                            <!-- {% if comparativa.fechaEnvioCliente == None %} -->
+                                <a id="envioTramite" href="{% url 'schema:enviarCotizacionTramites' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
+                            <!-- {% endif %} -->
+                        </a>
                         <a id="nuevoCliente" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>
                     </div>
                     </div>
@@ -29,33 +42,13 @@
                     <legend>
                         Características
                     </legend>
-                    {% for field in datosAP %}
+                    {% for field in datos %}
                         <li><b>{{ field.label }}:</b>
                             {% if field.data == None or field.data == '' %}
                                 No especificado
                             {% else %}
                                 {{ field.data }}</li>
                             {% endif %}
-                    {% endfor %}
-                    <!--
-                    {{ comparativa.tipoSeguro.seguroAP.marca }}
-                    {% if comparativa.tipoSeguro.nombre.pk == 'AP' %}
-                        {% for field, value in comparativa.tipoSeguro.seguroAP.attrs %}
-                            <li><b>{{ field }}:</b> {{ value }}</li>
-                        {% endfor %}
-                    {% endif %}
-                    {% for field, value in comparativa.tipoSeguro.attrs %}
-                        <li><b>{{ field }}:</b> {{ value }}</li>
-                    {% endfor %}
-                    {{ comparativa.tipoSeguro.seguroap.modelo }}
-                    -->
-                    <legend>
-                        Coberturas deseadas
-                    </legend>
-                    {% for cobertura in comparativa.coberturas.all %}
-                        <li>
-                            {{ cobertura.nombre }}
-                        </li>
                     {% endfor %}
                     <br />
                     <!-- start panel body -->
@@ -65,7 +58,7 @@
                                 <th>ID Cotización</th>
                                 <th>Aseguradora</th>
                                 <th>Costo</th>
-                                <th>Coberturas</th>
+                                <th>No. de coberturas</th>
                                 <th>Forma de pago</th>
                                 <th>Fecha de creación</th>
                             </tr>
@@ -91,6 +84,7 @@
                                     <td>
                                         {{ cotizacion.fechaCreacion }}
                                     </td>
+                                  </div>
                                 </tr>
                             {% endfor %}
                         </tbody>

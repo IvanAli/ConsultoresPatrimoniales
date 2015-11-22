@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Agente, Cliente, Cotizacion, CoberturaUtilizada, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
+from .models import Agente, Cliente, Cotizacion, CoberturaUtilizada, Poliza, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
 
 class LoginForm(forms.Form):
     user = forms.CharField(max_length=30)
@@ -15,12 +15,22 @@ class nuevoClienteForm(forms.ModelForm):
 class CotizacionForm(forms.ModelForm):
     class Meta:
         model = Cotizacion
-        fields = ['costo', 'formaPago', 'aseguradora']
+        fields = ['costo', 'formaPago', 'aseguradora', 'archivo']
 
 class CoberturaUtilizadaForm(forms.ModelForm):
     class Meta:
         model = CoberturaUtilizada
         fields = ['idCobertura', 'sumaAsegurada', 'deducible']
+
+class PolizaForm(forms.ModelForm):
+    class Meta:
+        model = Poliza
+        fields = ['idPoliza', 'primaNeta', 'fechaEmision', 'fechaInicio', 'fechaFin', 'endosoBeneficiario', 'caratulaPDF']
+        # fields = '__all__'
+
+class UploadFileForm(forms.Form):
+    # title = forms.CharField(max_length=50)
+    file = forms.FileField()
 
 class SeguroAPForm(forms.ModelForm):
 	class Meta:
