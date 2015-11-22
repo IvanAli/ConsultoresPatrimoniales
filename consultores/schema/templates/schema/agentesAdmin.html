@@ -35,9 +35,10 @@
                     </thead>
                     <tbody class="rowlink" data-link="row">
                         {% for agente in agentes %}
+                        
                         <tr>
                             <td>
-                                {{ agente.pk }}
+                                <a href="{% url 'schema:infoAgente' agente.pk %}">{{ agente.pk }}</a>
                             </td>
                             <td>
                                 {{ agente.userAgente.username }}
@@ -58,7 +59,6 @@
                         </tr>
                         
                         {% endfor %}
-                        
                     </tbody>
                 </table>
             </div>

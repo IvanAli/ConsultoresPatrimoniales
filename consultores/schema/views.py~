@@ -3,7 +3,11 @@ from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
 from schema import models
+<<<<<<< HEAD
 from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Poliza, Pago, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
+=======
+from .models import Agente, Administrador, Cliente, ClienteAgente, ClienteFisico, ClienteMoral, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
+>>>>>>> d0a83b012696f65b1b683dbd2be4629cc0c1bcda
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -91,13 +95,8 @@ def home(request):
     if whichUser(request.user) == 1:
         agente = Agente.objects.get(userAgente=request.user)
         ordenes = agente.ordenservicio_set.all()
-        meses = 2
-        lastTwoMonths = datetime.today() - timedelta(days=2*30)
-        clienteReciente = None
-        try:
-            clienteReciente = agente.clientes.all().order_by('-pk')[0]
-        except Exception as e:
-            print(e)
+        lastTwoMonths = datetime.today() - timedelta(days=60)
+        clienteReciente = agente.clientes.all().order_by('-pk')[0]
         # filter polizas vencidas and activas
         polizasVencidas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__lt=datetime.now())
         polizasActivas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=datetime.now())
@@ -117,7 +116,6 @@ def home(request):
             'clienteReciente': clienteReciente,
             'comparativasPendientes': comparativasPendientes,
             'cotizacionesSinPoliza': cotizacionesSinPoliza,
-            'meses': meses,
         }
         return render(request, 'schema/home.html', context)
     elif whichUser(request.user) == 2:
@@ -695,6 +693,8 @@ def segurosView(request):
         context = {'range': range(50)}
         return render(request, 'schema/segurosAdmin.html', context)
 
+<<<<<<< HEAD
+=======
 @login_required(redirect_field_name='')
 def infoAgenteView(request, idAgente):
     if whichUser(request.user) == 1:
@@ -705,7 +705,7 @@ def infoAgenteView(request, idAgente):
             'relacionCliente': ClienteAgente.objects.filter(agente=idAgente)
         }
         return render(request, 'schema/infoagenteAdmin.html', context)
-
+>>>>>>> d0a83b012696f65b1b683dbd2be4629cc0c1bcda
 
 # not working
 # class ComparativaPDFView(PDFTemplateView):

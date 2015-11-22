@@ -27,25 +27,24 @@
                 <thead>
                     <tr>
                         <th>ID Cliente</th>
-                        <th>Nombre</th>
-                        <th>Apellido Paterno</th>
-                        <th>Apellido Materno</th>
+                        <th>Nombre cliente</th>
+                        <th>Nombre agente</th>
                     </tr>
                 </thead>
                 <tbody class="rowlink" data-link="row">
-                    {% for cliente in clientes %}
+                    {% for relacion in clienteagente %}
                         <tr id="cliente{{ forloop.counter }}">
                             <td>
-                                <a href="{% url 'schema:infoCliente' cliente.pk %}">{{ cliente.pk }}</a>
+                                <a href="{% url 'schema:infoCliente' relacion.pk %}">{{ relacion.cliente.pk }}</a>
                             </td>
                             <td>
-                                {{ cliente.nombre }}
+                                {{ relacion.cliente.nombre }}
+                                {{ relacion.cliente.apellidoPaterno }}
+                                {{ relacion.cliente.apellidoMaterno }}
                             </td>
                             <td>
-                                {{ cliente.apellidoPaterno }}
-                            </td>
-                            <td>
-                                {{ cliente.apellidoMaterno }}
+                                {{ relacion.agente.userAgente.first_name }}
+                                {{ relacion.agente.userAgente.last_name }}
                             </td>
                         </tr>
 

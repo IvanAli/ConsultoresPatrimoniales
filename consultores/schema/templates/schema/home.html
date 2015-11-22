@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block head_title %}Consultores Patrimoniales{% endblock %}
+{% block head_title %}Inicio{% endblock %}
 
 {% block home_tag %}class="active"{% endblock %}
 {% block head_css %}
@@ -38,8 +38,12 @@
                         </p>
                         <p>
                             <strong>Cliente más reciente</strong>:
+                            {% if clienteReciente != None %}
                             <a href="{% url 'schema:infoCliente' clienteReciente.pk %}">{{ clienteReciente.nombre }}
                             {{ clienteReciente.apellidoPaterno }} {{ clienteReciente.apellidoMaterno}}</a>
+                            {% else %}
+                            No hay clientes registrados
+                            {% endif %}
                         </p>
                     </div>
                 </div>
@@ -50,6 +54,9 @@
                         <h3 class="panel-title">Vencimientos próximos</h3>
                     </div>
                     <div class="panel-body panel-body-deadline">
+                        {% if comparativasPendientes.all.count == 0 %}
+                            <p class="panel_padding_center"><strong>No hay vencimientos en los próximos {{ meses }} meses</strong></p>
+                        {% else %}
                         <table class="table table-hover" id="polizasTab">
                             <thead>
                                 <tr>
@@ -78,6 +85,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% endif %}
                     </div>
                 </div>
             </div>

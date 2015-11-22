@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^marcarPreferida/(?P<idCotizacion>[0-9]+)/$', views.marcarCotizacionPreferidaView, name='marcarCotizacionPreferida'),
     # url(r'^comparativa.pdf$', views.ComparativaPDFView.as_view(), name='comparativapdf'),
     url(r'^agentes/$', views.agentesView, name='agentes'),
+    url(r'^agentes/(?P<idAgente>[0-9]+)/$', views.infoAgenteView, name='infoAgente'),
     url(r'^aseguradoras/$', views.aseguradorasView, name='aseguradoras'),
     url(r'^seguros/$', views.segurosView, name='seguros'),
 ]
