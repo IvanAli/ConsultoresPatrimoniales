@@ -53,6 +53,7 @@
                                 </td>
                                 <td>
                                     N/A
+                                    <a href="#" class="button btn-warning btn-xs" style="float: right">Eliminar</a>
                                 </td>
                             </tr>
                             
@@ -83,7 +84,7 @@
                         </p>
                         <p><strong>Usuario:</strong> {{ agente.userAgente.username }}</p>
                         <p><strong>Correo:</strong> {{ agente.userAgente.email }}</p>
-                        <p>
+                        <p> 
                             <strong>Clave agente:</strong>
                             {% if agente.claveAgente %}
                                 {{ agente.claveAgente }}
@@ -112,12 +113,12 @@
                             {% if agente.calle %}
                                 <p>
                                 {{ agente.calle }}
-                                {{ agente.numeroInt }}
-                                {{ agente.numeroExt }}
+                                #{{ agente.numeroExt }}
+                                Int. {{ agente.numeroInt }}
                                 {{ agente.colonia }}
                                 </p>
                                 <p>
-                                {{ agente.ciudad }}
+                                {{ agente.ciudad }},
                                 {{ agente.estado }}
                                 {{ agente.codigoPostal }}
                                 </p>
