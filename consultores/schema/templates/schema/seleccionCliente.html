@@ -17,15 +17,27 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel">
-                <div class="panel-heading">
-                    <h4>Nueva Comparativa</h4>
-                    Selecciona por favor un cliente al cual deseas hacer una
-                    {% if context_type == 'comparativa' %}
-                        comparativa.
-                    {% elif context_type == 'poliza' %}
-                        póliza.
-                    {% endif %}
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Nueva comparativa</h4>
+                    <h6>
+                        Selecciona por favor un cliente al cual deseas hacer una
+                        {% if context_type == 'comparativa' %}
+                            comparativa.
+                        {% elif context_type == 'poliza' %}
+                            póliza.
+                        {% endif %}
+                    </h6>
+                </div>
+                <div class="col-md-4">
+                    <div class="pull-right">
+                        <div class="btn-new-pos" style="position: relative; top: .6em;">
+                            <a href="{% url 'schema:comparativas' %}" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-chevron-left"></div>
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="panel-body">
                     <!-- start panel body -->

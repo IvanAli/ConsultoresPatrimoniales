@@ -90,3 +90,8 @@ class SeguroTForm(forms.ModelForm):
         model = SeguroT
         fields = ['tipoMedio', 'bienTransportado', 'sumaAsegurada', 'ciudadOrigen', 'estadoOrigen',
         'ciudadDestino', 'estadoDestino', 'tipoTrabajo']
+
+class EliminarClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = []

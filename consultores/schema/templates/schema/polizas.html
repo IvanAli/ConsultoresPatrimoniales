@@ -17,65 +17,70 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Pólizas</h3>
-                    <div class="pull-right">
-                    <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
-                        <a href="{% url 'schema:seleccionOrdenServicio' %}" class="btn btn-default btn-sm btn-new-pos">Nueva póliza</a>
-                    </div>
-                    </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Mis pólizas</h4>
                 </div>
-                <div class="panel-body">
-                    <!-- start panel body -->
-                    <table class="table table-hover" id="comparativasTable">
-                        <thead>
-                            <tr>
-                                <th>ID Póliza</th>
-                                <th>Cliente</th>
-                                <th>Tipo de Seguro</th>
-                                <th>Cotización</th>
-                                <th>Pagos</th>
-                                <th>Vencimiento</th>
-                            </tr>
-                        </thead>
-                        <tbody class="rowlink" data-link="row">
-                            {% for cliente in clientes.all %}
-                                {% for orden in cliente.ordenservicio_set.all %}
-                                    {% if orden.poliza %}
-
-                            <tr id="poliza{{ forloop.counter }}">
-                                <td>
-                                    <a href="{% url 'schema:polizaCliente' orden.poliza.pk %}">{{ orden.poliza.pk }}</a>
-                                </td>
-                                <td>
-                                    {{ orden.cliente.nombre }}
-                                    {{ orden.cliente.apellidoPaterno }}
-                                    {{ orden.cliente.apellidoMaterno }}
-                                </td>
-                                <td>
-                                    {{ orden.comparativa.tipoSeguro.nombre.nombre }}
-                                </td>
-                                <td>
-                                    {{ orden.poliza.cotizacion.aseguradora }}
-                                </td>
-                                <td>
-                                    {{ orden.poliza.pago_set.all.count }}
-                                </td>
-                                <td>
-                                    {{ orden.poliza.fechaFin|date }}
-                                </td>
-                            </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <!-- end panel body -->
+                <div class="col-md-4">
+                    <div class="pull-right">
+                        <a href="{% url 'schema:seleccionOrdenServicio' %}" class="btn btn-default btn-sm" style="position: relative; top: .6em;">Nueva póliza</a>
+                    </div>
                 </div>
             </div>
-        </div>
+            <table class="table table-hover" id="comparativasTable">
+                <thead>
+                    <tr>
+                        <th>ID Póliza</th>
+                        <th>Cliente</th>
+                        <th>Tipo de Seguro</th>
+                        <th>Cotización</th>
+                        <th>Pagos</th>
+                        <th>Vencimiento</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="rowlink" data-link="row">
+                {% for cliente in clientes.all %}
+                    {% for orden in cliente.ordenservicio_set.all %}
+                        {% if orden.poliza %}
 
+                    <tr id="poliza{{ forloop.counter }}">
+                        <td>
+                            <a href="{% url 'schema:polizaCliente' orden.poliza.pk %}">{{ orden.poliza.pk }}</a>
+                        </td>
+                        <td>
+                            {{ orden.cliente.nombre }}
+                            {{ orden.cliente.apellidoPaterno }}
+                            {{ orden.cliente.apellidoMaterno }}
+                        </td>
+                        <td>
+                            {{ orden.comparativa.tipoSeguro.nombre.nombre }}
+                        </td>
+                        <td>
+                            {{ orden.poliza.cotizacion.aseguradora }}
+                        </td>
+                        <td>
+                            {{ orden.poliza.pago_set.all.count }}
+                        </td>
+                        <td>
+                            {{ orden.poliza.fechaFin|date }}
+                        </td>
+                        <td>
+                            <a href="#{{ cliente.pk }}" class="pull-right btn btn-danger btn-xs" style="color: white">
+                                <div class="glyphicon glyphicon-trash"></div>
+                                Borrar
+                            </a>
+                            <a href="#{{ cliente.pk }}" class="pull-right btn btn-warning btn-xs" style="color: white; position: relative; left: -.5em;">
+                                <div class="glyphicon glyphicon-edit"></div>
+                                Editar
+                            </a>
+                        </td>
+                    </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

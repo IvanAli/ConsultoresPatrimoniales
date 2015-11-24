@@ -5,104 +5,193 @@
 
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.0/css/buttons.bootstrap.min.css">
 {% endblock %}
-{% block head_javascript %}
 
+{% block head_javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.bootstrap.min.js"></script>
 {% endblock %}
 
 {% block clientes_tag %}class="active"{% endblock %}
 {% block body_content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Comparativas</h3>
-                </div>
-                <div class="panel-body">
-                    <!-- start panel body -->
-                    <table class="table table-hover" id="clienteTable">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Número de cotizaciones</th>
-                                <th>Concluida</th>
-                                <th>Enviada</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for orden in cliente.ordenservicio_set.all %}
-                                <tr id="comparativa{{ forloop.counter }}">
-                                    <td>
-                                        {{ orden.comparativa.pk }}
-                                    </td>
-                                    <td>
-                                        {{ orden.comparativa.cotizacion_set.all.count }}
-                                        <!-- numero de cotizaciones -->
-                                    </td>
-                                    <td>
-                                        {% if orden.comparativa.fechaConclusion %}
-                                            Sí
-                                        {% else %}
-                                            No
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if orden.comparativa.fechaEnviada %}
-                                            Sí
-                                        {% else %}
-                                            No
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <!-- end panel body -->
-                </div>
-            </div>
+        <div class="col-md-9">
+            <h4>Cliente
+                #{{ cliente.pk }} -
+                {{ cliente.nombre }}
+                {{ cliente.apellidoPaterno }}
+                {{ cliente.apellidoMaterno }}
+            </h4>
         </div>
-        <div class="col-md-4">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Info del cliente</h3>
-                </div>
-                <div class="panel-body">
-                    <p>{{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }} , {{ cliente.edad }} años</p>
-                    <p>{{ cliente.email }}</p>
-                    <p>tel: ({{ cliente.telefonoLada }}) {{ cliente.telefono }}</p>
-                    <p>{{ cliente.rfc }}</p>
-                    <p>{% if cliente.codigoPostal %} {{ cliente.codigoPostal }},{% endif %}
-                     {% if cliente.ciudad %}{{ cliente.ciudad }},{% endif %} {{ cliente.estado }}</p>
-                    <p>{% if cliente.colonia %}{{ cliente.colonia }},{% endif %}
-                    {% if cliente.calle %}{{ cliente.calle }} {% endif %} 
-                    {% if cliente.numeroExt %} # {{ cliente.numeroExt }}{% endif %}
-                    {% if cliente.numeroInt %} Int. {{ cliente.numeroInt }}{% endif %}</p>
-                </div>
-            </div>
-       
+        <div class="col-md-3" style="position:relative; top: .5em;">
+            <a href="{% url 'schema:eliminarCliente' cliente.pk %}" class="btn btn-danger btn-sm pull-right">
+                <div class="glyphicon glyphicon-trash"></div>
+                Eliminar
+            </a>
+            <a href="#" class="btn btn-warning btn-sm pull-right" style="position: relative;left:-.5em;">
+                <div class="glyphicon glyphicon-edit"></div>
+                Editar
+            </a>
         </div>
     </div>
-    <div class="row">
-          <div class="col-md-4" id="datosFacturacion">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Datos Facturación</h3>
+    <div class="row" id="comparativasTable">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#comp" data-toggle="tab">Comparativas</a></li>
+                                    <li><a href="#pol" data-toggle="tab">Pólizas</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <!-- start panel body -->
+                            <table class="table table-hover display">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Número de cotizaciones</th>
+                                        <th>Concluida</th>
+                                        <th>Enviada</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="rowlink" data-link="row">
+                                    {% for orden in cliente.ordenservicio_set.all %}
+                                        <tr id="comparativa{{ forloop.counter }}">
+                                            <td>
+                                                <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
+                                            </td>
+                                            <td>
+                                                {{ orden.comparativa.cotizacion_set.all.count }}
+                                                <!-- numero de cotizaciones -->
+                                            </td>
+                                            <td>
+                                                {% if orden.comparativa.fechaConclusion %}
+                                                    Sí
+                                                {% else %}
+                                                    No
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if orden.comparativa.fechaEnviada %}
+                                                    Sí
+                                                {% else %}
+                                                    No
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <!-- end panel body -->
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <p> {% if cliente.codigoPostalFact %} {{ cliente.codigoPostalFact }},{% endif %}
-                        {% if cliente.ciudadFact %} {{ cliente.ciudadFact }}, {% endif %} {{ cliente.estadoFact }} </p>
-                    <p>{% if cliente.coloniaFact %}{{ cliente.coloniaFact }},{% endif %}
-                    {% if cliente.calleFact %}{{ cliente.calleFact }} {% endif %} 
-                    {% if cliente.numeroExtFact %} # {{ cliente.numeroExtFact }}{% endif %}
-                    {% if cliente.numeroIntFact %} Int. {{ cliente.numeroIntFact }}{% endif %}</p>
-                    <a href="{% url 'schema:datosFacturacion' cliente.pk %}" class="btn btn-primary " >Crear</a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">Información del cliente</div>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <strong>Nombre:</strong>
+                            {{ cliente.nombre }}
+                            {{ cliente.apellidoPaterno }}
+                            {{ cliente.apellidoMaterno }}
+                        </p>
+                        <p>
+                            <strong>Edad:</strong>
+                            {% if cliente.edad %}
+                                {{ cliente.edad }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Correo:</strong>
+                            {% if cliente.email %}
+                                {{ cliente.email }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Teléfono:</strong>
+                            {% if cliente.telefono %}
+                                ({{ cliente.telefonoLada }}) {{ cliente.telefono }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>RFC:</strong>
+                            {% if cliente.RFC %}
+                                {{ cliente.RFC }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Domicilio:</strong>
+                            {% if cliente.calle %}
+                                {{ cliente.calle }}
+                                #{{ cliente.numeroExt }}
+                                {% if cliente.numeroInt %}
+                                    Int.{{ cliente.numeroInt }}
+                                {% endif %}
+                            <br>
+                                {{ cliente.ciudad }},
+                                {{ cliente.estado }}
+                                {{ cliente.codigoPostal }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">Datos de facturación</div>
+                    </div>
+                    <div class="panel-body">
+                        {% if cliente.calleFact %}
+                        <p>
+                            <strong>Domicilio:</strong>
+                            {{ cliente.calleFact }}
+                            #{{ cliente.numeroExtFact }}
+                            {% if cliente.numeroIntFact %}
+                                Int.{{ cliente.numeroIntFact }}
+                            {% endif %}
+                            <br>
+                            {{ cliente.ciudadFact }},
+                            {{ cliente.estadoFact }}
+                            {{ cliente.codigoPostalFact }}
+                        </p>
+                        <p>
+                            <div class="pull-left">
+                                <a href="#" class="btn btn-default btn-xs">Editar</a>
+                            </div>
+                        </p>
+                        {% else %}
+                            <a href="{% url 'schema:datosFacturacion' cliente.pk %}" class="btn btn-default btn-xs">Agregar datos de facturación</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
 </div>
 
 {% endblock %}
@@ -114,9 +203,13 @@
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
 <script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/buttons/1.1.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.bootstrap.min.js"></script>
+<script type = "text/javascript" src = "../../static/js/custom/tablasClientes.js"></script>
+
 <script>
-$(document).ready( function () {
-    $('#clienteTable').DataTable();
+$(document).ready(function() {
+    $('table.display').DataTable();
 } );
 </script>
 {% endblock %}

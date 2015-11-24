@@ -17,73 +17,86 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Comparativas</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Mis comparativas</h4>
+                </div>
+                <div class="col-md-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p style="color:orange;">{{ message }}</p>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
                     <div class="pull-right">
-                        <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
+                        <div class="btn-new-pos" style="position: relative; top: .6em;">
                             <a href="{% url 'schema:seleccionCliente' 'comparativa' %}" class="btn btn-default btn-sm btn-new-pos">Nueva comparativa</a>
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
-                    <!-- start panel body -->
-                    <table class="table table-hover" id="comparativasTable">
-                        <thead>
-                            <tr>
-                                <th># Comparativa</th>
-                                <th>Tipo de seguro</th>
-                                <th>Cliente</th>
-                                <!-- <th>Tipo de Seguro</th> -->
-                                <th>Número de cotizaciones</th>
-                                <th>Concluida</th>
-                                <th>Enviada</th>
-                            </tr>
-                        </thead>
-                        <tbody class="rowlink" data-link="row">
-                        {% for cliente in clientes.all %}
-                            {% for orden in cliente.ordenservicio_set.all %}
-                                <tr id="comparativa{{ forloop.counter }}">
-                                    <td>
-                                        <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
-                                    </td>
-                                    <td>
-                                        {{ orden.comparativa.tipoSeguro.nombre.nombre }}
-                                    </td>
-                                    <td>
-                                        {{ orden.cliente.nombre }}
-                                        {{ orden.cliente.apellidoPaterno }}
-                                        {{ orden.cliente.apellidoMaterno }}
-                                    </td>
-                                    <!-- <td>
-                                        {{ orden.tipoSeguro.get_idTipoSeguro_display }}
-                                    </td> -->
-                                    <td>
-                                        {{ orden.comparativa.cotizacion_set.all.count }}
-                                        <!-- numero de cotizaciones -->
-                                    </td>
-                                    <td>
-                                        {% if orden.comparativa.fechaConclusion %}
-                                            Sí
-                                        {% else %}
-                                            No
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if orden.comparativa.fechaEnviada %}
-                                            Sí
-                                        {% else %}
-                                            No
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <!-- end panel body -->
-                </div>
             </div>
+            <table class="table table-hover" id="comparativasTable">
+                <thead>
+                    <tr>
+                        <th># Comparativa</th>
+                        <th>Cliente</th>
+                        <th>Tipo de Seguro</th> 
+                        <th>Número de cotizaciones</th>
+                        <th>Concluida</th>
+                        <th>Enviada</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="rowlink" data-link="row">
+                {% for cliente in clientes.all %}
+                    {% for orden in cliente.ordenservicio_set.all %}
+                        <tr id="comparativa{{ forloop.counter }}">
+                            <td>
+                                <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
+                            </td>
+                            <td>
+                                {{ orden.cliente.nombre }}
+                                {{ orden.cliente.apellidoPaterno }}
+                                {{ orden.cliente.apellidoMaterno }}
+                            </td>
+                             <td>
+                                {{ orden.comparativa.tipoSeguro.nombre.nombre }}
+                            </td> 
+                            <td>
+                                {{ orden.comparativa.cotizacion_set.all.count }}
+                                <!-- numero de cotizaciones -->
+                            </td>
+                            <td>
+                                {% if orden.comparativa.fechaConclusion %}
+                                    Sí
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if orden.comparativa.fechaEnviada %}
+                                    Sí
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'schema:eliminarComparativa' orden.comparativa.pk %}" class="pull-right btn btn-danger btn-xs" style="color: white">
+                                    <div class="glyphicon glyphicon-trash"></div>
+                                    Eliminar
+                                </a>
+                                <a href="#{{ cliente.pk }}" class="pull-right btn btn-warning btn-xs" style="color: white; position: relative; left: -.5em;">
+                                    <div class="glyphicon glyphicon-edit"></div>
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

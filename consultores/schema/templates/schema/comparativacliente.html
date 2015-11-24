@@ -17,35 +17,60 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Comparativa</h3>
-                    <div class="pull-right">
-                    <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
-                        <a id="concluida" onclick="marcar_boton_concluida('{% url 'schema:marcarConcluida' comparativa.pk %}', this.id, 'envioCliente', 'envioTramite')" class="btn btn-default btn-sm btn-new-pos">
-                            Marcar como concluida
-                        </a>
+            <h4>Comparativa de
+                {{ comparativa.ordenServicio.cliente.nombre }}
+                {{ comparativa.ordenServicio.cliente.apellidoPaterno }}
+                {{ comparativa.ordenServicio.cliente.apellidoMaterno }}
+            </h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right" style="position: relative; top:.6em;">
+                <a id="concluida" onclick="marcar_boton_concluida('{% url 'schema:marcarConcluida' comparativa.pk %}', this.id, 'envioCliente', 'envioTramite')" class="btn btn-default btn-sm btn-new-pos">
+                    Marcar como concluida
+                </a>
                                 <!-- TODO: disable when no of cotizaciones is zero -->
-                        <a id="envioCliente" onclick="enviarCliente('{% url 'schema:enviarComparativa' comparativa.pk %}', this.id)" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
-                        <a id="envioTramite" onclick="enviarTramites('{% url 'schema:enviarCotizacionTramites' comparativa.pk %}', this.id)" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
-                        <a id="nuevaCotizacion" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>
-                    </div>
+                <a id="envioCliente" onclick="enviarCliente('{% url 'schema:enviarComparativa' comparativa.pk %}', this.id)" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">
+                    Enviar comparativa a cliente
+                </a>
+                <a id="envioTramite" onclick="enviarTramites('{% url 'schema:enviarCotizacionTramites' comparativa.pk %}', this.id)" class="btn btn-default btn-sm btn-new-pos">
+                    Enviar cotización preferida a trámites
+                </a>
+                <a href="#" class="btn btn-warning btn-sm">
+                    <div class="glyphicon glyphicon-edit"></div>
+                    Editar
+                </a>
+                <a href="{% url 'schema:eliminarComparativa' comparativa.pk %}" class="btn btn-danger btn-sm">
+                    <div class="glyphicon glyphicon-trash"></div>
+                    Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <br>
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="panel-title">Cotizaciones de la comparativa</div>
+                        </div>
+                        <div class="col-md-3">
+                        {% if comparativa.fechaConclusion == None %}
+                            
+                            <a id="nuevaCotizacion" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="pull-right btn btn-default btn-sm">
+                                <div class="glyphicon glyphicon-plus"></div>
+                                Nueva cotización
+                            </a>
+                        {% else %}
+                            <a disabled href="#" class="pull-right btn btn-default btn-xs">Nueva cotización</a>
+                        {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="panel-body">
-                    <legend>
-                        Características
-                    </legend>
-                    {% for field in datos %}
-                        <li><b>{{ field.label }}:</b>
-                            {% if field.data == None or field.data == '' %}
-                                No especificado
-                            {% else %}
-                                {{ field.data }}</li>
-                            {% endif %}
-                    {% endfor %}
-                    <br />
-                    <!-- start panel body -->
                     <table class="table table-hover" id="cotizacionesTable">
                         <thead>
                             <tr>
@@ -58,36 +83,88 @@
                             </tr>
                         </thead>
                         <tbody class="rowlink" data-link="row">
-                            {% for cotizacion in comparativa.cotizacion_set.all %}
-                                <tr id="comparativa{{ forloop.counter }}">
-                                    <td>
-                                        <a href="{% url 'schema:cotizacionCliente' cotizacion.pk %}">{{ cotizacion.pk }}</a>
-                                    </td>
-                                    <td>
-                                        {{ cotizacion.aseguradora.nombre }}
-                                    </td>
-                                    <td>
-                                        {{ cotizacion.costo }}
-                                    </td>
-                                    <td>
-                                        {{ cotizacion.coberturautilizada_set.all.count }}
-                                    </td>
-                                    <td>
-                                        {{ cotizacion.get_formaPago_display }}
-                                    </td>
-                                    <td>
-                                        {{ cotizacion.fechaCreacion }}
-                                    </td>
-                                  </div>
-                                </tr>
-                            {% endfor %}
+                        {% for cotizacion in comparativa.cotizacion_set.all %}
+                            <tr id="comparativa{{ forloop.counter }}">
+                                <td>
+                                    <a href="{% url 'schema:cotizacionCliente' cotizacion.pk %}">{{ cotizacion.pk }}</a>
+                                </td>
+                                <td>
+                                    {{ cotizacion.aseguradora.nombre }}
+                                </td>
+                                <td>
+                                    {{ cotizacion.costo }}
+                                </td>
+                                <td>
+                                    {{ cotizacion.coberturautilizada_set.all.count }}
+                                </td>
+                                <td>
+                                    {{ cotizacion.get_formaPago_display }}
+                                </td>
+                                <td>
+                                    {{ cotizacion.fechaCreacion }}
+                                </td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
-                    <!-- end panel body -->
-                  
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">Características de seguro a contratar</div>
+                    </div>
+                    <div class="panel-body">
+                        {% for field in datos %}
+                        <p>
+                            <strong>{{ field.label }}:</strong>
+                            {% if field.data == None or field.data == '' %}
+                                No especificado
+                            {% else %}
+                                {{ field.data }}
+                            {% endif %}
+                        </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <a href="{% url 'schema:infoCliente' comparativa.ordenServicio.cliente.pk %}">
+                                Información del cliente
+                            </a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <strong>Nombre:</strong>
+                            {{ comparativa.ordenServicio.cliente.nombre }}
+                            {{ comparativa.ordenServicio.cliente.apellidoPaterno }}
+                            {{ comparativa.ordenServicio.cliente.apellidoMaterno }}
+                        </p>
+                        <p>
+                            <strong>Correo:</strong>
+                            {% if comparativa.ordenServicio.cliente.email %}
+                                {{ comparativa.ordenServicio.cliente.email }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Teléfono:</strong>
+                            {% if cliente.telefono %}
+                                ({{ cliente.telefonoLada }}) {{ cliente.telefono }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

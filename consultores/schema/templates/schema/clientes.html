@@ -18,51 +18,59 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Clientes</h3>
-                    <div class="pull-right">
-                    <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
-                        <a id="nuevoCliente" href="{% url 'schema:nuevoCliente' %}" class="btn btn-default btn-sm btn-new-pos">Nuevo cliente</a>
-                    </div>
-                    </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Mis clientes</h4>
                 </div>
-                <div class="panel-body">
-                    <!-- start panel body -->
-                    <table class="table table-hover" id="clientesTable">
-                        <thead>
-                            <tr>
-                                <th>ID Cliente</th>
-                                <th>Nombre</th>
-                                <th>Apellido Paterno</th>
-                                <th>Apellido Materno</th>
-                            </tr>
-                        </thead>
-                        <tbody class="rowlink" data-link="row">
-                            {% for cliente in clientes.all %}
-                                <tr id="cliente{{ forloop.counter }}">
-                                    <td>
-                                        <a href="{% url 'schema:infoCliente' cliente.pk %}">{{ cliente.pk }}</a>
-                                    </td>
-                                    <td>
-                                        {{ cliente.nombre }}
-                                    </td>
-                                    <td>
-                                        {{ cliente.apellidoPaterno }}
-                                    </td>
-                                    <td>
-                                        {{ cliente.apellidoMaterno }}
-                                    </td>
-                                </tr>
-
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <!-- end panel body -->
+                <div class="col-md-4">
+                    <div class="pull-right">
+                        <div class="btn-new-pos" style="position: relative; top: .6em;">
+                            <a id="nuevoCliente" href="{% url 'schema:nuevoCliente' %}" class="btn btn-default btn-sm btn-new-pos">Nuevo cliente</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <table class="table table-hover" id="clientesTable">
+                <thead>
+                    <tr>
+                        <th>ID Cliente</th>
+                        <th>Nombre</th>
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="rowlink" data-link="row">
+                    {% for cliente in clientes.all %}
+                        <tr id="cliente{{ forloop.counter }}">
+                            <td>
+                                <a href="{% url 'schema:infoCliente' cliente.pk %}">{{ cliente.pk }}</a>
+                            </td>
+                            <td>
+                                {{ cliente.nombre }}
+                            </td>
+                            <td>
+                                {{ cliente.apellidoPaterno }}
+                            </td>
+                            <td>
+                                {{ cliente.apellidoMaterno }}
+                                {{ user.pk }}
+                            </td>
+                            <td>
+                                <a href="{% url 'schema:eliminarCliente' cliente.pk %}" class="pull-right btn btn-danger btn-xs" style="color: white">
+                                    <div class="glyphicon glyphicon-trash"></div>
+                                    Eliminar
+                                </a>
+                                <a href="#{{ cliente.pk }}" class="pull-right btn btn-warning btn-xs" style="color: white; position: relative; left: -.5em;">
+                                    <div class="glyphicon glyphicon-edit"></div>
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
 
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
