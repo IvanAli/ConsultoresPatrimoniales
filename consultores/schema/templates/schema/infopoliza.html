@@ -23,6 +23,11 @@
                         {% if poliza.pago_set.all.count < poliza.cotizacion.formaPago %}
                             <a id="nuevoPago" href="{% url 'schema:nuevoPago' poliza.pk %}" class="btn btn-default btn-sm btn-new-pos">Agregar pago</a>
                         {% endif %}
+                        {% if poliza.comision.fechaDeposito == None %}
+                            <a id="marcarComision" href="{% url 'schema:marcarComisionCobrada' poliza.pk %}" class="btn btn-default btn-sm btn-new-pos">Marcar comisión cobrada</a>
+                        {% else %}
+                            <a id="marcarComision" href="{% url 'schema:marcarComisionCobrada' poliza.pk %}" class="btn btn-default btn-sm btn-new-pos">Desmarcar comisión cobrada</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="panel-body">

@@ -82,6 +82,9 @@
                                         {{ poliza.ordenServicio.cliente.nombre }} {{ poliza.ordenServicio.cliente.apellidoPaterno}}
                                         {{ poliza.ordenServicio.cliente.apellidoMaterno }}
                                     </td>
+                                    <td>
+                                        {{ poliza.fechaFin|date }}
+                                    </td>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -102,14 +105,30 @@
                         <h3 class="panel-title">Comisiones por cobrar</h3>
                     </div>
                     <div class="panel-body panel-body-deadline">
-                            <!--
-                            {% for poliza in polizas %}
-                                <p><a href="{% url 'schema:polizaCliente' poliza.pk %}">
-                                    #{{ poliza.pk }} ({{ poliza.cotizacion.comparativa.tipoSeguro.nombre.nombre }} /
-                                    {{ poliza.cotizacion.aseguradora }}) -
-                                    {{ poliza.ordenServicio.cliente.nombre }} {{ poliza.ordenServicio.cliente.apellidoPaterno}}
-                                    {{ poliza.ordenServicio.cliente.apellidoMaterno }}</a></p>
-                            {% endfor %} -->
+                        {% if polizasSinCobrar.all.count == 0 %}
+                            <p class="panel_padding_center"><strong>No hay comisiones por cobrar</strong></p>
+                        {% else %}
+                        <table class="table table-hover" id="comisionesTable">
+                            <thead>
+                                <tr>
+                                    <th>No. de póliza</th>
+                                    <th>Comisión</th>
+                                </tr>
+                            </thead>
+                            <tbody class="rowlink" data-link="row">
+                            {% for poliza in polizasSinCobrar.all %}
+                                    <tr id="poliza{{ forloop.counter }}">
+                                        <td>
+                                            <a href="{% url 'schema:polizaCliente' poliza.pk %}">{{ poliza.noPoliza }}</a>
+                                        </td>
+                                        <td>
+                                            {{ poliza.comision.cantidadComision }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -217,6 +236,13 @@ $(document).ready( function () {
         "scrollY": true
     });
     $('#cotizacionesSinPolizaTable').DataTable({
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "searching": false,
+        "scrollY": true
+    });
+    $('#comisionesTable').DataTable({
         "paging":   false,
         "ordering": false,
         "info":     false,

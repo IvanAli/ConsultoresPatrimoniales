@@ -26,6 +26,7 @@
                             <a id="pdf" href="{{ cotizacion.archivo.url }}" class="btn btn-default btn-sm btn-new-pos">
                                 PDF de cotización
                             </a>
+                            {% if cotizacion.comparativa.fechaEnvioTramite == None %}
                             <a id="elegida" href="{% url 'schema:marcarCotizacionPreferida' cotizacion.pk %}" class="btn btn-default btn-sm btn-new-pos">
                                 {% if cotizacion.elegida == True %}
                                     Remover como cotización preferida
@@ -33,6 +34,7 @@
                                     Seleccionar como cotización preferida
                                 {% endif %}
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- start panel body -->

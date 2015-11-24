@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^enviarComparativa/(?P<idComparativa>[0-9]+)/$', views.enviarComparativaView, name='enviarComparativa'),
     url(r'^marcarConcluida/(?P<idComparativa>[0-9]+)/$', views.marcarComparativaConcluidaView, name='marcarConcluida'),
     url(r'^marcarPreferida/(?P<idCotizacion>[0-9]+)/$', views.marcarCotizacionPreferidaView, name='marcarCotizacionPreferida'),
+    url(r'^marcarComisionCobrada/(?P<idPoliza>[0-9]+)/$', views.marcarComisionCobradaaView, name='marcarComisionCobrada'),
     # url(r'^comparativa.pdf$', views.ComparativaPDFView.as_view(), name='comparativapdf'),
     url(r'^agentes/$', views.agentesView, name='agentes'),
     url(r'^agentes/(?P<idAgente>[0-9]+)/$', views.infoAgenteView, name='infoAgente'),
