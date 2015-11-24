@@ -1,0 +1,22 @@
+.logo-size {
+    max-height: 250%;
+    margin-top: -0.7em;
+}
+
+#agent_info {
+    /*background-color: yellow;*/
+    height: 15em;
+}
+
+#deadline {
+    /*background-color: red;*/
+    height: 30em;
+}
+
+.panel-body-agent {
+     min-height: 10em;
+}
+
+.panel-body-deadline {
+     min-height: 36em;
+}

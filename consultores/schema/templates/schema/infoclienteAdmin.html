@@ -1,0 +1,189 @@
+{% extends "baseAdmin.html" %}
+
+{% block head_title %}Cliente: {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+<link rel="stylesheet" href="../../static/css/dataTables/dataTablesAdmin.bootstrap.css">
+{% endblock %}
+
+{% block head_javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+{% endblock %}
+
+{% block clientes_tag %}class="active"{% endblock %}
+{% block body_content %}
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Comparativas</h3>
+                </div>
+                <div class="panel-body">
+                    <!-- start panel body -->
+                    <table class="table table-hover" id="clienteTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Número de cotizaciones</th>
+                                <th>Concluida</th>
+                                <th>Enviada</th>
+                            </tr>
+                        </thead>
+                        <tbody class="rowlink" data-link="row">
+                            {% for orden in cliente.ordenservicio_set.all %}
+                                <tr id="comparativa{{ forloop.counter }}">
+                                    <td>
+                                        <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
+                                    </td>
+                                    <td>
+                                        {{ orden.comparativa.cotizacion_set.all.count }}
+                                        <!-- numero de cotizaciones -->
+                                    </td>
+                                    <td>
+                                        {% if orden.comparativa.fechaConclusion %}
+                                            Sí
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if orden.comparativa.fechaEnviada %}
+                                            Sí
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- end panel body -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Info del cliente</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <strong>Nombre:</strong>
+                            {{ cliente.nombre }}
+                            {{ cliente.apellidoPaterno }}
+                            {{ cliente.apellidoMaterno }}
+                            <strong>Edad:</strong>
+                            {% if cliente.edad %}
+                                {{ cliente.edad }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Correo:</strong>
+                            {% if cliente.email %}
+                                {{ cliente.email }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Teléfono:</strong>
+                            ({{ telefonoLada }}) {{ telefono }}
+                        </p>
+                        <p>
+                            <strong>RFC:</strong>
+                            {% if cliente.RFC %}
+                                {{ cliente.RFC }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Domicilio:</strong>
+                            {% if cliente.calle %}
+                                {{ cliente.calle }}
+                                #{{ cliente.numeroExt }}
+                                {% if cliente.numeroInt %}
+                                    Int.{{ cliente.numeroInt }}
+                                {% endif %}
+                            <br>
+                                {{ cliente.ciudad }},
+                                {{ cliente.estado }}
+                                {{ cliente.codigoPostal }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Datos de facturación</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if cliente.calleFact %}
+                            <p>
+                            <strong>Domicilio:</strong>
+                                {{ cliente.calleFact }}
+                                #{{ cliente.numeroExtFact }}
+                                {% if cliente.numeroIntFact %}
+                                    Int.{{ cliente.numeroIntFact }}
+                                {% endif %}
+                            <br>
+                                {{ cliente.ciudadFact }},
+                                {{ cliente.estadoFact }}
+                                {{ cliente.codigoPostalFact }}
+                            </p>
+                        {% else %}
+                            <a href="#" class="btn btn-default btn-xs">Agregar datos de facturación</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Agente encargado</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <strong>Nombre:</strong>
+                            {{ relacionAgente.agente.userAgente.first_name }}
+                            {{ relacionAgente.agente.userAgente.last_name }}
+                        </p>
+                        <p>
+                            <strong>Correo:</strong>
+                            {{ relacionAgente.agente.userAgente.email }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+
+<script>
+$(document).ready( function () {
+    var table = $('#clienteTable').DataTable();
+} );
+</script>
+{% endblock %}

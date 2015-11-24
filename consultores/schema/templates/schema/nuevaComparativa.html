@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block head_title %}Nueva Comparativa{% endblock %}
+
+{% block head_css %}
+<link rel="stylesheet" type="text/css" href="/static/css/custom/styles_nueva_comparativa.css"/>
+{% endblock %}
+
+{% block head_javascript %}
+<!-- JS here -->
+{% endblock %}
+
+{% block comparativas_tag %}class="active"{% endblock %}
+
+{% block body_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Nueva comparativa</h4>
+                    <h6>Selecciona el tipo de seguro e ingresa los datos necesarios.</h6>
+                </div>
+                <div class="col-md-4">
+                    <div class="pull-right">
+                        <div class="btn-new-pos" style="position: relative; top: .6em;">
+                            <a href="{% url 'schema:seleccionCliente' 'comparativa' %}" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-chevron-left"></div>
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <select class="form-control" name="tipo" id="select" placeholder="Tipo de Seguro" onchange="checaSeguro(value)">
+                            <option selected value="None">Selecciona un tipo...</option>
+                            {% for seguro in seguros.all %}
+                            <option value="{{ seguro.pk }}">
+                                {{ seguro.nombre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="forma"></div>
+            <div id="None"><br></div>
+            <div class="row">
+                <div id="AP">
+                    <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                        {% csrf_token %}
+                        <div class="col-md-8">
+                            {{ APform.as_p }}
+                        </div>
+                        <input type="hidden" name="tipo" value="AP">
+                        <div class="col-md-4">
+                            <fieldset>
+                                <legend><small>Coberturas deseadas</small></legend>
+                                {% for cobertura in coberturasAP.all %}
+                                    <p><input type="checkbox" name="coberturaAP" value="{{ cobertura.pk }}">{{ cobertura.nombre }}</p>
+                                {% endfor %}
+                            </fieldset>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-0">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <div class="glyphicon glyphicon-ok"></div>
+                                    Crear
+                                </button>
+                                <button type="reset" class="btn btn-danger btn-sm">
+                                    <div class="glyphicon glyphicon-remove"></div>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="C">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ Cform.as_p }}
+                    <input type="hidden" name="tipo" value="R">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasR.all %}
+                            <input type="checkbox" name="coberturaR" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="R">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ Rform.as_p }}
+                    <input type="hidden" name="tipo" value="R">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasR.all %}
+                            <input type="checkbox" name="coberturaR" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="G">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ Gform.as_p }}
+                    <input type="hidden" name="tipo" value="G">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasG.all %}
+                            <input type="checkbox" name="coberturaG" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="V">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ Vform.as_p }}
+                    <input type="hidden" name="tipo" value="V">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasV.all %}
+                            <input type="checkbox" name="coberturaV" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="H">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ Hform.as_p }}
+                    <input type="hidden" name="tipo" value="H">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasAP.all %}
+                            <input type="checkbox" name="coberturaH" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="I">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ Iform.as_p }}
+                    <input type="hidden" name="tipo" value="I">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasI.all %}
+                            <input type="checkbox" name="coberturaI" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="E">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ Eform.as_p }}
+                    <input type="hidden" name="tipo" value="E">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasE.all %}
+                            <input type="checkbox" name="coberturaE" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="EC">
+                <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ ECform.as_p }}
+                    <input type="hidden" name="tipo" value="EC">
+                    <fieldset>
+                        <legend>
+                            Coberturas deseadas
+                        </legend>
+                        {% for cobertura in coberturasEC.all %}
+                            <input type="checkbox" name="coberturaAP" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-0">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <div class="glyphicon glyphicon-ok"></div>
+                                Crear
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-sm">
+                                <div class="glyphicon glyphicon-remove"></div>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+</div>
+            <div id="T">
+                    <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
+                        {% csrf_token %}
+                        {{ Tform.as_p }}
+                        <input type="hidden" name="tipo" value="T">
+                        <fieldset>
+                            <legend>
+                                Coberturas deseadas
+                            </legend>
+                            {% for cobertura in coberturasT.all %}
+                                <input type="checkbox" name="coberturaT" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                            {% endfor %}
+                        </fieldset>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-0">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <div class="glyphicon glyphicon-ok"></div>
+                                    Crear
+                                </button>
+                                <button type="reset" class="btn btn-danger btn-sm">
+                                    <div class="glyphicon glyphicon-remove"></div>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+<script src="/static/js/custom/nueva_comparativa.js"></script>
+{% endblock %}

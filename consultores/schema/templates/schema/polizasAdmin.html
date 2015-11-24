@@ -1,0 +1,95 @@
+{% extends "baseAdmin.html" %}
+
+{% block head_title %}Pólizas{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+<link rel="stylesheet" href="../../static/css/dataTables/dataTablesAdmin.bootstrap.css">
+{% endblock %}
+{% block head_javascript %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+{% endblock %}
+
+{% block polizas_tag %}class="active"{% endblock %}
+{% block body_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Todas las pólizas</h4>
+                </div>
+            </div>
+                <table class="table table-hover" id="polizasTable">
+                    <thead>
+                        <tr>
+                            <th>ID Póliza</th>
+                            <th>Agente</th>
+                            <th>Cliente</th>
+                            <th>Tipo de Seguro</th>
+                            <th>Cotización</th>
+                            <th>Pagos</th>
+                            <th>Vencimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody class="rowlink" data-link="row">
+                        {% for agente in agentes %}
+                            {% for cliente in agente.clientes.all %}
+                                {% for orden in cliente.ordenservicio_set.all %}
+                                    {% if orden.poliza %}
+                        
+                        <td>
+                            {{ orden.poliza.pk }}
+                        </td>
+                        <td>
+                            {{ agente.userAgente.first_name }}
+                            {{ agente.userAgente.last_name }}
+                        </td>
+                        <td>
+                            {{ orden.cliente.nombre }}
+                            {{ orden.cliente.apellidoPaterno }}
+                            {{ orden.cliente.apellidoMaterno }}
+                        </td>
+                        <td>
+                            {{ orden.tipoSeguro.get_idTipoSeguro_display }}
+                        </td>
+                        <td>
+                            {{ orden.poliza.cotizacion.pk }}
+                        </td>
+                        <td>
+                            {{ orden.poliza.pago_set.all.count }}
+                        </td>
+                        <td>
+                            {{ orden.poliza.fechaFin|date }}
+                        </td>
+                        
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#polizasTable').DataTable();
+} );
+</script>
+{% endblock %}

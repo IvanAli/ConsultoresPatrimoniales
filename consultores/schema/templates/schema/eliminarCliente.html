@@ -1,0 +1,5 @@
+¿Estás seguro de eliminar al cliente {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoPaterno }}?
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Sí, seguro.</button>
+</form>

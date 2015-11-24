@@ -1,0 +1,51 @@
+.logo-size {
+    max-height: 45px;
+    /* margin-top: -0.9em; */
+    position: relative;
+    top: -0.4em;
+    left: -0.7em;
+}
+
+.base_footer {
+    border-top: 1px solid LightGray;
+    padding: 3em;
+    text-align: center;
+}
+
+/*fondo de barra de navegacion*/
+.navbar {
+    min-height:45px !important;
+    background-color: #006ac1; 
+}
+
+/*contenedor de botones de navegacion*/
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:10px !important;
+    padding-bottom:0 !important;
+    height: 45px;
+    left: -32px;
+}
+
+/*botones de navegacion*/
+.navbar-inverse .navbar-nav > li > a {
+    background-color: #006ac1;
+    color: #fff;
+}
+
+/*hover en botones de navegacion*/
+.navbar-inverse .navbar-nav > li > a:hover {
+    background-color: #005290;
+    color: #fff;
+}
+
+/*boton de navegacion activo*/
+.navbar-inverse .navbar-nav > .active > a {
+    background-color: #005290;
+    color: #fff;
+}
+
+/*hover en boton de navegacion activo*/
+.navbar-inverse .navbar-nav > .active > a:hover {
+    background-color: #005290;
+    color: #fff;
+}

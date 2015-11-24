@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block head_title %}Clientes{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+{% endblock %}
+{% block head_javascript %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+{% endblock %}
+
+{% block clientes_tag %}class="active"{% endblock %}
+{% block body_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Mis clientes</h4>
+                </div>
+                <div class="col-md-4">
+                    <div class="pull-right">
+                        <div class="btn-new-pos" style="position: relative; top: .6em;">
+                            <a id="nuevoCliente" href="{% url 'schema:nuevoCliente' %}" class="btn btn-default btn-sm btn-new-pos">Nuevo cliente</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-hover" id="clientesTable">
+                <thead>
+                    <tr>
+                        <th>ID Cliente</th>
+                        <th>Nombre</th>
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="rowlink" data-link="row">
+                    {% for cliente in clientes.all %}
+                        <tr id="cliente{{ forloop.counter }}">
+                            <td>
+                                <a href="{% url 'schema:infoCliente' cliente.pk %}">{{ cliente.pk }}</a>
+                            </td>
+                            <td>
+                                {{ cliente.nombre }}
+                            </td>
+                            <td>
+                                {{ cliente.apellidoPaterno }}
+                            </td>
+                            <td>
+                                {{ cliente.apellidoMaterno }}
+                                {{ user.pk }}
+                            </td>
+                            <td>
+                                <a href="{% url 'schema:eliminarCliente' cliente.pk %}" class="pull-right btn btn-danger btn-xs" style="color: white">
+                                    <div class="glyphicon glyphicon-trash"></div>
+                                    Eliminar
+                                </a>
+                                <a href="#{{ cliente.pk }}" class="pull-right btn btn-warning btn-xs" style="color: white; position: relative; left: -.5em;">
+                                    <div class="glyphicon glyphicon-edit"></div>
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+
+<script>
+$(document).ready( function () {
+    $('#clientesTable').DataTable();
+} );
+</script>
+{% endblock %}
+
+<!-- load the js file -->
+<script language="javascript" src="js/script_clientes.js"></script>
+</html>

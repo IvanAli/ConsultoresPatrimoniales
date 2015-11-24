@@ -1,0 +1,84 @@
+{% extends "baseAdmin.html" %}
+
+{% block head_title %}Agentes{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+<link rel="stylesheet" href="../../static/css/dataTables/dataTablesAdmin.bootstrap.css">
+{% endblock %}
+{% block head_javascript %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+{% endblock %}
+
+{% block agentes_tag %}class="active"{% endblock %}
+{% block body_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Todos los agentes</h4>
+                </div>
+            </div>
+                <table class="table table-hover" id="agentesTable">
+                    <thead>
+                        <tr>
+                            <th>ID Agente</th>
+                            <th>Username</th>
+                            <th>Clave de agente</th>
+                            <th>Nombre</th>
+                            <th>Cuenta bancaria</th>
+                            <th># de clientes</th>
+                        </tr>
+                    </thead>
+                    <tbody class="rowlink" data-link="row">
+                        {% for agente in agentes %}
+                        
+                        <tr>
+                            <td>
+                                <a href="{% url 'schema:infoAgente' agente.pk %}">{{ agente.pk }}</a>
+                            </td>
+                            <td>
+                                {{ agente.userAgente.username }}
+                            </td>
+                            <td>
+                                {{ agente.claveAgente }}
+                            </td>
+                            <td>
+                                {{ agente.userAgente.first_name }}
+                                {{ agente.userAgente.last_name }}
+                            </td>
+                            <td>
+                                {{ agente.cuentaBancaria }}
+                            </td>
+                            <td>
+                                {{ agente.clientes.all.count }}
+                            </td>
+                        </tr>
+                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#agentesTable').DataTable();
+} );
+</script>
+{% endblock %}
