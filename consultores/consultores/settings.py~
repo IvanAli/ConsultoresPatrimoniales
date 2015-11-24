@@ -58,12 +58,15 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST = 'smtp-mail.outlook.com'
 
+<<<<<<< HEAD
+EMAIL_HOST_USER = 'consultorespatrimonialesdebug@outlook.com'
+
+#Must generate specific password for your app in [gmail settings][1]
+EMAIL_HOST_PASSWORD = 'ConsultoresPatrimoniales'
+=======
 EMAIL_HOST_USER = 'jorge_andres115@hotmail.com'
 
 #Must generate specific password for your app in [gmail settings][1]
-<<<<<<< HEAD
-EMAIL_HOST_PASSWORD = 'waltzforPiano24'
-=======
 EMAIL_HOST_PASSWORD = 'coque1996'
 >>>>>>> 417579c6fffe976ae85447021848da4ff6323ca5
 
