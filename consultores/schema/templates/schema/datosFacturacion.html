@@ -5,87 +5,103 @@
     <link rel="stylesheet" href="../../static/css/custom/styles_nuevocliente.css">
     <script type = "text/javascript" src = "../../static/js/custom/datosClientes.js"></script>
 
-    <!-- <link rel="stylesheet" href="http://bootswatch.com/paper/bootstrap.css"> -->
 {% endblock %}
 
 
 {% block body_content %}
-<!-- check out the following: https://docs.djangoproject.com/en/dev/howto/custom-template-tags/ -->
 
 
 
-    <form action="{% url 'schema:datosFacturacionAuth' cliente.pk %}" method="post">
-        {% csrf_token %}
-     <div class="container">
-        <div class="col-md-12" >
-      		<div class="row">
-        <form>
-            <fieldset>
-              <h3 >Datos Facturación</h3></br>
-    			 <div class="form-group">
-                <label for="inputEstado" class="col-md-2 control-label">Estado </label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="estadoFact" placeholder="Guanajuato">
-                  </div>
 
-                <label for="inputCiudad" class="col-md-2 control-label">Ciudad</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="ciudadFact" placeholder="León">
-                  </div>
-              </div>      		</div>
-      		<div class="row">
-    			 <div class="form-group">
-                <label for="inputColonia" class="col-md-2 control-label">Colonia</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="coloniaFact" placeholder="Jardines del Campestre">
-                  </div>
-
-                <label for="inputCalle" class="col-md-2 control-label">Calle</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="calleFact" placeholder="Volcan">
-                  </div>
+<form action="{% url 'schema:datosFacturacionAuth' cliente.pk %}" method="post">
+  {% csrf_token %}
+  <div class="container">
+    <div class="col-md-12" >
+    <h3 >Datos Facturación</h3></br>
+      <div class="row">
+        <!-- PRIMERA COLUMNA -->
+        <div class="col-md-6">
+          <div class="row">
+            <div class="form-group">
+             <label for="inputEstado" class="col-md-4 control-label">Estado</label>
+              <div class="col-md-8">
+                 <input type="text" class="form-control" name="estadoFact" placeholder="">
               </div>
-      		</div>
-      		<div class="row">
-    		    <div class="form-group">
-                <label for="inputNumExt" class="col-md-2 control-label">Numero Exterior</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="numeroExtFact" placeholder="109">
-                  </div>
-
-                <label for="inputNumInt" class="col-md-2 control-label">Numero Interior </label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="numeroIntFact" placeholder="E-19">
-                  </div>
             </div>
-      		</div>
-      		<div class="row">
-    				  <div class="form-group">
-                <label for="inputCodigoP" class="col-md-2 control-label">Codigo Postal</label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="codigoPostalFact" placeholder="37150">
-                  </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="inputCiudad" class="col-md-4 control-label">Ciudad</label>
+              <div class="col-md-8">
+                <input type="text" class="form-control" name="ciudadFact" placeholder="">
               </div>
-      		</div>
-      	</br>
-   	 		 		<div class="form-group">
-      					<div class="col-lg-10 col-lg-offset-2">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="inputColonia" class="col-md-4 control-label">Colonia</label>
+              <div class="col-md-8">
+                <input type="text" class="form-control" name="coloniaFact" placeholder="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="inputCalle" class="col-md-4 control-label">Calle</label>
+              <div class="col-md-8">
+                 <input type="text" class="form-control" name="callefact" placeholder="">
+                    {% for error in datos_form.email.errors %}
+                    <p class="red-color">{{ error_email }}</p>
+                    {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- SEGUNDA COLUMNA -->
+        <div class="col-md-6">
+          <div class="row">
+            <div class="form-group">
+              <label for="inputNumExt" class="col-md-4 control-label">Numero Exterior</label>
+              <div class="col-md-8">
+                <input type="text" class="form-control" name="numeroExtFact" placeholder="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="inputNumInt" class="col-md-4 control-label">Numero Interior</label>
+              <div class="col-md-8">
+                <input type="text" maxlength="3" class="form-control" name="numeroIntFact" placeholder="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group">
+              <label for="inputTel" class="col-md-4 control-label">Codigo Postal</label>
+              <div class="col-md-8">
+                <input type="text" maxlength="7"class="form-control" name="codigoPostalFact" placeholder="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+          <div class="row">
+         <div class="form-group">
+          <div class="col-lg-10 col-lg-offset-2">
                   <input type="submit" name="crear" class="btn btn-primary " value="Agregar">
-        					<input type="reset" name ="cancelar" class="btn btn-warning" value="Cancelar">
-        					
-      					</div>
-    				</div>
+                  <input type="reset" name ="cancelar" class="btn btn-warning" value="Cancelar">
+          </div>
+         </div>
+        </div>
+      </div>
+    </div>
+</form>
 
-     			</fieldset>
-				</form>
-			</div>
-		</div>
-	  </div>
-    </form>
+    
 
-
-    {% if error_missingfields %}<p class="red-color">{{ error_missingfields }}</p>{% endif %}
-    {% if error_wrongpassword %}<p class="red-color">{{ error_wrongpassword }}</p>{% endif %}
+  
 
 
 {% endblock %}

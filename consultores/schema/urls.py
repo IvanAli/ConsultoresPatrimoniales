@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^clientes/(?P<idCliente>[0-9]+)/$', views.infoClienteView, name='infoCliente'),
     url(r'^seleccionCliente/(?P<context_type>[a-zA-Z]+)/$', views.seleccionClienteView, name='seleccionCliente'),
     #PENDIENTE A SABER SI ES UTIL TODAVIA
-	#url(r'^preNuevaComparativa/$', views.preNuevaComparativaView, name='preNuevaComparativa'),
+	url(r'^preNuevaComparativa/$', views.preNuevaComparativaView, name='preNuevaComparativa'),
     url(r'^nuevaComparativa/(?P<idCliente>[0-9]+)/$', views.nuevaComparativaView, name='nuevaComparativa'),
     url(r'^enviarCotizacionTramites/(?P<idComparativa>[0-9]+)/$', views.enviarCotizacionTramitesView, name='enviarCotizacionTramites'),
     url(r'^nuevaPoliza/(?P<idCliente>[0-9]+)/$', views.nuevaPolizaView, name='nuevaPoliza'),
@@ -34,7 +34,6 @@ urlpatterns = [
     url(r'^agentes/$', views.agentesView, name='agentes'),
     url(r'^aseguradoras/$', views.aseguradorasView, name='aseguradoras'),
     url(r'^seguros/$', views.segurosView, name='seguros'),
-	url(r'^generar_pdf/(?P<idComparativa>[0-9]+)/$', views.generar_pdf, name='pdf'),
 ]
 
 

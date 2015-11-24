@@ -58,10 +58,10 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST = 'smtp-mail.outlook.com'
 
-EMAIL_HOST_USER = 'ivanali@outlook.com'
+EMAIL_HOST_USER = 'jorge_andres115@hotmail.com'
 
 #Must generate specific password for your app in [gmail settings][1]
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'coque1996'
 
 EMAIL_PORT = 25
 

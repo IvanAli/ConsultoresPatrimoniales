@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 def create_agente():
     user = User.objects.create_user(username='ivanalejandro', password='ivan',
-    email='ivanali@outlook.com', first_name='Ivan', last_name='Soto')
+    email='gerchez93@gmail.com', first_name='Ivan', last_name='Soto')
     user.save()
 
     agente = Agente.objects.create(userAgente=user, claveAgente=12345, email=user.email, sexo='H',

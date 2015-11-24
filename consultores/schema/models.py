@@ -49,8 +49,8 @@ class Persona(models.Model):
     def __str__(self):
         return "Persona"
 
-def get_upload_file_name(instance, filename):
-    return "uploaded_files/%s_%s" % (str(time()).replace('.','_'),filename)
+# def get_upload_file_name(instance, filename):
+#     return "uploaded_files/%s_%s" % (str(time()).replace('.','_'),filename)
 
 class Cliente(Persona):
     idCliente = models.AutoField(primary_key=True)
@@ -58,7 +58,7 @@ class Cliente(Persona):
     apellidoPaterno = models.CharField(max_length=30)
     apellidoMaterno = models.CharField(max_length=30)
     linkRegistroRFC = models.URLField(blank=True, null=True)
-    linkComprobanteDomicilio = models.FileField(upload_to=get_upload_file_name)
+    linkComprobanteDomicilio = models.FileField(null=True)
     calleFact = models.CharField(max_length=50, blank=True)
     numeroExtFact = models.PositiveSmallIntegerField(blank=True, null=True)
     numeroIntFact = models.CharField(max_length=6, blank=True, null=True)
@@ -68,7 +68,7 @@ class Cliente(Persona):
     codigoPostalFact = models.PositiveIntegerField(blank=True, null=True)
     def __str__(self):
         return "Cliente fisico: " + self.nombre + " " +self.apellidoPaterno + " " + self.apellidoMaterno
-        
+
 #Creo que seria mejor agregar como campos dentro de Cliente
 class ClienteFisico(Cliente):
     def __str__(self):
@@ -164,7 +164,7 @@ class Cotizacion(models.Model):
     formaPago = models.IntegerField(choices=FORMA_PAGO_OPCIONES, default=12)
     comparativa = models.ForeignKey('Comparativa', null=True)
     aseguradora = models.ForeignKey('Aseguradora')
-    archivo = models.FileField(null=True)
+    archivo = models.FileField(null=True, blank=True)
     elegida = models.BooleanField(default=False)
     def __str__(self):
         return "Cotizacion: " + self.idCotizacion + " de comparativa: " + self.comparativa

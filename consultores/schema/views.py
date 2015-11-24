@@ -103,51 +103,8 @@ def home(request):
         return render(request, 'schema/homeAdmin.html', context)
 
 @login_required(redirect_field_name='')
-def generar_pdf(request, idComparativa):
-    response = HttpResponse(content_type='application/pdf')
-    pdf_name = "clientes.pdf"  # llamado clientes
-   
-    #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
-    buff = BytesIO()
-    doc = SimpleDocTemplate(buff,
-                            pagesize=letter,
-                            rightMargin=40,
-                            leftMargin=40,
-                            topMargin=60,
-                            bottomMargin=18,
-                            )
-   
-    cotizaciones =[]
-    styles = getSampleStyleSheet()
-    header = Paragraph("Cotizaciones", styles['Heading1'])
-    headings= ( 'Aseguradora','Costo', 'Forma de Pago')
-    cotizaciones.append(header)
-    comparativa = Comparativa.objects.get(pk=idComparativa)
-    allcotizaciones =[( a.aseguradora,a.costo, a.formaPago,) for a in comparativa.cotizacion_set.all()]
-    
-
-    t = Table([headings]+allcotizaciones)
-    t.setStyle(TableStyle(
-        [
-            ('GRID', (0, 0), (3, -1), 1, colors.dodgerblue),
-            ('LINEBELOW', (0, 0), (-1, 0), 2, colors.darkblue),
-            ('BACKGROUND', (0, 0), (-1, 0), colors.dodgerblue),
-            ('ALIGN',(0,0),(-1,0),'CENTER'),
-        ]
-    ))
-    cotizaciones.append(t)
-    doc.build(cotizaciones)
-    response.write(buff.getvalue())
-    buff.close()
-    return response
-
-
-@login_required(redirect_field_name='')
 def nuevoClienteView(request):
-    datos_form = forms.nuevoClienteForm()
-    context = {
-        "datos_form": datos_form, 
-        'cliente': request.user.agente.clientes}
+    context = {'cliente': request.user.agente.clientes}
     return render(request, "schema/nuevoCliente.html", context)
 
 @login_required(redirect_field_name='')
@@ -177,15 +134,17 @@ def datosFacturacionView(request, idCliente):
 @login_required(redirect_field_name='')
 def datosFacturacionAuth(request, idCliente):
     if request.method == "POST":
-        datos_form = forms.nuevoClienteForm(request.POST)
-        if datos_form.is_valid():
+        facturacion_form = forms.nuevoClienteForm(request.POST)
+        if facturacion_form.is_valid():
 #             context = {'cliente': request.user.agente.clientes.get(pk=idCliente),}
             cliente = Cliente.objects.get(pk=idCliente)
-            datos_form=forms.nuevoClienteForm(request.POST, instance = cliente)
-            datos_form.save()
-            return HttpResponseRedirect(reverse('schema:infocliente.html'))
+            facturacion_form=forms.nuevoClienteForm(request.POST, instance = cliente)
+            facturacion_form.save()
+            context = {'cliente': cliente}
+            return render(request, 'schema/infocliente.html', context)
         else:
-            context = {'error_missingfields': "Campos sin llenar"}
+            context = {'facturacion_form': facturacion_form,  
+            'error_missingfields': "Campos sin llenar"}
             return render(request, 'schema/datosFacturacion.html', context)
 
 @login_required(redirect_field_name='')
@@ -276,6 +235,7 @@ def nuevaComparativaView(request, idCliente):
         'coberturasE': Cobertura.objects.filter(seguro__pk='E'),
         'coberturasEC': Cobertura.objects.filter(seguro__pk='EC'),
         'coberturasT': Cobertura.objects.filter(seguro__pk='T'),
+
     }
     return render(request, 'schema/nuevaComparativa.html', context)
 
@@ -288,7 +248,7 @@ def nuevaComparativaAPAuth(request, idCliente):
         else:
             return HttpResponse("not valid fuck")
 
-
+@login_required(redirect_field_name='')
 def saveForm(request, idCliente, filledForm, seguroPK):
     form = filledForm
     if form.is_valid():
@@ -322,7 +282,13 @@ def nuevaComparativaAuth(request, idCliente):
             if saveForm(request, idCliente, forms.SeguroCForm(request.POST), tipo):
                 return HttpResponseRedirect(reverse('schema:comparativas'))
             else:
-                return HttpResponse('Forma ' + tipo + ' invalida')
+                cliente = Cliente.objects.get(pk=idCliente)
+                context = {
+                'error_missingfields': "Campos sin llenar",
+                'seguros': Seguro.objects.all(),
+                'Cform': forms.SeguroCForm(),
+                'cliente': cliente,}
+                return render(request, 'schema/nuevaComparativa.html', context)
         if tipo == 'R':
             if saveForm(request, idCliente, forms.SeguroRForm(request.POST), tipo):
                 return HttpResponseRedirect(reverse('schema:comparativas'))
@@ -452,6 +418,28 @@ def cotizacionClienteView(request, idCotizacion):
     context = {'cotizacion': Cotizacion.objects.get(pk=idCotizacion)}
     return render(request, 'schema/cotizacioncliente.html', context)
 
+# def enviocomparativa(request, idComparativa):
+#     # file_ = open('C:/Users/Ivan/Consultores/consultores/django-storages.txt')
+#     comparativa = Comparativa.objects.get(pk=idComparativa)
+#     cliente = comparativa.ordenServicio.cliente
+#     seguro = comparativa.tipoSeguro.nombre
+#     agente = comparativa.ordenServicio.agente
+    
+#     if cliente.email is None or cliente.email == "":
+#         return HttpResponse('El cliente no tiene email')
+#     else:
+#         subject = "Lista de cotizaciones para su seguro de " + seguro.nombre
+#         context= {
+#                 'agente': agente,
+#                 'cliente': cliente,
+#                 'comparativa': comparativa,
+#                 'seguroNombre': seguro,
+#                 'datos': getDatosSeguro(idComparativa),
+#                 'coberturas': Cobertura.objects.filter(seguro__pk=seguro.pk),
+#             }
+        
+#     return render(request,'schema/enviocomparativa.html', context)
+
 @login_required(redirect_field_name='')
 def nuevaCotizacionView(request, idComparativa):
     class RequiredFormSet(BaseFormSet):
@@ -496,7 +484,7 @@ def nuevaCotizacionAuth(request, idComparativa):
         cotizacionForm = forms.CotizacionForm(request.POST, request.FILES, instance=Cotizacion())
         cuForm = forms.CoberturaUtilizadaForm(request.POST)
         cuFormset = formset(request.POST, request.FILES)
-        # uploadedFileForm = forms.UploadFileForm(request.POST, request.FILES)
+        uploadedFileForm = forms.UploadFileForm(request.POST, request.FILES)
 
         if cotizacionForm.is_valid() and cuFormset.is_valid():
             """
@@ -514,8 +502,8 @@ def nuevaCotizacionAuth(request, idComparativa):
         else:
             for err in cotizacionForm.errors:
                 print(err)
-            for err in uploadedFileForm.errors:
-                print(err)
+            # for err in uploadedFileForm.errors:
+            #     print(err)
             return HttpResponse("error")
 
     """
@@ -562,7 +550,7 @@ def marcarCotizacionPreferidaView(request, idCotizacion):
     cotizacion.save()
     return HttpResponseRedirect(reverse('schema:cotizacionCliente', args=[idCotizacion]))
 
-@login_required(redirect_field_name='')
+#@login_required(redirect_field_name='')
 def sendEmail(subject, message, fromEmail, toEmail):
     try:
         mail = EmailMessage(subject, message, fromEmail, toEmail)
@@ -573,7 +561,7 @@ def sendEmail(subject, message, fromEmail, toEmail):
         return False
 
 
-@login_required(redirect_field_name='')
+#@login_required(redirect_field_name='')
 def sendEmailAlternative(subject, textMessage, htmlMessage, fromEmail, toEmail):
     try:
         mail = EmailMultiAlternatives(subject, textMessage, fromEmail, toEmail)
@@ -584,6 +572,7 @@ def sendEmailAlternative(subject, textMessage, htmlMessage, fromEmail, toEmail):
         print(e)
         return False
 
+#@login_required(redirect_field_name='')
 def sendEmailWithAttachment(subject, message, fromEmail, toEmail, attachment, contentType):
     try:
         mail = EmailMessage(subject, message, fromEmail, toEmail)
@@ -600,7 +589,7 @@ def enviarComparativaView(request, idComparativa):
     comparativa = Comparativa.objects.get(pk=idComparativa)
     cliente = comparativa.ordenServicio.cliente
     seguro = comparativa.tipoSeguro.nombre
-    agente = comparativa.ordenServicio.agente
+    agente =  Agente.objects.get(userAgente=request.user)
 
     if cliente.email is None or cliente.email == "":
         return HttpResponse('El cliente no tiene email')
@@ -615,10 +604,11 @@ def enviarComparativaView(request, idComparativa):
                 'seguroNombre': seguro,
                 'datos': getDatosSeguro(idComparativa),
                 'coberturas': Cobertura.objects.filter(seguro__pk=seguro.pk),
+                
             }
         )
         message = "Un saludo"
-        if sendEmailAlternative(subject, message, htmlMessage, 'ivanali@outlook.com', [cliente.email]):
+        if sendEmailAlternative(subject, message, htmlMessage, 'jorge_andres115@hotmail.com', [cliente.email]):
             return HttpResponse('Email enviado exitosamente!')
     return HttpResponse('no exito')
 
