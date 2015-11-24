@@ -3,7 +3,7 @@ from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
 from schema import models
-from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, ClienteAgente, Poliza, Pago, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, ClienteAgente, AsignacionComision, Comision, Poliza, Pago, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -92,7 +92,7 @@ def home(request):
         agente = Agente.objects.get(userAgente=request.user)
         ordenes = agente.ordenservicio_set.all()
         meses = 2
-        lastTwoMonths = datetime.today() - timedelta(days=2*30)
+        lastTwoMonths = datetime.today() - timedelta(days=meses*30)
         clienteReciente = None
         try:
             clienteReciente = agente.clientes.all().order_by('-pk')[0]
@@ -101,10 +101,11 @@ def home(request):
         # filter polizas vencidas and activas
         polizasVencidas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__lt=datetime.now())
         polizasActivas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=datetime.now())
+        polizasSinCobrar = Poliza.objects.filter(ordenServicio__agente=agente, comision__fechaDeposito=None)
         # filter polizas from the last two months
         # polizas = Poliza.objects.filter(ordenServicio__agente=agente)
         polizas = Poliza.objects.filter(ordenServicio__agente=agente, fechaFin__gte=lastTwoMonths)
-        cotizacionesSinPoliza = Cotizacion.objects.filter(comparativa__ordenServicio__agente=agente, elegida=True, poliza=None)
+        cotizacionesSinPoliza = Cotizacion.objects.filter(comparativa__ordenServicio__agente=agente, elegida=True, poliza=None).exclude(comparativa__fechaEnvioTramite=None)
         comparativasPendientes = Comparativa.objects.filter(ordenServicio__agente=agente, fechaConclusion=None)
         for poliza in polizas:
             print(poliza)
@@ -114,6 +115,7 @@ def home(request):
             'polizas': polizas,
             'polizasVencidas': polizasVencidas,
             'polizasActivas': polizasActivas,
+            'polizasSinCobrar': polizasSinCobrar,
             'clienteReciente': clienteReciente,
             'comparativasPendientes': comparativasPendientes,
             'cotizacionesSinPoliza': cotizacionesSinPoliza,
@@ -188,7 +190,7 @@ def seleccionClienteView(request, context_type):
 @login_required(redirect_field_name='')
 def seleccionOrdenServicioView(request):
     context = {
-        'ordenes': OrdenServicio.objects.filter(agente=request.user.agente).exclude(comparativa__fechaEnvioTramite=None),
+        'ordenes': OrdenServicio.objects.filter(agente=request.user.agente, comparativa__cotizacionElegida__poliza=None).exclude(comparativa__fechaEnvioTramite=None),
     }
     return render(request, 'schema/seleccionOrdenServicio.html', context)
 
@@ -204,6 +206,9 @@ def nuevaPolizaView(request, idOrdenServicio):
         context = {'orden': ordenServicio, 'polizaForm': forms.PolizaForm()}
         return render(request, 'schema/nuevaPoliza.html', context)
     return HttpResponse('Falta llenar direccion del cliente')
+    form = forms.nuevoClienteForm(data=Cliente.objects.get(pk=cliente.pk))
+    context = {'clienteForm': form}
+    # return render(request, 'schema/nuevoCliente.html', context)
 
 @login_required(redirect_field_name='')
 def nuevaPolizaAuthView(request, idOrdenServicio):
@@ -214,6 +219,11 @@ def nuevaPolizaAuthView(request, idOrdenServicio):
         ordenServicio = OrdenServicio.objects.get(pk=idOrdenServicio)
         poliza.ordenServicio = ordenServicio
         poliza.cotizacion = getCotizacionPreferida(ordenServicio.comparativa.pk)
+        asignacionComision = AsignacionComision.objects.filter(seguro=ordenServicio.comparativa.tipoSeguro.nombre, aseguradora=poliza.cotizacion.aseguradora).order_by('-fechaAsignacion')[0]
+        multiplier = asignacionComision.porcentaje / 100
+        comision = Comision(cantidadComision=poliza.primaNeta*multiplier)
+        comision.save()
+        poliza.comision = comision
         poliza.save()
         return HttpResponseRedirect(reverse('schema:polizas'))
     else:
@@ -483,7 +493,7 @@ def nuevaCotizacionAuth(request, idComparativa):
         cotizacionForm = forms.CotizacionForm(request.POST, request.FILES, instance=Cotizacion())
         cuForm = forms.CoberturaUtilizadaForm(request.POST)
         cuFormset = formset(request.POST, request.FILES)
-        #uploadedFileForm = forms.UploadFileForm(request.POST, request.FILES)
+        # uploadedFileForm = forms.UploadFileForm(request.POST, request.FILES)
 
         if cotizacionForm.is_valid() and cuFormset.is_valid():
             """
@@ -526,6 +536,19 @@ def nuevaCotizacionAuth(request, idComparativa):
     """
     return HttpResponse("error")
 
+def marcarComisionCobradaaView(request, idPoliza):
+    poliza = Poliza.objects.get(pk=idPoliza)
+    comision = poliza.comision
+    # date may not be right now, but whatever
+    if comision.fechaDeposito is None:
+        comision.fechaDeposito = datetime.now()
+    else:
+        comision.fechaDeposito = None
+    comision.save()
+    poliza.comision = comision
+    poliza.save()
+    return HttpResponseRedirect(reverse('schema:polizaCliente', args=[idPoliza]))
+
 def marcarComparativaConcluidaView(request, idComparativa):
     comparativa = Comparativa.objects.get(pk=idComparativa)
     if comparativa.fechaConclusion == None:
@@ -545,6 +568,8 @@ def marcarCotizacionPreferidaView(request, idCotizacion):
             cot.save()
     cotizacion.elegida = not cotizacion.elegida
     cotizacion.save()
+    comparativa.cotizacionElegida = cotizacion
+    comparativa.save()
     return HttpResponseRedirect(reverse('schema:cotizacionCliente', args=[idCotizacion]))
 
 def sendEmail(subject, message, fromEmail, toEmail):
@@ -628,7 +653,7 @@ def enviarCotizacionTramitesView(request, idComparativa):
     cliente = comparativa.ordenServicio.cliente
     agente = comparativa.ordenServicio.agente
     seguro = comparativa.tipoSeguro.nombre
-
+    cotizacionElegida = getCotizacionPreferida(comparativa.pk)
     if getCotizacionPreferida(idComparativa) is not None:
         archivo = cotizacionElegida.archivo
         if AreaTramites.objects.count() > 0:
@@ -658,6 +683,7 @@ def enviarCotizacionTramitesView(request, idComparativa):
             return HttpResponse('No hay emails de area de tramites registrados')
     else:
         return HttpResponse('Favor de seleccionar una cotizacion preferida')
+    return HttpResponse('error')
 
 @login_required(redirect_field_name='')
 def polizasView(request):

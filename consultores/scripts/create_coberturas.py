@@ -53,6 +53,10 @@ def create_coberturas_E():
     cobertura = models.Cobertura(nombre='Huelgas y alborotos populares', seguro=models.Seguro.objects.get(pk='E'))
     cobertura.save()
 
+def create_coberturas_I():
+    cobertura = models.Cobertura(nombre='Inversion inteligente', seguro=models.Seguro.objects.get(pk='I'))
+    cobertura.save()
+
 def run():
     models.Cobertura.objects.all().delete()
     create_coberturas_AP()
