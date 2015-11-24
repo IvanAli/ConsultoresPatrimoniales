@@ -18,19 +18,42 @@
 {% block clientes_tag %}class="active"{% endblock %}
 {% block body_content %}
 <div class="container">
-    <br>
     <div class="row">
         <div class="col-md-9">
-            <div class="panel panel-default">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tablaComparativas" data-toggle="tab" aria-expanded="true">Comparativas</a></li>
-                    <li class=""><a href="#tablaPolizas" data-toggle="tab" aria-expanded="false">Pólizas</a></li>
-                </ul>
-                <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade active in" id="#tablaComparativas">
+            <h4>Cliente
+                #{{ cliente.pk }} -
+                {{ cliente.nombre }}
+                {{ cliente.apellidoPaterno }}
+                {{ cliente.apellidoMaterno }}
+            </h4>
+        </div>
+        <div class="col-md-3" style="position:relative; top: .5em;">
+            <a href="#" class="btn btn-danger btn-sm pull-right">
+                <div class="glyphicon glyphicon-trash"></div>
+                Eliminar
+            </a>
+            <a href="#" class="btn btn-warning btn-sm pull-right" style="position: relative;left:-.5em;">
+                <div class="glyphicon glyphicon-edit"></div>
+                Editar
+            </a>
+        </div>
+    </div>
+    <div class="row" id="comparativasTable">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#comp" data-toggle="tab">Comparativas</a></li>
+                                    <li><a href="#pol" data-toggle="tab">Pólizas</a></li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="panel-body">
                             <!-- start panel body -->
-                            <table class="table table-hover" id="clienteTable">
+                            <table class="table table-hover display">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -70,47 +93,14 @@
                             <!-- end panel body -->
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="#tablaPolizas">
-                        <div class="panel-body">
-                            <!-- start panel body -->
-                            <table class="table table-hover" id="clienteTable">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="rowlink" data-link="row">
-                                    {% for orden in cliente.ordenservicio_set.all %}
-                                        <tr id="comparativa{{ forloop.counter }}">
-                                            <td>
-                                                <a href="{% url 'schema:comparativaCliente' orden.comparativa.pk %}">{{ orden.comparativa.pk }}</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            <!-- end panel body -->
-                        </div>
-                    </div>
                 </div>
-                
-                
-                
-                
-                
-<!--
-                <div class="panel-heading">
-                    <h3 class="panel-title">Comparativas</h3>
-                </div>
--->
-                
             </div>
         </div>
         <div class="col-md-3">
             <div class="row">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Info del cliente</h3>
+                        <div class="panel-title">Información del cliente</div>
                     </div>
                     <div class="panel-body">
                         <p>
@@ -118,6 +108,8 @@
                             {{ cliente.nombre }}
                             {{ cliente.apellidoPaterno }}
                             {{ cliente.apellidoMaterno }}
+                        </p>
+                        <p>
                             <strong>Edad:</strong>
                             {% if cliente.edad %}
                                 {{ cliente.edad }}
@@ -165,21 +157,13 @@
                                 N/A
                             {% endif %}
                         </p>
-                        <p>
-                            <div class="pull-right">
-                                <a href="#" class="btn btn-danger btn-xs">Eliminar</a>
-                            </div>
-                            <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-xs">Editar</a>
-                            </div>
-                        </p>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Datos de facturación</h3>
+                        <div class="panel-title">Datos de facturación</div>
                     </div>
                     <div class="panel-body">
                         {% if cliente.calleFact %}
@@ -221,10 +205,11 @@
 <script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/buttons/1.1.0/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.bootstrap.min.js"></script>
+<script type = "text/javascript" src = "../../static/js/custom/tablasClientes.js"></script>
 
 <script>
-$(document).ready( function () {
-    var table = $('#clienteTable').DataTable();
+$(document).ready(function() {
+    $('table.display').DataTable();
 } );
 </script>
 {% endblock %}

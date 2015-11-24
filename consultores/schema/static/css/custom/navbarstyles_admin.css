@@ -1,3 +1,7 @@
+html *{
+    outline-color: #FFC107;
+}
+
 .logo-size {
     max-height: 45px;
     /* margin-top: -0.9em; */
@@ -44,8 +48,21 @@
     color: #000;
 }
 
-/*hover en boton de navegacion*/
+/*hover en boton de navegacion activo*/
 .navbar-inverse .navbar-nav > .active > a:hover {
     background-color: #FFA000;
     color: #000;
+}
+
+/*focus en botones de navegacion*/
+.navbar-inverse .navbar-nav > li > a:focus {
+    color: #000;
+    outline-color: #FFA000;
+}
+
+/*hover en boton de navegacion activo*/
+.navbar-inverse .navbar-nav > .active > a:focus {
+    background-color: #FFA000;
+    color: #000;
+    outline-color: #FFA000;
 }

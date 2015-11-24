@@ -3,7 +3,7 @@ from . import forms
 from django.forms import formset_factory
 from django.forms import BaseFormSet
 from schema import models
-from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, Poliza, Pago, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
+from .models import Agente, Administrador, Cliente, ClienteFisico, ClienteMoral, ClienteAgente, Poliza, Pago, Seguro, AreaTramites, TipoSeguro, OrdenServicio, Comparativa, Aseguradora, Contacto, Cobertura, Cotizacion, CoberturaUtilizada
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -429,7 +429,7 @@ def comparativaClienteView(request, idComparativa):
         #  'datosAP': datosAP
         context = {'comparativa': Comparativa.objects.get(pk=idComparativa), 'datosAP': datosAP}
         return render(request, 'schema/comparativaclienteAdmin.html', context)
-	"""
+    """
 
 @login_required(redirect_field_name='')
 def cotizacionClienteView(request, idCotizacion):
@@ -483,7 +483,7 @@ def nuevaCotizacionAuth(request, idComparativa):
         cotizacionForm = forms.CotizacionForm(request.POST, request.FILES, instance=Cotizacion())
         cuForm = forms.CoberturaUtilizadaForm(request.POST)
         cuFormset = formset(request.POST, request.FILES)
-        # uploadedFileForm = forms.UploadFileForm(request.POST, request.FILES)
+        #uploadedFileForm = forms.UploadFileForm(request.POST, request.FILES)
 
         if cotizacionForm.is_valid() and cuFormset.is_valid():
             """
@@ -501,8 +501,8 @@ def nuevaCotizacionAuth(request, idComparativa):
         else:
             for err in cotizacionForm.errors:
                 print(err)
-            for err in uploadedFileForm.errors:
-                print(err)
+            # for err in uploadedFileForm.errors:
+            #     print(err)
             return HttpResponse("error")
 
     """
