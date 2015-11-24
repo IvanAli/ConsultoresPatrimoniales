@@ -145,7 +145,7 @@ def nuevoClienteAuth(request):
                 CA.save()
                 return HttpResponseRedirect(reverse('schema:clientes'))
             else:
-                context = {{
+                context = {
                     'datos_form': datos_form,        
                     'error_missingfields': "Campo obligatorio sin llenar",
                     'error_lada': "Campo obligatorio, ingresa unicamente numeros",
@@ -159,24 +159,32 @@ def nuevoClienteAuth(request):
 
 @login_required(redirect_field_name='')
 def datosFacturacionView(request, idCliente):
-    context = {'cliente': Cliente.objects.get(pk=idCliente)}
-    return render(request, 'schema/datosFacturacion.html', context)
+    if whichUser(request.user) == 1:
+        context = {'cliente': Cliente.objects.get(pk=idCliente)}
+        return render(request, 'schema/datosFacturacion.html', context)
+    elif whichUser(request.user) == 2:
+        return HttpResponse("No autorizado")
 
 @login_required(redirect_field_name='')
 def datosFacturacionAuth(request, idCliente):
-    if request.method == "POST":
-        facturacion_form = forms.nuevoClienteForm(request.POST)
-        if facturacion_form.is_valid():
+    if whichUser(request.user) == 1:
+        if request.method == "POST":
+            facturacion_form = forms.nuevoClienteForm(request.POST)
+            if facturacion_form.is_valid():
 #             context = {'cliente': request.user.agente.clientes.get(pk=idCliente),}
-            cliente = Cliente.objects.get(pk=idCliente)
-            facturacion_form=forms.nuevoClienteForm(request.POST, instance = cliente)
-            facturacion_form.save()
-            context = {'cliente': cliente}
-            return render(request, 'schema/infocliente.html', context)
-        else:
-            context = {'facturacion_form': facturacion_form,  
-            'error_missingfields': "Campos sin llenar"}
-            return render(request, 'schema/datosFacturacion.html', context)
+                cliente = Cliente.objects.get(pk=idCliente)
+                facturacion_form=forms.nuevoClienteForm(request.POST, instance = cliente)
+                facturacion_form.save()
+                context = {'cliente': cliente}
+                return render(request, 'schema/infocliente.html', context)
+            else:
+                cliente = Cliente.objects.get(pk=idCliente)
+                context = {
+                    'cliente': cliente,
+                    'error_missingfields': "Campos sin llenar"}
+                return render(request, 'schema/datosFacturacion.html', context)
+    elif whichUser(request.user) == 2:
+        return HttpResponse("No autorizado")
 
 @login_required(redirect_field_name='')
 def clientesView(request):
@@ -562,8 +570,8 @@ def nuevaCotizacionAuth(request, idComparativa):
         else:
             for err in cotizacionForm.errors:
                 print(err)
-            for err in uploadedFileForm.errors:
-                print(err)
+            # for err in uploadedFileForm.errors:
+            #     print(err)
             return HttpResponse("error")
 
     """
@@ -726,7 +734,7 @@ def enviarCotizacionTramitesView(request, idComparativa):
                     'coberturas': Cobertura.objects.filter(seguro__pk=seguro.pk),
                 }
             )
-            if sendEmailAlternativeWithAttachment(subject, message, htmlMessage, 'ivanali@outlook.com', emailList, archivo, 'application/pdf'):
+            if sendEmailAlternativeWithAttachment(subject, message, htmlMessage, 'jorge_andres115@hotmail.com', emailList, archivo, 'application/pdf'):
                 comparativa.fechaEnvioTramite = datetime.now()
                 comparativa.save()
                 return HttpResponse('Email enviado exitosamente!')

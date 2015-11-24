@@ -49,9 +49,6 @@ class Persona(models.Model):
     def __str__(self):
         return "Persona"
 
-# def get_upload_file_name(instance, filename):
-#     return "uploaded_files/%s_%s" % (str(time()).replace('.','_'),filename)
-
 class Cliente(Persona):
     idCliente = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=40)
@@ -59,12 +56,12 @@ class Cliente(Persona):
     apellidoMaterno = models.CharField(max_length=30)
     linkRegistroRFC = models.URLField(blank=True, null=True)
     linkComprobanteDomicilio = models.FileField(null=True)
-    calleFact = models.CharField(max_length=50, blank=True)
+    calleFact = models.CharField(max_length=50, blank=True,null=True)
     numeroExtFact = models.PositiveSmallIntegerField(blank=True, null=True)
     numeroIntFact = models.CharField(max_length=6, blank=True, null=True)
-    coloniaFact = models.CharField(max_length=40, blank=True)
-    ciudadFact = models.CharField(max_length=30, blank=True)
-    estadoFact = models.CharField(max_length=19, blank=True)
+    coloniaFact = models.CharField(max_length=40, blank=True, null=True)
+    ciudadFact = models.CharField(max_length=30, blank=True, null=True)
+    estadoFact = models.CharField(max_length=19, blank=True, null=True)
     codigoPostalFact = models.PositiveIntegerField(blank=True, null=True)
     def __str__(self):
         return "Cliente fisico: " + self.nombre + " " +self.apellidoPaterno + " " + self.apellidoMaterno
