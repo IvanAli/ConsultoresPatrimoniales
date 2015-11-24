@@ -21,16 +21,18 @@
 
         <br />
         <!-- start panel body -->
+
         <table border=1>
             <thead>
                 <tr>
-                    <th>Aseguradora</th>
-                    <th>Costo</th>
-                    <th>No. de coberturas</th>
-                    <th>Forma de pago</th>
-                    {% for cobertura in coberturas.all %}
-                        <th>{{ cobertura.nombre }}</th>
+                    <th></th>
+
+                    {% for cotizacion in comparativa.cotizacion_set.all %}
+                    <th>
+                        {{ cotizacion.aseguradora.nombre }}
+                    </th>
                     {% endfor %}
+                   
                     <!--
                     {% for cotizacion in comparativa.cotizacion_set.all %}
                         {% for cobertura in cotizacion.coberturautilizada_set.all %}
@@ -41,27 +43,89 @@
                 </tr>
             </thead>
             <tbody padding=1em>
+                <tr>
+                    <td>Costo</td>
+                    
+                    {% for cotizacion in comparativa.cotizacion_set.all %}
+                    <td>
+                        ${{ cotizacion.costo }}
+                    </td>
+                    {% endfor %}
+                
+                </tr>
+                <tr>
+                    <td>No. de coberturas</td>
+
+                    {% for cotizacion in comparativa.cotizacion_set.all %}
+                    <td>
+                        {{ cotizacion.coberturautilizada_set.all.count}}
+                    </td>
+                    {% endfor %}
+
+                </tr>
+                <tr>
+                    <td>Forma de pago</td>
+                    
+                    {% for cotizacion in comparativa.cotizacion_set.all %}
+                    <td>
+                        {{ cotizacion.get_formaPago_display }}
+                    </td>
+                    {% endfor %}
+
+                </tr>
+
+               
+     <!--          {% for cotizacion2 in comparativa.cotizacion_set.all %}
+                        {% for coberturaUtil2 in cotizacion2.coberturautilizada_set.all %}
+                <tr>
+
+                <td> 
+ {% for cobertura in coberturas %}
+             {{ cobertura.nombre }}
+   {% endfor %}</td>
+
                 {% for cotizacion in comparativa.cotizacion_set.all %}
-                    <tr id="comparativa{{ forloop.counter }}">
-                        <td>
-                            {{ cotizacion.aseguradora.nombre }}
-                        </td>
-                        <td>
-                            {{ cotizacion.costo }}
-                        </td>
-                        <td>
-                            {{ cotizacion.coberturautilizada_set.all.count }}
-                        </td>
-                        <td>
-                            {{ cotizacion.get_formaPago_display }}
-                        </td>
-                        <td>
-                            {{ cotizacion.coberturautiliza_set.all }}
-                        </td>
-                      </div>
-                    </tr>
-                {% endfor %}
+            
+                 <td>  {{cotizacion.idCotizacion}},{{coberturaUtil2.cotizacion_id }} </td>
+                     {% endfor %}
+                </tr> 
+                {% endfor %}{% endfor %} -->
+                <!--  <tr>
+                <td>  Exencion de deducible por perdida total </td>
+             
+                 </tr>  -->
+                 <tr>
+                <td>  Deducible cero en robo total </td>
+                          {% for cotizacion in comparativa.cotizacion_set.all %}
+                        {% for coberturaUtil in cotizacion.coberturautilizada_set.all %}
+                        {{coberturaUtil.cotizacion_id }}
+                 <td>  {{cotizacion.idCotizacion}}, </td>
+                     {% endfor %}
+                     {% endfor %}
+                 </tr> 
+                 <tr>
+                <td>  Responsabilidad civil daños a bienes y personas</td>
+               {% for cotizacion in comparativa.cotizacion_set.all %}
+                 <td>  {{cotizacion.idCotizacion}} </td>
+                     {% endfor %}
+                 </tr> 
+                 <tr>
+                <td>  Robo parcial </td>
+               {% for cotizacion in comparativa.cotizacion_set.all %}
+                 <td>  {{cotizacion.idCotizacion}} </td>
+                     {% endfor %}
+                 </tr> 
+                 <tr>
+                <td>  Gastos medicos ocupantes </td>
+              {% for cotizacion in comparativa.cotizacion_set.all %}
+                 <td>  {{cotizacion.idCotizacion}} </td>
+                     {% endfor %}
+                 </tr> 
+                
+                   
+                    
             </tbody>
+           
         </table>
         <p>
             Estaré esperando su respuesta para proseguir con el trámite en caso de que opte por un seguro.

@@ -33,6 +33,8 @@ def create_agentes():
         claveAgente=12345,
         cuentaBancaria=999,
         banco='Santander',
+        telefonoLada = '666',
+        telefono = '1234567',
         )
     agente.save()
 
@@ -49,6 +51,8 @@ def create_agentes():
         claveAgente=666,
         cuentaBancaria=888,
         banco='Banamex',
+        telefonoLada = '666',
+        telefono = '1234567',
         )
     agente.save()
 
@@ -65,6 +69,8 @@ def create_agentes():
         claveAgente=123456,
         cuentaBancaria=777,
         banco='Banorte',
+        telefonoLada = '666',
+        telefono = '1234567',
         )
     agente.save()
 
@@ -73,7 +79,19 @@ def create_admin():
     email='joaquin_tech@hotmail.com', first_name='Joaquin', last_name='Gutierrez')
     user.save()
 
-    admin = Administrador.objects.create(userAdmin=user)
+    admin = Administrador.objects.create(
+        userAdmin=user,
+        edad = 25,
+        sexo = 'H',
+        telefonoLada = '666',
+        telefono = '1234567',
+        calle = 'av00',
+        numeroExt = 0,
+        numeroInt = 000,
+        colonia = 'col100',
+        ciudad = 'Queretaro',
+        estado = 'Queretaro',
+        codigoPostal = '58300',        )
     admin.save()
 
 def create_clientes():

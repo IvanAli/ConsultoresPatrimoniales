@@ -10,7 +10,9 @@ class nuevoClienteForm(forms.ModelForm):
 	class Meta:
  		model = Cliente
  		fields = ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
- 		'numeroInt','colonia','ciudad','estado','codigoPostal']
+ 		'numeroInt','colonia','ciudad','estado','codigoPostal','calleFact','numeroExtFact','numeroIntFact','coloniaFact','ciudadFact'
+ 		,'estadoFact','codigoPostalFact']
+
 
 class CotizacionForm(forms.ModelForm):
     class Meta:

@@ -185,7 +185,7 @@
                             </div>
                         </p>
                         {% else %}
-                            <a href="#" class="btn btn-default btn-xs">Agregar datos de facturación</a>
+                            <a href="{% url 'schema:datosFacturacion' cliente.pk %}" class="btn btn-default btn-xs">Agregar datos de facturación</a>
                         {% endif %}
                     </div>
                 </div>

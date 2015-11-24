@@ -39,17 +39,45 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'storages',
-    'easy_pdf',
     'schema',
 )
 
 # Storage
-DEFAULT_FILE_STORAGE = 'storages.backend.azure_storage.AzureStorage'
+MEDIA_ROOT = 'https://consultorespatrimoniales.blob.core.windows.net/'
+MEDIA_URL = 'https://consultorespatrimoniales.blob.core.windows.net/'
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 AZURE_ACCOUNT_NAME = 'consultorespatrimoniales'
 AZURE_ACCOUNT_KEY = 'dV2vFne0e0sWg3JKRdOTIrBRC+VnxEKU6510QS9d5Kx1USELHEpUt9pfQsDd3ysfmPGItgjbg+kC6kLmprJLfw=='
-AZURE_CONTAINER = 
+AZURE_CONTAINER = 'cotizaciones'
+
+#For email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'smtp-mail.outlook.com'
+
+<<<<<<< HEAD
+EMAIL_HOST_USER = 'consultorespatrimonialesdebug@outlook.com'
+
+#Must generate specific password for your app in [gmail settings][1]
+EMAIL_HOST_PASSWORD = 'ConsultoresPatrimoniales'
+=======
+EMAIL_HOST_USER = 'jorge_andres115@hotmail.com'
+
+#Must generate specific password for your app in [gmail settings][1]
+EMAIL_HOST_PASSWORD = 'coque1996'
+>>>>>>> 417579c6fffe976ae85447021848da4ff6323ca5
+
+EMAIL_PORT = 25
+
+#This did the trick
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # AUTH_USER_MODEL = 'schema.Usuario'
+
+LOGIN_URL = '/'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
