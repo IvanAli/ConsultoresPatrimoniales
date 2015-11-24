@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Agente, Cliente, ClienteFisico, ClienteMoral, Cotizacion, CoberturaUtilizada, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
+from .models import Agente, Cliente, Cotizacion, CoberturaUtilizada, Poliza, Pago, SeguroAP, SeguroC, SeguroR, SeguroG, SeguroV, SeguroH, SeguroI, SeguroE, SeguroEC, SeguroT
 
 class LoginForm(forms.Form):
     user = forms.CharField(max_length=30)
@@ -9,18 +9,9 @@ class LoginForm(forms.Form):
 class nuevoClienteForm(forms.ModelForm):
 	class Meta:
  		model = Cliente
- 		fields= ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
+ 		fields = ['nombre','apellidoPaterno','apellidoMaterno','email','telefonoLada','telefono','edad','sexo','rfc','calle','numeroExt',
  		'numeroInt','colonia','ciudad','estado','codigoPostal','calleFact','numeroExtFact','numeroIntFact','coloniaFact','ciudadFact'
  		,'estadoFact','codigoPostalFact']
-### PENDIENTE, PUES NO SE COMO DISTINGUIR ENTRE CLIENTE FISICO Y MORAL
-# class nuevoClienteFisicoForm(forms.ModelForm):
-# 	class Meta:
-# 		model = ClienteFisico
-
-class nuevoClienteMoralForm(forms.ModelForm):
-	class Meta :
-		model =ClienteMoral
-		fields =['razonSocial','linkActaConstitutiva','linkIdRepresentante']
 
 
 class CotizacionForm(forms.ModelForm):
@@ -32,6 +23,17 @@ class CoberturaUtilizadaForm(forms.ModelForm):
     class Meta:
         model = CoberturaUtilizada
         fields = ['idCobertura', 'sumaAsegurada', 'deducible']
+
+class PolizaForm(forms.ModelForm):
+    class Meta:
+        model = Poliza
+        fields = ['idPoliza', 'noPoliza', 'primaNeta', 'fechaEmision', 'fechaInicio', 'fechaFin', 'endosoBeneficiario', 'caratulaPDF']
+        # fields = '__all__'
+
+class PagoForm(forms.ModelForm):
+    class Meta:
+        model = Pago
+        fields = ['idPago', 'cantidad', 'fechaPago', 'comprobante']
 
 class UploadFileForm(forms.Form):
     # title = forms.CharField(max_length=50)

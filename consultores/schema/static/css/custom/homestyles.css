@@ -1,0 +1,8 @@
+.panel_padding_center {
+    padding: 2em;
+    text-align: center;
+}
+
+.panel-primary {
+    min-height: 150px;
+}

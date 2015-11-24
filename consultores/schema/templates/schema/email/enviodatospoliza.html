@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <p>
+            Buen día
+        </p>
+        <p>
+            Soy el agente {{ agente.userAgente.first_name }} {{ agente.userAgente.last_name }} y envío al área de
+            trámites la siguiente información para solicitar una póliza para un seguro
+            de <strong>{{ seguroNombre.nombre }}</strong> para el cliente <strong>{{ cliente.nombre }}
+                {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}</strong>
+        </p>
+
+        <strong>Datos del cliente</strong><br />
+        <p>Nombre: {{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}</p>
+        <p>Email: {{ cliente.email }}</p>
+        <p>Edad: {{ cliente.edad }}</p>
+        <p>Sexo: {{ cliente.sexo }}</p>
+        <p>RFC: {{ cliente.rfc }}</p>
+        <p>Teléfono: {{ cliente.telefonoLada }} {{ cliente.telefono }}</p>
+        <p>Dirección: {{ cliente.calle }} #{{ cliente.numeroExt }}</p>
+        {% if cliente.numeroInt != None %} Int. {{ cliente.numeroInt }}{% endif %}. {{ cliente.colonia }}.</p>
+        C.P. {{ cliente.codigoPostal }}. {{ cliente.ciudad }}, {{ cliente.estado }}</p>
+        <!--
+        {% if isClienteMoral %}
+            <p>Razón social: {{ cliente.razonSocial }}</p>
+        {% endif %}
+        -->
+        <strong>Datos de la cotización</strong><br />
+        {% for field in datos %}
+            <li><b>{{ field.label }}:</b>
+                {% if field.data == None or field.data == '' %}
+                    No especificado
+                {% else %}
+                    {{ field.data }}</li>
+                {% endif %}
+        {% endfor %}
+        <p><strong>Costo: </strong>{{ cotizacionElegida.costo }}</p>
+        <p><strong>Forma de pago: </strong>{{ cotizacionElegida.formaPago }}</p>
+        <p><strong>Aseguradora: </strong>{{ cotizacionElegida.aseguradora }}</p>
+
+        <strong>Coberturas incluidas</strong><br />
+        <table border=1>
+            <thead>
+                <th>
+                    Nombre de cobertura
+                </th>
+                <th>
+                    Suma asegurada
+                </th>
+                <th>
+                    Deducible
+                </th>
+            </thead>
+
+            <tbody>
+                {% for cobertura in cotizacionElegida.coberturautilizada_set.all %}
+                    <tr id="cobertura{{ forloop.counter }}">
+                        <td>
+                            {{ cobertura.idCobertura.nombre }}
+                        </td>
+                        <td>
+                            {{ cobertura.sumaAsegurada }}
+                        </td>
+                        <td>
+                            {{ cobertura.deducible }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>
+            Asimismo anexo la cotización de la aseguradora.
+        </p>
+        <p>
+            Que tenga un buen día.
+        </p>
+        <p>
+            {{ agente.userAgente.first_name }}
+        </p>
+    </body>
+</html>

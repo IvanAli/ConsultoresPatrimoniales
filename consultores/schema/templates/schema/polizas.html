@@ -22,7 +22,7 @@
                     <h3 class="panel-title">Pólizas</h3>
                     <div class="pull-right">
                     <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
-                        <a href="{% url 'schema:seleccionCliente' 'poliza' %}" class="btn btn-default btn-sm btn-new-pos">Nueva póliza</a>
+                        <a href="{% url 'schema:seleccionOrdenServicio' %}" class="btn btn-default btn-sm btn-new-pos">Nueva póliza</a>
                     </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
 
                             <tr id="poliza{{ forloop.counter }}">
                                 <td>
-                                    {{ orden.poliza.pk }}
+                                    <a href="{% url 'schema:polizaCliente' orden.poliza.pk %}">{{ orden.poliza.pk }}</a>
                                 </td>
                                 <td>
                                     {{ orden.cliente.nombre }}
@@ -54,10 +54,10 @@
                                     {{ orden.cliente.apellidoMaterno }}
                                 </td>
                                 <td>
-                                    {{ orden.tipoSeguro.get_idTipoSeguro_display }}
+                                    {{ orden.comparativa.tipoSeguro.nombre.nombre }}
                                 </td>
                                 <td>
-                                    {{ orden.poliza.cotizacion.idCotizacion }}
+                                    {{ orden.poliza.cotizacion.aseguradora }}
                                 </td>
                                 <td>
                                     {{ orden.poliza.pago_set.all.count }}

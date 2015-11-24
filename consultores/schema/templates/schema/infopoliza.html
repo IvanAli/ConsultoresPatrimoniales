@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block head_title %}Póliza{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+{% endblock %}
+{% block head_javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+{% endblock %}
+
+{% block polizas_tag %}class="active"{% endblock %}
+{% block body_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Recibos de pago</h3>
+                    <div class="btn-new-pos btn-new-pos" style="float: right; position: relative; top: -23px;">
+                        {% if poliza.pago_set.all.count < poliza.cotizacion.formaPago %}
+                            <a id="nuevoPago" href="{% url 'schema:nuevoPago' poliza.pk %}" class="btn btn-default btn-sm btn-new-pos">Agregar pago</a>
+                        {% endif %}
+                        {% if poliza.comision.fechaDeposito == None %}
+                            <a id="marcarComision" href="{% url 'schema:marcarComisionCobrada' poliza.pk %}" class="btn btn-default btn-sm btn-new-pos">Marcar comisión cobrada</a>
+                        {% else %}
+                            <a id="marcarComision" href="{% url 'schema:marcarComisionCobrada' poliza.pk %}" class="btn btn-default btn-sm btn-new-pos">Desmarcar comisión cobrada</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <!-- start panel body -->
+                    <table class="table table-hover" id="pagosTable">
+                        <thead>
+                            <tr>
+                                <th>Número de pago</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de pago</th>
+                            </tr>
+                        </thead>
+                        <tbody class="rowlink" data-link="row">
+                            {% for pago in poliza.pago_set.all %}
+                                <tr title="Haz click en el renglón para ver el comprobante de pago" id="pago{{ forloop.counter }}">
+                                    <td>
+                                        <a href="{{ pago.comprobante.url }}">{{ pago.numeroPago }}</a>
+                                    </td>
+                                    <td>
+                                        {{ pago.cantidad }}
+                                    </td>
+                                    <td>
+                                        {{ pago.fechaPago|date }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- end panel body -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Información de la póliza ID {{ poliza.pk }}</h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <strong>No. de póliza: </strong>{{ poliza.noPoliza }}
+                    </p>
+                    <p>
+                        <strong>Cliente: </strong>{{ poliza.ordenServicio.cliente.nombre }} {{ poliza.ordenServicio.cliente.apellidoPaterno }} {{ poliza.ordenServicio.cliente.apellidoMaterno }}
+                    </p>
+                    <p>
+                        <strong>Aseguradora: </strong>{{ poliza.cotizacion.aseguradora }}
+                    </p>
+                    <p>
+                        <strong>Descripción: </strong>--
+                    </p>
+                    <p>
+                        <strong>Prima Neta: </strong>{{ poliza.primaNeta }}
+                    </p>
+                    <p>
+                        <strong>Forma de pago: </strong>{{ poliza.cotizacion.get_formaPago_display }}
+                    </p>
+                    <p>
+                        <strong>Recibos de pago: </strong>{{ poliza.pago_set.all.count }}/{{ poliza.cotizacion.formaPago }}
+                    </p>
+                    <p>
+                        <strong>Vencimiento: </strong>{{ poliza.fechaFin }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_javascript %}
+
+<!-- jQuery -->
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../../static/js/dataTables/dataTables.bootstrap.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#pagosTable').DataTable({
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "searching": false,
+        "scrollY": true
+    });
+} );
+</script>
+{% endblock %}

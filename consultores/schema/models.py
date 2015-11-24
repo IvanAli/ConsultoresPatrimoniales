@@ -87,7 +87,7 @@ class Agente(Persona):
     claveAgente = models.IntegerField(blank=True, null=True)
     cuentaBancaria = models.CharField(max_length=34, blank=True)
     banco = models.CharField(max_length=30, blank=True)
-    clientes = models.ManyToManyField(Cliente)
+    clientes = models.ManyToManyField(Cliente, through='ClienteAgente')
 
     def save(self, *args, **kwargs):
         try:
@@ -101,6 +101,11 @@ class Agente(Persona):
 
     def __str__(self):
         return "Agente: " + self.userAgente.username
+
+class ClienteAgente(models.Model):
+    cliente = models.ForeignKey(Cliente)
+    agente = models.ForeignKey(Agente)
+    fecha = models.DateField(auto_now_add=True)
 
 class Administrador(Persona):
     userAdmin = OneToOneField(User)
@@ -147,11 +152,12 @@ class Comparativa(models.Model):
     idComparativa = models.AutoField(primary_key=True)
     fechaCreacion = models.DateTimeField('fecha creada', auto_now_add=True)
     fechaConclusion = models.DateTimeField('fecha concluida', blank=True, null=True)
-    fechaEnvio = models.DateTimeField('fecha de envio', blank=True, null=True)
+    fechaEnvioCliente = models.DateTimeField('fecha de envio a cliente', blank=True, null=True)
+    fechaEnvioTramite = models.DateTimeField('fecha de envio a tramites', blank=True, null=True)
     tipoSeguro = models.ForeignKey('TipoSeguro')
     coberturas = models.ManyToManyField('Cobertura')
+    cotizacionElegida = models.OneToOneField('Cotizacion', related_name='comparativaPreferida', null=True)
 
-### HACE FALTA RESOLVER LO DE COBERTURAS
 class Cotizacion(models.Model):
     idCotizacion = models.AutoField(primary_key=True)
     costo = models.DecimalField(max_digits=11, decimal_places=2)
@@ -176,39 +182,41 @@ class AreaTramites(models.Model):
 
 class Poliza(models.Model):
     idPoliza = models.AutoField(primary_key=True)
+    noPoliza = models.CharField(max_length=20, null=True)
     primaNeta = models.DecimalField(max_digits=11, decimal_places=2)
     fechaEmision = models.DateTimeField('fecha emitida')
     fechaInicio = models.DateTimeField('fecha de inicio')
-    fechaFin = models.DateTimeField('fecha de fin')
+    fechaFin = models.DateTimeField('fecha de fin', null=True)
     endosoBeneficiario = models.CharField(max_length=100, blank=True)
-    linkCaratulaPDF = models.URLField(max_length=200)
-    comision = models.OneToOneField('Comision')
-    cotizacion = models.OneToOneField('Cotizacion')
-    ordenServicio = models.OneToOneField('OrdenServicio')
+    caratulaPDF = models.FileField(null=True)
+    comision = models.OneToOneField('Comision', null=True)
+    cotizacion = models.OneToOneField('Cotizacion', null=True)
+    ordenServicio = models.OneToOneField('OrdenServicio', null=True)
 
 class Pago(models.Model):
     idPago = models.AutoField(primary_key=True)
     cantidad = models.DecimalField(max_digits=11, decimal_places=2)
-    fechaPago = models.DateTimeField('fecha de pago', auto_now_add=True)
+    fechaPago = models.DateTimeField('fecha de pago')
     numeroPago = models.PositiveSmallIntegerField()
+    comprobante = models.FileField(null=True)
     poliza = models.ForeignKey('Poliza')
     def __str__(self):
-        return "Pago " + self.numeroPago + " de Poliza " + self.poliza
+        return "Pago " + str(self.numeroPago)
 
 class Comision(models.Model):
     idComision = models.AutoField(primary_key=True)
     cantidadComision = models.DecimalField(max_digits=11, decimal_places=2)
     fechaDeposito = models.DateTimeField(blank=True, null=True)
     asignacionComision = models.ForeignKey('AsignacionComision', null=True)
-    agente = models.ForeignKey('Agente')
+    # agente = models.ForeignKey('Agente')
     def __str__(self):
-        return "Comisión " + self.idComision + " de Agente " + self.agente
+        return "Comisión " + str(self.idComision) + " de " + self.agente
 
 class AsignacionComision(models.Model):
     idAsignacion = models.AutoField(primary_key=True)
     fechaAsignacion = models.DateTimeField('fecha de asignacion', auto_now_add=True)
     porcentaje = models.DecimalField(max_digits=4, decimal_places=2)
-    tipoSeguro = models.ForeignKey('TipoSeguro')
+    seguro = models.ForeignKey('Seguro', null=True)
     aseguradora = models.ForeignKey('Aseguradora')
     def __str__(self):
         return "Asignacion de Comisión: " + self.idAsignacion + " Tipo de Seguro: " + self.tipoSeguro + " Aseguradora: " + self.aseguradora
