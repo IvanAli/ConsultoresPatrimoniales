@@ -151,7 +151,7 @@ class Comparativa(models.Model):
     fechaEnvioTramite = models.DateTimeField('fecha de envio a tramites', blank=True, null=True)
     tipoSeguro = models.ForeignKey('TipoSeguro')
     coberturas = models.ManyToManyField('Cobertura')
-    # cotizacionElegida = models.OneToOneField('Cotizacion')
+    cotizacionElegida = models.OneToOneField('Cotizacion', related_name='comparativaPreferida', null=True)
 
 class Cotizacion(models.Model):
     idCotizacion = models.AutoField(primary_key=True)
@@ -203,7 +203,7 @@ class Comision(models.Model):
     cantidadComision = models.DecimalField(max_digits=11, decimal_places=2)
     fechaDeposito = models.DateTimeField(blank=True, null=True)
     asignacionComision = models.ForeignKey('AsignacionComision', null=True)
-    agente = models.ForeignKey('Agente')
+    # agente = models.ForeignKey('Agente')
     def __str__(self):
         return "Comisión " + str(self.idComision) + " de " + self.agente
 
@@ -211,7 +211,7 @@ class AsignacionComision(models.Model):
     idAsignacion = models.AutoField(primary_key=True)
     fechaAsignacion = models.DateTimeField('fecha de asignacion', auto_now_add=True)
     porcentaje = models.DecimalField(max_digits=4, decimal_places=2)
-    tipoSeguro = models.ForeignKey('TipoSeguro')
+    seguro = models.ForeignKey('Seguro', null=True)
     aseguradora = models.ForeignKey('Aseguradora')
     def __str__(self):
         return "Asignacion de Comisión: " + self.idAsignacion + " Tipo de Seguro: " + self.tipoSeguro + " Aseguradora: " + self.aseguradora
