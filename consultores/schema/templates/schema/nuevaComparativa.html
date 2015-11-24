@@ -58,13 +58,13 @@
                         <form class="form-horizontal" action="{% url 'schema:nuevaComparativaAuth' cliente.pk %}" method="post">
                             {% csrf_token %}
                             {{ Cform.as_p }}
-                            <input type="hidden" name="tipo" value="R">
+                            <input type="hidden" name="tipo" value="C">
                             <fieldset>
                                 <legend>
                                     Coberturas deseadas
                                 </legend>
-                                {% for cobertura in coberturasR.all %}
-                                    <input type="checkbox" name="coberturaR" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                {% for cobertura in coberturasC.all %}
+                                    <input type="checkbox" name="coberturaC" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
                                 {% endfor %}
                             </fieldset>
                             <div class="form-group">
@@ -147,7 +147,7 @@
                                 <legend>
                                     Coberturas deseadas
                                 </legend>
-                                {% for cobertura in coberturasAP.all %}
+                                {% for cobertura in coberturasH.all %}
                                     <input type="checkbox" name="coberturaH" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
                                 {% endfor %}
                             </fieldset>
@@ -211,7 +211,7 @@
                                     Coberturas deseadas
                                 </legend>
                                 {% for cobertura in coberturasEC.all %}
-                                    <input type="checkbox" name="coberturaAP" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
+                                    <input type="checkbox" name="coberturaEC" value="{{ cobertura.pk }}"> {{ cobertura.nombre }}<br />
                                 {% endfor %}
                             </fieldset>
                             <div class="form-group">

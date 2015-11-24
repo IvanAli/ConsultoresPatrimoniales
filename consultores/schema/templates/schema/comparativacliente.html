@@ -22,29 +22,13 @@
                     <h3 class="panel-title">Comparativa</h3>
                     <div class="pull-right">
                     <div class="btn-new-pos btn-new-pos" style="position: relative; top: -23px;">
-                        {% if comparativa.fechaEnvioTramite == None %}
-                        <a id="concluida" href="{% url 'schema:marcarConcluida' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">
-                            {% if comparativa.fechaConclusion == None %}
-                                Marcar como concluida</a><!-- TODO: disable when no of cotizaciones is zero -->
-                                <a id="envioCliente" disabled href="#" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
-                            {% else %}
-                                Marcar como no concluida</a>
-                                <a id="envioCliente" href="{% url 'schema:enviarComparativa' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
-                            {% endif %}
-                        {% else %}
-                            <a id="concluida" disabled href="#" class="btn btn-default btn-sm btn-new-pos">Marcar como no concluida</a>
-                            <a id="envioCliente" href="{% url 'schema:enviarComparativa' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
-                        {% endif %}
-                            {% if comparativa.fechaConclusion == None %}
-                                <a id="envioTramite" disabled href="#" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
-                            {% else %}
-                                <a id="envioTramite" href="{% url 'schema:enviarCotizacionTramites' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
-                            {% endif %}
-                        {% if comparativa.fechaConclusion == None %}
-                        <a id="nuevoCliente" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>
-                        {% else %}
-                        <a id="nuevoCliente" disabled href="#" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>
-                        {% endif %}
+                        <a id="concluida" onclick="marcar_boton_concluida('{% url 'schema:marcarConcluida' comparativa.pk %}', this.id, 'envioCliente', 'envioTramite')" class="btn btn-default btn-sm btn-new-pos">
+                            Marcar como concluida
+                        </a>
+                                <!-- TODO: disable when no of cotizaciones is zero -->
+                        <a id="envioCliente" onclick="enviarCliente('{% url 'schema:enviarComparativa' comparativa.pk %}', this.id)" title="La comparativa podrá enviarse una vez haya sido concluida" class="btn btn-default btn-sm btn-new-pos">Enviar comparativa a cliente: {{ comparativa.ordenServicio.cliente.nombre }}</a>
+                        <a id="envioTramite" onclick="enviarTramites('{% url 'schema:enviarCotizacionTramites' comparativa.pk %}', this.id)" class="btn btn-default btn-sm btn-new-pos">Enviar cotización preferida a trámites</a>
+                        <a id="nuevaCotizacion" href="{% url 'schema:nuevaCotizacion' comparativa.pk %}" class="btn btn-default btn-sm btn-new-pos">Nueva cotización</a>
                     </div>
                     </div>
                 </div>
@@ -100,6 +84,7 @@
                         </tbody>
                     </table>
                     <!-- end panel body -->
+                  
                 </div>
             </div>
         </div>
@@ -110,7 +95,14 @@
 {% endblock %}
 
 {% block footer_javascript %}
-
+<!-- ajax -->
+<script src="/static/js/ajax/marcar_botones.js"></script>
+<script>
+    window.onload = function() {
+        console.log("function on load");
+        init_disabled_marking('{{ comparativa.fechaConclusion }}', 'concluida', 'envioCliente', 'envioTramite', 'nuevaCotizacion');
+    }
+</script>
 <!-- jQuery -->
 
 <!-- DataTables -->

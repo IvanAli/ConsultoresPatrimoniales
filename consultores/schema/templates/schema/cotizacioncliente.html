@@ -27,12 +27,8 @@
                                 PDF de cotización
                             </a>
                             {% if cotizacion.comparativa.fechaEnvioTramite == None %}
-                            <a id="elegida" href="{% url 'schema:marcarCotizacionPreferida' cotizacion.pk %}" class="btn btn-default btn-sm btn-new-pos">
-                                {% if cotizacion.elegida == True %}
-                                    Remover como cotización preferida
-                                {% else %}
+                            <a id="elegida" onclick="marcar_boton('{% url 'schema:marcarCotizacionPreferida' cotizacion.pk %}', this.id)" class="btn btn-default btn-sm btn-new-pos">
                                     Seleccionar como cotización preferida
-                                {% endif %}
                             </a>
                             {% endif %}
                         </div>
@@ -70,6 +66,11 @@
     </div>
 </div>
 
+{% endblock %}
 
+{% block footer_javascript %}
+<script src="/static/js/ajax/marcar_botones.js"></script>
+<!--
 
+-->
 {% endblock %}

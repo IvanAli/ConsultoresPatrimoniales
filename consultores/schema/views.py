@@ -145,8 +145,44 @@ def nuevoClienteAuth(request):
                 CA.save()
                 return HttpResponseRedirect(reverse('schema:clientes'))
             else:
-                context = {'error_missingfields': "Campos sin llenar"}
+                context = {
+                    'datos_form': datos_form,        
+                    'error_missingfields': "Campo obligatorio sin llenar",
+                    'error_lada': "Campo obligatorio, ingresa unicamente numeros",
+                    'error_telefono': "Campo obligatorio, ingresa unicamente numeros",
+                    'error_email':"Campo obligatorio, ingresa un email valido",
+                    'error_NE':"Ingresa unicamente numeros",
+                    'error_CP':"Ingresa unicamente numeros"}
                 return render(request, 'schema/nuevoCliente.html', context)
+    elif whichUser(request.user) == 2:
+        return HttpResponse("No autorizado")
+
+@login_required(redirect_field_name='')
+def datosFacturacionView(request, idCliente):
+    if whichUser(request.user) == 1:
+        context = {'cliente': Cliente.objects.get(pk=idCliente)}
+        return render(request, 'schema/datosFacturacion.html', context)
+    elif whichUser(request.user) == 2:
+        return HttpResponse("No autorizado")
+
+@login_required(redirect_field_name='')
+def datosFacturacionAuth(request, idCliente):
+    if whichUser(request.user) == 1:
+        if request.method == "POST":
+            facturacion_form = forms.nuevoClienteForm(request.POST)
+            if facturacion_form.is_valid():
+#             context = {'cliente': request.user.agente.clientes.get(pk=idCliente),}
+                cliente = Cliente.objects.get(pk=idCliente)
+                facturacion_form=forms.nuevoClienteForm(request.POST, instance = cliente)
+                facturacion_form.save()
+                context = {'cliente': cliente}
+                return render(request, 'schema/infocliente.html', context)
+            else:
+                cliente = Cliente.objects.get(pk=idCliente)
+                context = {
+                    'cliente': cliente,
+                    'error_missingfields': "Campos sin llenar"}
+                return render(request, 'schema/datosFacturacion.html', context)
     elif whichUser(request.user) == 2:
         return HttpResponse("No autorizado")
 
@@ -188,6 +224,29 @@ def seleccionClienteView(request, context_type):
     return render(request, 'schema/seleccionCliente.html', context)
 
 @login_required(redirect_field_name='')
+def enviarCotizacionTramitesView(request, idComparativa):
+    comparativa = Comparativa.objects.get(pk=idComparativa)
+    cliente = comparativa.ordenServicio.cliente
+    agente = comparativa.ordenServicio.agente
+    elegidaExists = False
+    for cot in comparativa.cotizacion_set.all():
+        if cot.elegida == True:
+            elegidaExists = True
+            break
+    print(elegidaExists)
+    if elegidaExists:
+        if AreaTramites.objects.count() > 0:
+            emailList = []
+            for tramites in AreaTramites.objects.all():
+                emailList.append(tramites.email)
+            subject = 'Datos de póliza a tramitar'
+            message = 'Envío datos de póliza a tramitar para cliente ' + cliente.nombre + " " + cliente.apellidoPaterno + " " + cliente.apellidoMaterno
+            if sendEmail(subject, message, agente.email, emailList):
+                return HttpResponse('Email enviado a trámites exitosamente')
+        else:
+            return HttpResponse('No hay emails de area de tramites registrados')
+    else:
+        return HttpResponse('Favor de seleccionar una cotizacion preferida')
 def seleccionOrdenServicioView(request):
     context = {
         'ordenes': OrdenServicio.objects.filter(agente=request.user.agente, comparativa__cotizacionElegida__poliza=None).exclude(comparativa__fechaEnvioTramite=None),
@@ -303,7 +362,7 @@ def nuevaComparativaAPAuth(request, idCliente):
     elif whichUser(request.user) == 2:
         return HttpResponse("No autorizado")
 
-
+@login_required(redirect_field_name='')
 def saveForm(request, idCliente, filledForm, seguroPK):
     form = filledForm
     if form.is_valid():
@@ -322,6 +381,9 @@ def saveForm(request, idCliente, filledForm, seguroPK):
         ordenServicio = OrdenServicio(cliente=Cliente.objects.get(pk=idCliente),comparativa=comparativa, agente=request.user.agente)
         ordenServicio.save()
         return True
+    else:
+        for err in form.errors:
+            print("error:", err)
     return False
 
 @login_required(redirect_field_name='')
@@ -511,8 +573,8 @@ def nuevaCotizacionAuth(request, idComparativa):
         else:
             for err in cotizacionForm.errors:
                 print(err)
-            for err in uploadedFileForm.errors:
-                print(err)
+            # for err in uploadedFileForm.errors:
+            #     print(err)
             return HttpResponse("error")
 
     """
@@ -536,7 +598,7 @@ def nuevaCotizacionAuth(request, idComparativa):
     """
     return HttpResponse("error")
 
-def marcarComisionCobradaaView(request, idPoliza):
+def marcarComisionCobradaView(request, idPoliza):
     poliza = Poliza.objects.get(pk=idPoliza)
     comision = poliza.comision
     # date may not be right now, but whatever
@@ -553,10 +615,13 @@ def marcarComparativaConcluidaView(request, idComparativa):
     comparativa = Comparativa.objects.get(pk=idComparativa)
     if comparativa.fechaConclusion == None:
         comparativa.fechaConclusion = datetime.now()
+        responseText = 'Marcar como no concluida'
     else:
         comparativa.fechaConclusion = None
+        responseText = 'Marcar como concluida'
     comparativa.save()
-    return HttpResponseRedirect(reverse('schema:comparativaCliente', args=[idComparativa]))
+    return HttpResponse(responseText)
+    # return HttpResponseRedirect(reverse('schema:comparativaCliente', args=[idComparativa]))
 
 def marcarCotizacionPreferidaView(request, idCotizacion):
     cotizacion = Cotizacion.objects.get(pk=idCotizacion)
@@ -570,7 +635,12 @@ def marcarCotizacionPreferidaView(request, idCotizacion):
     cotizacion.save()
     comparativa.cotizacionElegida = cotizacion
     comparativa.save()
-    return HttpResponseRedirect(reverse('schema:cotizacionCliente', args=[idCotizacion]))
+    if cotizacion.elegida:
+        responseText = 'Remover como cotización preferida'
+    else:
+        responseText = 'Seleccionar como cotización preferida'
+    return HttpResponse(responseText)
+    # return HttpResponseRedirect(reverse('schema:cotizacionCliente', args=[idCotizacion]))
 
 def sendEmail(subject, message, fromEmail, toEmail):
     try:
@@ -638,8 +708,8 @@ def enviarComparativaView(request, idComparativa):
         if sendEmailAlternative(subject, message, htmlMessage, 'ivanali@outlook.com', [cliente.email]):
             comparativa.fechaEnvioCliente = datetime.now()
             comparativa.save()
-            return HttpResponse('Email enviado exitosamente!')
-    return HttpResponse('no exito')
+            return HttpResponse('Email enviado exitosamente')
+    return HttpResponse('Email no pudo ser enviado')
 
 def getCotizacionPreferida(idComparativa):
     comparativa = Comparativa.objects.get(pk=idComparativa)
@@ -675,7 +745,7 @@ def enviarCotizacionTramitesView(request, idComparativa):
                     'coberturas': Cobertura.objects.filter(seguro__pk=seguro.pk),
                 }
             )
-            if sendEmailAlternativeWithAttachment(subject, message, htmlMessage, 'ivanali@outlook.com', emailList, archivo, 'application/pdf'):
+            if sendEmailAlternativeWithAttachment(subject, message, htmlMessage, 'jorge_andres115@hotmail.com', emailList, archivo, 'application/pdf'):
                 comparativa.fechaEnvioTramite = datetime.now()
                 comparativa.save()
                 return HttpResponse('Email enviado exitosamente!')
@@ -683,7 +753,7 @@ def enviarCotizacionTramitesView(request, idComparativa):
             return HttpResponse('No hay emails de area de tramites registrados')
     else:
         return HttpResponse('Favor de seleccionar una cotizacion preferida')
-    return HttpResponse('error')
+    return HttpResponse('Error al enviar email')
 
 @login_required(redirect_field_name='')
 def polizasView(request):

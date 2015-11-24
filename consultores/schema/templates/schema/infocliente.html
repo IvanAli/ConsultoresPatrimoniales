@@ -69,18 +69,40 @@
                     <h3 class="panel-title">Info del cliente</h3>
                 </div>
                 <div class="panel-body">
-                    <p>{{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}</p>
+                    <p>{{ cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }} , {{ cliente.edad }} años</p>
                     <p>{{ cliente.email }}</p>
+                    <p>tel: ({{ cliente.telefonoLada }}) {{ cliente.telefono }}</p>
                     <p>{{ cliente.rfc }}</p>
-                    <p>{{ telefonoLada }} {{ telefono }}</p>
-                    <p>{{ cliente.calle }} #{{ cliente.numeroExt }}
+                    <p>{% if cliente.codigoPostal %} {{ cliente.codigoPostal }},{% endif %}
+                     {% if cliente.ciudad %}{{ cliente.ciudad }},{% endif %} {{ cliente.estado }}</p>
+                    <p>{% if cliente.colonia %}{{ cliente.colonia }},{% endif %}
+                    {% if cliente.calle %}{{ cliente.calle }} {% endif %} 
+                    {% if cliente.numeroExt %} # {{ cliente.numeroExt }}{% endif %}
                     {% if cliente.numeroInt %} Int. {{ cliente.numeroInt }}{% endif %}</p>
-                    <p>{{ cliente.codigoPostal }} {{ cliente.ciudad }}, {{ cliente.estado }}</p>
+                </div>
+            </div>
+       
+        </div>
+    </div>
+    <div class="row">
+          <div class="col-md-4" id="datosFacturacion">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Datos Facturación</h3>
+                </div>
+                <div class="panel-body">
+                    <p> {% if cliente.codigoPostalFact %} {{ cliente.codigoPostalFact }},{% endif %}
+                        {% if cliente.ciudadFact %} {{ cliente.ciudadFact }}, {% endif %} {{ cliente.estadoFact }} </p>
+                    <p>{% if cliente.coloniaFact %}{{ cliente.coloniaFact }},{% endif %}
+                    {% if cliente.calleFact %}{{ cliente.calleFact }} {% endif %} 
+                    {% if cliente.numeroExtFact %} # {{ cliente.numeroExtFact }}{% endif %}
+                    {% if cliente.numeroIntFact %} Int. {{ cliente.numeroIntFact }}{% endif %}</p>
+                    <a href="{% url 'schema:datosFacturacion' cliente.pk %}" class="btn btn-primary " >Crear</a>
                 </div>
             </div>
         </div>
-        </div>
     </div>
+    
 </div>
 
 {% endblock %}

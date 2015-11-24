@@ -32,7 +32,12 @@ urlpatterns = [
     url(r'^enviarComparativa/(?P<idComparativa>[0-9]+)/$', views.enviarComparativaView, name='enviarComparativa'),
     url(r'^marcarConcluida/(?P<idComparativa>[0-9]+)/$', views.marcarComparativaConcluidaView, name='marcarConcluida'),
     url(r'^marcarPreferida/(?P<idCotizacion>[0-9]+)/$', views.marcarCotizacionPreferidaView, name='marcarCotizacionPreferida'),
+<<<<<<< HEAD
     url(r'^marcarComisionCobrada/(?P<idPoliza>[0-9]+)/$', views.marcarComisionCobradaView, name='marcarComisionCobrada'),
+    # url(r'^comparativa.pdf$', views.ComparativaPDFView.as_view(), name='comparativapdf'),
+=======
+    url(r'^marcarComisionCobrada/(?P<idPoliza>[0-9]+)/$', views.marcarComisionCobradaaView, name='marcarComisionCobrada'),
+>>>>>>> 417579c6fffe976ae85447021848da4ff6323ca5
     url(r'^agentes/$', views.agentesView, name='agentes'),
     url(r'^agentes/(?P<idAgente>[0-9]+)/$', views.infoAgenteView, name='infoAgente'),
     url(r'^aseguradoras/$', views.aseguradorasView, name='aseguradoras'),
