@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
+from django.contrib import messages
 # from easy_pdf.views import PDFTemplateView
 from . import managers
 from django.forms.models import model_to_dict
@@ -19,7 +20,6 @@ from django.template import loader
 # Create your views here.
 
 # from django.conf.settings import PROJECT_ROOT
-
 
 # HELPER FUNCTIONS
 def getUser(username):
@@ -732,6 +732,39 @@ def infoAgenteView(request, idAgente):
         }
         return render(request, 'schema/infoagenteAdmin.html', context)
 
+@login_required(redirect_field_name='')
+def eliminarClienteView(request, idCliente):
+    if whichUser(request.user) == 1:
+        eliminadoCA = ClienteAgente.objects.get(cliente=idCliente)
+        eliminadoCA.delete()
+        eliminadoC = Cliente.objects.get(pk=idCliente)
+        eliminadoC.delete()
+
+        return HttpResponseRedirect(reverse('schema:clientes' ))
+    elif whichUser(request.user) == 2:
+        eliminadoCA = ClienteAgente.objects.get(cliente=idCliente)
+        eliminadoCA.delete()
+        eliminadoC = Cliente.objects.get(pk=idCliente)
+        eliminadoC.delete()
+
+        return HttpResponseRedirect(reverse('schema:clientes' ))
+
+@login_required(redirect_field_name='')
+def eliminarComparativaView(request, idComparativa):
+    if whichUser(request.user) == 1:
+        eliminadoComp = Comparativa.objects.get(pk=idComparativa)
+        if eliminadoComp.fechaConclusion:
+            messages.success(request, 'No fue eliminada la comparativa, ya que ya ha sido concluida.')
+            return HttpResponseRedirect(reverse('schema:comparativas'))
+        else:
+            eliminadoComp.ordenServicio.delete()
+            eliminadoComp.delete()
+
+            messages.success(request, 'Comparativa eliminada exitosamente..')
+            return HttpResponseRedirect(reverse('schema:comparativas'))
+    elif whichUser(request.user) == 2:
+
+        return HttpResponseRedirect(reverse('schema:comparativas' ))
 
 # not working
 # class ComparativaPDFView(PDFTemplateView):

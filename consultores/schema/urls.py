@@ -38,4 +38,6 @@ urlpatterns = [
     url(r'^agentes/(?P<idAgente>[0-9]+)/$', views.infoAgenteView, name='infoAgente'),
     url(r'^aseguradoras/$', views.aseguradorasView, name='aseguradoras'),
     url(r'^seguros/$', views.segurosView, name='seguros'),
+    url(r'^eliminarCliente/(?P<idCliente>[0-9]+)/$', views.eliminarClienteView, name='eliminarCliente'),
+    url(r'^eliminarComparativa/(?P<idComparativa>[0-9]+)/$', views.eliminarComparativaView, name='eliminarComparativa'),
 ]

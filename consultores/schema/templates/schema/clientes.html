@@ -54,11 +54,12 @@
                             </td>
                             <td>
                                 {{ cliente.apellidoMaterno }}
+                                {{ user.pk }}
                             </td>
                             <td>
                                 <a href="{% url 'schema:eliminarCliente' cliente.pk %}" class="pull-right btn btn-danger btn-xs" style="color: white">
                                     <div class="glyphicon glyphicon-trash"></div>
-                                    Borrar
+                                    Eliminar
                                 </a>
                                 <a href="#{{ cliente.pk }}" class="pull-right btn btn-warning btn-xs" style="color: white; position: relative; left: -.5em;">
                                     <div class="glyphicon glyphicon-edit"></div>
