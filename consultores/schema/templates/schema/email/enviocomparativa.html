@@ -71,56 +71,20 @@
                         {{ cotizacion.get_formaPago_display }}
                     </td>
                     {% endfor %}
+                       {% for cotizacion in comparativa.cotizacion_set.all %}
+                        {% for cobertura in cotizacion.coberturautilizada_set.all %}
+
+                </tr>
+                <td>{{ cobertura.idCobertura.nombre }}</td>
+                <td>suma asegurada :{{ cobertura.sumaAsegurada }}, deducible: {{ cobertura.deducible }}</td>
+                    {% endfor %}
+                    {% endfor %}
+
 
                 </tr>
 
                
-     <!--          {% for cotizacion2 in comparativa.cotizacion_set.all %}
-                        {% for coberturaUtil2 in cotizacion2.coberturautilizada_set.all %}
-                <tr>
-
-                <td> 
- {% for cobertura in coberturas %}
-             {{ cobertura.nombre }}
-   {% endfor %}</td>
-
-                {% for cotizacion in comparativa.cotizacion_set.all %}
-            
-                 <td>  {{cotizacion.idCotizacion}},{{coberturaUtil2.cotizacion_id }} </td>
-                     {% endfor %}
-                </tr> 
-                {% endfor %}{% endfor %} -->
-                <!--  <tr>
-                <td>  Exencion de deducible por perdida total </td>
-             
-                 </tr>  -->
-                 <tr>
-                <td>  Deducible cero en robo total </td>
-                          {% for cotizacion in comparativa.cotizacion_set.all %}
-                        {% for coberturaUtil in cotizacion.coberturautilizada_set.all %}
-                        {{coberturaUtil.cotizacion_id }}
-                 <td>  {{cotizacion.idCotizacion}}, </td>
-                     {% endfor %}
-                     {% endfor %}
-                 </tr> 
-                 <tr>
-                <td>  Responsabilidad civil daños a bienes y personas</td>
-               {% for cotizacion in comparativa.cotizacion_set.all %}
-                 <td>  {{cotizacion.idCotizacion}} </td>
-                     {% endfor %}
-                 </tr> 
-                 <tr>
-                <td>  Robo parcial </td>
-               {% for cotizacion in comparativa.cotizacion_set.all %}
-                 <td>  {{cotizacion.idCotizacion}} </td>
-                     {% endfor %}
-                 </tr> 
-                 <tr>
-                <td>  Gastos medicos ocupantes </td>
-              {% for cotizacion in comparativa.cotizacion_set.all %}
-                 <td>  {{cotizacion.idCotizacion}} </td>
-                     {% endfor %}
-                 </tr> 
+  
                 
                    
                     

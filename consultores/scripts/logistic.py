@@ -135,9 +135,6 @@ def create_aseguradoras():
     aseguradora = Aseguradora(nombre='AXA', sitioWeb='https://axa.mx/', telefonoLada=442, telefono=1234567, calle='Rainbow', numeroExt=1234, colonia='asdf', ciudad='Queretaro', estado='Queretaro', codigoPostal=54321)
     aseguradora.save()
 
-    aseguradora = Aseguradora(nombre='AXA', sitioWeb='https://axa.mx/', telefonoLada=442, telefono=1234567, calle='Rainbow', numeroExt=1234, colonia='asdf', ciudad='Queretaro', estado='Queretaro', codigoPostal=54321)
-    aseguradora.save()
-
     aseguradora = Aseguradora(nombre='Zurich', sitioWeb='https://www.zurich.com.mx/es-mx/', telefonoLada=442, telefono=1234567, calle='Rainbow', numeroExt=1234, colonia='asdf', ciudad='Queretaro', estado='Queretaro', codigoPostal=54321)
     aseguradora.save()
 
