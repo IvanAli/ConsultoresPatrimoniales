@@ -1,0 +1,27 @@
+{% extends "baseAdmin.html" %}
+
+{% block head_title %}Cliente: {{ comparativa.cliente.nombre }} {{ cliente.apellidoPaterno }} {{ cliente.apellidoMaterno }}{% endblock %}
+{% block head_css %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="../../static/css/dataTables/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+<link rel="stylesheet" href="../../static/css/dataTables/dataTablesAdmin.bootstrap.css">
+{% endblock %}
+{% block head_javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+{% endblock %}
+
+{% block clientes_tag %}class="active"{% endblock %}
+{% block body_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Coberturas elegidas</h2>
+            {% for cobertura in cotizacion.coberturautilizada_set.all %}
+                <h3>{{ cobertura.idCobertura.nombre }}</h3>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
