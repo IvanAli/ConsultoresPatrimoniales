@@ -365,4 +365,8 @@ def run():
     create_coberturas_E()
     create_area_tramites()
     create_asignacion_comision()
+<<<<<<< HEAD
     create_clientes()
+=======
+    create_clientes()
+>>>>>>> 5b093fc173e16e67c696ed911072fc34901f6aa8

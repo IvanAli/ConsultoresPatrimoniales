@@ -146,7 +146,7 @@ def nuevoClienteAuth(request):
                 return HttpResponseRedirect(reverse('schema:clientes'))
             else:
                 context = {
-                    'datos_form': datos_form,        
+                    'datos_form': datos_form,
                     'error_missingfields': "Campo obligatorio sin llenar",
                     'error_lada': "Campo obligatorio, ingresa unicamente numeros",
                     'error_telefono': "Campo obligatorio, ingresa unicamente numeros",
@@ -311,8 +311,8 @@ def nuevoPagoAuthView(request, idPoliza):
         if Pago.objects.filter(poliza=poliza).count() == 0:
             pago.numeroPago = 1
         else:
-            lastPago = Pago.objects.filter(poliza=poliza).orden_by('-numeroPago')[0]
-            pago.numeroPago = lastPago + 1
+            lastPago = Pago.objects.filter(poliza=poliza).order_by('-numeroPago')[0]
+            pago.numeroPago = lastPago.numeroPago + 1
         pago.poliza = poliza
         pago.save()
         return HttpResponseRedirect(reverse('schema:polizaCliente', args=[idPoliza]))
