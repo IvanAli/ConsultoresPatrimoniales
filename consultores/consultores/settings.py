@@ -45,10 +45,14 @@ INSTALLED_APPS = (
 # Storage
 MEDIA_ROOT = 'https://consultorespatrimoniales.blob.core.windows.net/'
 MEDIA_URL = 'https://consultorespatrimoniales.blob.core.windows.net/'
+### COMMENT TO USE LOCAL STORAGE / UNCOMMENT TO USE AZURE STORAGE SERVICES
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+
 # STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+
+### COMMENT TO USE LOCAL STORAGE / UNCOMMENT TO USE AZURE STORAGE SERVICES
 AZURE_ACCOUNT_NAME = 'consultorespatrimoniales'
-AZURE_ACCOUNT_KEY = 'dV2vFne0e0sWg3JKRdOTIrBRC+VnxEKU6510QS9d5Kx1USELHEpUt9pfQsDd3ysfmPGItgjbg+kC6kLmprJLfw=='
+AZURE_ACCOUNT_KEY = 'OEEYlVZGFK0VqPGqpcaNZIjeomV9gOv1z/daQ2lWIMJLkqw+m+I6Dez0VyTXWiIMkFknu+VnfOfyqr78SmY5nA=='
 AZURE_CONTAINER = 'cotizaciones'
 
 #For email

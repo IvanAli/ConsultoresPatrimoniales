@@ -114,18 +114,25 @@
             <div class="row">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <div class="panel-title">Características de seguro a contratar</div>
+                        <div class="panel-title">Información del seguro a contratar</div>
                     </div>
                     <div class="panel-body">
+                        <h4 class="list-group-item-heading">Datos</h4>
                         {% for field in datos %}
-                        <p>
                             <strong>{{ field.label }}:</strong>
                             {% if field.data == None or field.data == '' %}
                                 No especificado
                             {% else %}
                                 {{ field.data }}
                             {% endif %}
-                        </p>
+                        <br>
+                        {% endfor %}
+                        <br>
+                        <h4 class="list-group-item-heading">Coberturas deseadas</h4>
+                        {% for cobertura in comparativa.coberturas.all %}
+                                <li>
+                                    {{ cobertura.nombre }}
+                                </li>
                         {% endfor %}
                     </div>
                 </div>
