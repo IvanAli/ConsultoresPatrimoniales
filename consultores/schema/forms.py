@@ -39,15 +39,17 @@ class UploadFileForm(forms.Form):
     # title = forms.CharField(max_length=50)
     file = forms.FileField()
 
+
+# FORMAS DE SEGUROS
 class SeguroAPForm(forms.ModelForm):
 	class Meta:
 		model = SeguroAP
-		fields = ['marca', 'modelo', 'tipoPlan', 'ano', 'descripcion', 'pasajeros', 'estadoCirculacion', 'version', 'transmision']
+		fields = ['tipoPlan', 'marca', 'modelo', 'ano', 'version', 'transmision', 'pasajeros', 'descripcion', 'descripcion']
 
 class SeguroCForm(forms.ModelForm):
 	class Meta:
 		model = SeguroC
-		fields = ['marca', 'modelo', 'ano', 'descripcion', 'pasajeros', 'unidad', 'transmision']
+		fields = ['marca', 'modelo', 'ano', 'transmision', 'unidad', 'pasajeros', 'descripcion']
 
 class SeguroRForm(forms.ModelForm):
     class Meta:
@@ -67,7 +69,7 @@ class SeguroVForm(forms.ModelForm):
 class SeguroHForm(forms.ModelForm):
     class Meta:
         model = SeguroH
-        fields = ['codigoPostal', 'tipoVivienda', 'primeraResidencia', 'metrosCuadrados', 'capitalContinente', 'capitalContenido']
+        fields = ['tipoVivienda', 'metrosCuadrados', 'primeraResidencia', 'calle', 'numeroExt', 'numeroInt', 'colonia', 'ciudad', 'estado', 'codigoPostal', 'capitalContinente', 'capitalContenido']
 
 class SeguroIForm(forms.ModelForm):
     class Meta:
@@ -77,7 +79,7 @@ class SeguroIForm(forms.ModelForm):
 class SeguroEForm(forms.ModelForm):
     class Meta:
         model = SeguroE
-        fields = ['nombreEmpresa', 'direccion', 'tipoConstruccion', 'tipoMuro', 'numeroPisos', 'numeroSotanos', 'numeroExt',
+        fields = ['nombreEmpresa', 'tipoConstruccion', 'tipoMuro', 'numeroPisos', 'numeroSotanos', 'direccion', 'numeroExt',
         'numeroInt', 'colonia', 'ciudad', 'estado', 'codigoPostal']
 
 class SeguroECForm(forms.ModelForm):
@@ -88,8 +90,8 @@ class SeguroECForm(forms.ModelForm):
 class SeguroTForm(forms.ModelForm):
     class Meta:
         model = SeguroT
-        fields = ['tipoMedio', 'bienTransportado', 'sumaAsegurada', 'ciudadOrigen', 'estadoOrigen',
-        'ciudadDestino', 'estadoDestino', 'tipoTrabajo']
+        fields = ['tipoTrabajo', 'tipoMedio', 'bienTransportado', 'sumaAsegurada', 'ciudadOrigen', 'estadoOrigen',
+        'ciudadDestino', 'estadoDestino']
 
 class EliminarClienteForm(forms.ModelForm):
     class Meta:

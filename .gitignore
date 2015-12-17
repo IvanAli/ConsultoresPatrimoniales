@@ -2,3 +2,4 @@
 *.pyc
 consultores/schema/migrations/*
 *~
+https:/*
